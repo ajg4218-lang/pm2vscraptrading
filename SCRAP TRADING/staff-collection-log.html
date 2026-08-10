@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Log - PM2V Scrap Trading</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+        .summary-card {
+            background: white; padding: 20px 24px; border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: flex; align-items: center; gap: 14px;
+        }
+        .summary-card .s-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .summary-card .s-icon.green { background: #e8f5e9; }
+        .summary-card .s-icon.blue { background: #eff6ff; }
+        .summary-card .s-icon.amber { background: #fef3c7; }
+        .summary-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin: 0 0 4px; }
+        .summary-card .s-value { font-size: 26px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; margin: 0; }
+
+        .log-form-section {
+            background: white; border-radius: 16px; padding: 28px;
+            border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            margin-bottom: 28px;
+        }
+        .log-form-header { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+        .log-form-header h3 { font-size: 17px; font-weight: 700; color: #1a202c; margin: 0; }
+        .log-form-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; align-items: flex-end;
+        }
+
+        .log-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .log-status.logged { background: #fef3c7; color: #92400e; }
+        .log-status.verified { background: #dcfce7; color: #166534; }
+
+        .date-filter { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+        .date-filter input[type="date"] {
+            padding: 8px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+            font-size: 13px; font-family: inherit; color: #334155;
+        }
+        .date-filter input[type="date"]:focus { outline: none; border-color: #166734; }
+
+        @media (max-width: 768px) {
+            .summary-cards { grid-template-columns: 1fr; }
+            .log-form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="pm2v-logo.png" alt="PM2V Logo" class="sidebar-logo">
+            </div>
+            <div class="user-profile">
+                <div class="avatar" id="sidebarAvatar"></div>
+                <div>
+                    <h3 id="sidebarName">Staff</h3>
+                    <p id="sidebarRole">Staff Member</p>
+                </div>
+            </div>
+            <nav class="navigation">
+                <ul class="menu">
+                    <li><a href="staff-dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a></li>
+                    <li><a href="staff-physical-inventory.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Physical Inventory</a></li>
+                    <li class="active"><a href="staff-collection-log.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Collection Log</a></li>
+                    <li><a href="staff-profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1>Incoming Collection Log</h1>
+                    <p class="header-subtitle">Record scrap materials received from suppliers and sellers.</p>
+                </div>
+                <div class="header-date">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span id="currentDate"></span>
+                    <span style="margin: 0 6px; color: #cbd5e1;">|</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="currentTime"></span>
+                </div>
+            </header>
+
+            <!-- Summary Cards -->
+            <section class="summary-cards">
+                <div class="summary-card">
+                    <div class="s-icon green">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div>
+                        <h4>Collections Today</h4>
+                        <p class="s-value" id="statCollections">0</p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="s-icon blue">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    </div>
+                    <div>
+                        <h4>Total Weight Today</h4>
+                        <p class="s-value" id="statWeight">0 kg</p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="s-icon amber">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                        <h4>Suppliers Today</h4>
+                        <p class="s-value" id="statSuppliers">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Log Entry Form -->
+            <section class="log-form-section">
+                <div class="log-form-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <h3>Log New Collection</h3>
+                </div>
+                <div class="log-form-grid">
+                    <div class="form-group">
+                        <label>Supplier / Seller Name</label>
+                        <input type="text" id="supplierName" placeholder="e.g. Juan Dela Cruz">
+                    </div>
+                    <div class="form-group">
+                        <label>Material Category</label>
+                        <select id="materialCategory">
+                            <option value="Metal">Metal</option>
+                            <option value="Plastic">Plastic</option>
+                            <option value="Wood">Wood</option>
+                            <option value="Paper">Paper</option>
+                            <option value="Fiber">Fiber</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="materialWeight" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Condition</label>
+                        <select id="materialCondition">
+                            <option value="Good">Good</option>
+                            <option value="Poor">Poor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (optional)</label>
+                        <input type="text" id="collectionNotes" placeholder="e.g. Mixed aluminum cans">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-save" id="btnLogCollection">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Log Collection
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Today's Collection Log Table -->
+            <section class="table-section">
+                <div class="table-header">
+                    <div class="table-header-left">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        <h3>Collection Log</h3>
+                    </div>
+                    <div class="date-filter">
+                        <input type="date" id="filterDate">
+                    </div>
+                </div>
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Supplier</th>
+                            <th>Category</th>
+                            <th>Weight (kg)</th>
+                            <th>Condition</th>
+                            <th>Notes</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="collectionLogBody">
+                        <tr class="empty-row"><td colspan="7">No collections logged yet today.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+    import { db, auth } from './firebase.js';
+    import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    // ---- Date display ----
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString('en-US', { timeZone:'Asia/Manila', weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    }
+    function updatePhTime() {
+        const timeEl = document.getElementById('currentTime');
+        if (timeEl) {
+            timeEl.textContent = new Date().toLocaleTimeString('en-US', { timeZone:'Asia/Manila', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+        }
+    }
+    updatePhTime();
+    setInterval(updatePhTime, 1000);
+
+    // ---- State ----
+    let collections = [];
+    let currentFilterDate = new Date();
+
+    // Set date filter to today
+    const filterDateInput = document.getElementById('filterDate');
+    filterDateInput.value = formatDateForInput(new Date());
+    filterDateInput.addEventListener('change', () => {
+        currentFilterDate = new Date(filterDateInput.value + 'T00:00:00');
+        loadCollections();
+    });
+
+    function formatDateForInput(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    // ---- Load sidebar user info ----
+    auth.onAuthStateChanged(user => {
+        if (!user) { window.location.href = 'login.html'; return; }
+        const userDocRef = db.collection ? null : null; // handled below
+        import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js').then(({ doc, getDoc }) => {
+            getDoc(doc(db, 'users', user.uid)).then(snap => {
+                if (snap.exists()) {
+                    const data = snap.data();
+                    const name = data.fullName || data.name || 'Staff';
+                    document.getElementById('sidebarName').textContent = name;
+                    document.getElementById('sidebarRole').textContent = data.role || 'Staff';
+                    document.getElementById('sidebarAvatar').textContent = name.charAt(0).toUpperCase();
+                }
+            });
+        });
+        loadCollections();
+    });
+
+    // ---- Load collections for selected date ----
+    function loadCollections() {
+        const startOfDay = new Date(currentFilterDate);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(currentFilterDate);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const startTs = Timestamp.fromDate(startOfDay);
+        const endTs = Timestamp.fromDate(endOfDay);
+
+        const colRef = collection(db, 'collections');
+        const q = query(colRef, where('timestamp', '>=', startTs), where('timestamp', '<=', endTs), orderBy('timestamp', 'desc'));
+
+        onSnapshot(q, (snapshot) => {
+            collections = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderTable();
+            updateSummary();
+        }, (error) => {
+            console.error('Error loading collections:', error);
+            // Fallback: load without ordering if index missing
+            const q2 = query(colRef, where('timestamp', '>=', startTs), where('timestamp', '<=', endTs));
+            onSnapshot(q2, (snapshot) => {
+                collections = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                collections.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                renderTable();
+                updateSummary();
+            });
+        });
+    }
+
+    // ---- Render table ----
+    function renderTable() {
+        const tbody = document.getElementById('collectionLogBody');
+        if (collections.length === 0) {
+            const dateStr = currentFilterDate.toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' });
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No collections logged for ${dateStr}.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = collections.map(item => {
+            const ts = item.timestamp ? new Date(item.timestamp.seconds * 1000) : null;
+            const timeStr = ts ? ts.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+            const statusClass = item.status === 'verified' ? 'verified' : 'logged';
+            const statusLabel = item.status === 'verified' ? 'Verified' : 'Logged';
+
+            return `<tr>
+                <td><strong>${item.supplierName || 'Unknown'}</strong></td>
+                <td><span class="badge badge-${(item.category || 'metal').toLowerCase()}">${item.category || 'Metal'}</span></td>
+                <td>${item.weight || 0} kg</td>
+                <td><span class="badge badge-${(item.condition || 'good').toLowerCase()}">${item.condition || 'Good'}</span></td>
+                <td>${item.notes || '—'}</td>
+                <td>${timeStr}</td>
+                <td><span class="log-status ${statusClass}">${statusLabel}</span></td>
+            </tr>`;
+        }).join('');
+    }
+
+    // ---- Update summary cards ----
+    function updateSummary() {
+        const totalCollections = collections.length;
+        const totalWeight = collections.reduce((sum, c) => sum + (parseFloat(c.weight) || 0), 0);
+        const uniqueSuppliers = new Set(collections.map(c => (c.supplierName || '').toLowerCase().trim())).size;
+
+        document.getElementById('statCollections').textContent = totalCollections;
+        document.getElementById('statWeight').textContent = totalWeight.toFixed(1) + ' kg';
+        document.getElementById('statSuppliers').textContent = uniqueSuppliers;
+    }
+
+    // ---- Save new collection ----
+    document.getElementById('btnLogCollection').addEventListener('click', async () => {
+        const supplierName = document.getElementById('supplierName').value.trim();
+        const category = document.getElementById('materialCategory').value;
+        const weight = parseFloat(document.getElementById('materialWeight').value) || 0;
+        const condition = document.getElementById('materialCondition').value;
+        const notes = document.getElementById('collectionNotes').value.trim();
+
+        if (!supplierName) { alert('Please enter the supplier/seller name.'); return; }
+        if (weight <= 0) { alert('Please enter a valid weight.'); return; }
+
+        const btn = document.getElementById('btnLogCollection');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+
+        try {
+            const colRef = collection(db, 'collections');
+            await addDoc(colRef, {
+                supplierName,
+                category,
+                weight,
+                condition,
+                notes,
+                status: 'logged',
+                timestamp: Timestamp.now(),
+                loggedBy: auth.currentUser ? auth.currentUser.email : 'Staff'
+            });
+
+            // Reset form
+            document.getElementById('supplierName').value = '';
+            document.getElementById('materialWeight').value = '';
+            document.getElementById('collectionNotes').value = '';
+            document.getElementById('materialCategory').value = 'Metal';
+            document.getElementById('materialCondition').value = 'Good';
+
+            alert('Collection logged successfully!');
+        } catch (error) {
+            console.error('Error logging collection:', error);
+            alert('Error saving: ' + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Log Collection';
+        }
+    });
+    </script>
+    <script type="module" src="authRedirect.js"></script>
+</body>
+</html>

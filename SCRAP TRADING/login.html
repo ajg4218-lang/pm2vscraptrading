@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM2V Scrap Trading - Login</title>
+    <link rel="stylesheet" href="LOGIN.CSS">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- DECORATIVE BACKGROUND ELEMENTS -->
+    <div class="bg-pattern"></div>
+
+    <!-- TOP NAVIGATION -->
+    <header class="top-nav">
+        <a href="login.html" class="nav-brand">
+            <img src="pm2v-logo.png" alt="PM2V Logo" class="nav-logo">
+            <span>PM2V Scrap Trading</span>
+        </a>
+        <nav class="nav-links">
+            <a href="about.html">About Us</a>
+            <a href="faqs.html">FAQs</a>
+            <a href="privacy-policy.html">Privacy</a>
+            <a href="terms-of-service.html">Terms</a>
+        </nav>
+    </header>
+
+    <!-- MAIN LOGIN SECTION -->
+    <div class="main-container">
+        <!-- LEFT PANEL - Scrap themed -->
+        <div class="left-panel">
+            <div class="left-content">
+                <div class="recycle-icon">
+                    <img src="pm2v-logo.png" alt="PM2V Logo" class="left-panel-logo">
+                </div>
+                <p class="tagline">Smart Inventory. Sustainable Future.</p>
+                <div class="divider"></div>
+                <p class="description">
+                    Founded in 2007, we are a trusted partner in waste management in Los Banos, Laguna. Specializing in metal, wood, plastic, and carton scraps.
+                </p>
+
+                <div class="material-chips">
+                    <span class="chip">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        Metal
+                    </span>
+                    <span class="chip">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        Plastic
+                    </span>
+                    <span class="chip">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+                        Wood
+                    </span>
+                    <span class="chip">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                        Paper
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to manage your inventory</p>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group floating">
+                    <input type="email" name="email" required placeholder=" " autocomplete="email">
+                    <label>Email Address</label>
+                    <div class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                    </div>
+                </div>
+
+                <div class="form-group floating password-field">
+                    <input type="password" id="password" name="password" required placeholder=" " autocomplete="current-password">
+                    <label>Password</label>
+                    <div class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <button type="button" class="eye" onclick="togglePassword()" aria-label="Toggle password visibility">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+
+                <div class="form-options">
+                    <p class="forgot">Forgot password?</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <span>Sign In</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+
+                <!-- Security Notice -->
+                <div class="security-notice">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span>Protected by encrypted connection</span>
+                </div>
+
+                <div id="error-msg" class="error-msg" style="display:none;"></div>
+
+                <div class="signup-prompt">
+                    <p>Don't have an account? <a href="#" id="openApplyModal">Apply for Access</a></p>
+                </div>
+
+                <!-- Privacy & Terms -->
+                <div class="privacy-notice">
+                    <p>By signing in, you agree to our <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-of-service.html">Terms of Service</a>.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="applyModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>Apply for Access</h2>
+                    <p>Submit your application for review</p>
+                </div>
+                <button id="closeApplyModal" class="modal-close">&times;</button>
+            </div>
+            
+            <form id="apply-form">
+                <div class="modal-form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="fullName" required placeholder="Enter your full name">
+                </div>
+                <div class="modal-form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="modal-form-group">
+                    <label>Requested Role</label>
+                    <select name="requestedRole" required>
+                        <option value="" disabled selected>Select a role</option>
+                        <option value="staff">Staff</option>
+                        <option value="secretary">Secretary</option>
+                    </select>
+                    <div class="role-descriptions">
+                        <div class="role-desc">
+                            <strong>Staff</strong> — Manage daily collection logs and view physical inventory.
+                        </div>
+                        <div class="role-desc">
+                            <strong>Secretary</strong> — Handle transactions, generate reports, and manage inventory records.
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+                <div id="apply-msg" class="apply-msg"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Copyright &copy; 2026 PM2V Scrap Trading. All Rights Reserved.</p>
+    </footer>
+
+    <script type="module" src="login.js"></script>
+    <script type="module" src="authRedirect.js"></script>
+    <script>
+        function togglePassword() {
+            const p = document.getElementById('password');
+            p.type = p.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to get user role from /users/{uid}
+    function getRole() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role.toString().toLowerCase()
+        : null;
+    }
+    
+    // Helper to check if the current user is an owner
+    function isOwner() {
+      return request.auth != null && 
+             request.auth.token.firebase.sign_in_provider != 'anonymous' &&
+             (getRole() == "owner" || request.auth.token.email == "pm2vstorage@gmail.com");
+    }
+
+    match /inventory/{docId} {
+      // All authenticated users can read inventory
+      allow read: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      // Owner, Secretary, and Staff can create or update inventory items
+      allow create, update: if request.auth != null && 
+                            request.auth.token.firebase.sign_in_provider != 'anonymous' &&
+                            getRole() in ["owner", "secretary", "staff"];
+      // Only owner can delete inventory items
+      allow delete: if isOwner();
+    }
+
+    match /users/{userId} {
+      // Users can read their own profile, owner and secretary can read all profiles
+      allow read: if request.auth != null && 
+                  request.auth.token.firebase.sign_in_provider != 'anonymous' &&
+                  (request.auth.uid == userId || getRole() in ["owner", "secretary"]);
+      // Users can create their own document on first login; owner can create user docs during approval
+      allow create: if request.auth != null && 
+                    request.auth.token.firebase.sign_in_provider != 'anonymous' &&
+                    (request.auth.uid == userId || getRole() == "owner");
+      // Users can update their own profile, owner can update any profile
+      allow update: if request.auth != null && 
+                    request.auth.token.firebase.sign_in_provider != 'anonymous' &&
+                    (request.auth.uid == userId || getRole() == "owner");
+      // Only owner can delete users
+      allow delete: if isOwner();
+    }
+
+    match /applicants/{applicantId} {
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          "fullName",
+          "email",
+          "roleRequested",
+          "status",
+          "createdAt"
+        ]) &&
+        request.resource.data.fullName is string &&
+        request.resource.data.fullName.size() > 0 &&
+        request.resource.data.email is string &&
+        request.resource.data.email.matches(".*@.*\\..*") &&
+        request.resource.data.roleRequested in ["staff", "secretary"] &&
+        request.resource.data.status == "pending" &&
+        request.resource.data.createdAt is timestamp;
+
+      allow read: if request.auth != null && getRole() == "owner";
+      allow delete: if request.auth != null && getRole() == "owner";
+    }
+
+    match /transactions/{transactionId} { 
+      // Only owner and secretary can read, create, or update transactions
+      allow read, create, update: if request.auth != null && 
+                                  request.auth.token.firebase.sign_in_provider != 'anonymous' &&
+                                  getRole() in ["owner", "secretary"];
+      // Only owner can delete transactions
+      allow delete: if isOwner();
+    }
+
+  }
+}

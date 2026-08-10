@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - PM2V Scrap Trading</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="pm2v-logo.png" alt="PM2V Logo" class="sidebar-logo">
+            </div>
+            <div class="user-profile">
+                <div class="avatar" id="sidebarAvatar"></div>
+                <div>
+                    <h3 id="sidebarName">Staff</h3>
+                    <p id="sidebarRole">Staff Member</p>
+                </div>
+            </div>
+            <nav class="navigation">
+                <ul class="menu">
+                    <li><a href="staff-dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a></li>
+                    <li><a href="staff-physical-inventory.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Physical Inventory</a></li>
+                    <li><a href="staff-collection-log.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Collection Log</a></li>
+                    <li class="active"><a href="staff-profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1>Profile</h1>
+                    <p class="header-subtitle">Manage your account information and settings.</p>
+                </div>
+                <div class="header-date">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span id="currentDate"></span>
+                    <span style="margin: 0 6px; color: #cbd5e1;">|</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="currentTime"></span>
+                </div>
+            </header>
+
+            <section class="profile-card-section" id="profileRoot">
+                <!-- Profile Header -->
+                <div class="profile-header-card">
+                    <div class="profile-header-main">
+                        <div class="profile-avatar" id="userAvatar"></div>
+                        <div class="profile-identity">
+                            <h2 id="profileHeaderName">Staff User</h2>
+                            <div class="profile-badges">
+                                <span class="status-badge role-staff-badge" id="profileRoleBadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Staff</span>
+                                <span class="status-badge status-active" id="profileStatusBadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Active</span>
+                            </div>
+                            <div class="profile-header-email" id="profileHeaderEmail"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Sections -->
+                <div class="profile-sections">
+                    <section class="profile-section-card">
+                        <div class="section-card-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <h3>Personal Information</h3>
+                        </div>
+                        <div class="profile-fields">
+                            <div class="detail-field" id="fieldFullName">
+                                <label>Full Name</label>
+                                <p id="userName">Loading...</p>
+                                <input type="text" id="editFullName" style="display:none;">
+                            </div>
+                        </div>
+                    </section>
+                    <section class="profile-section-card">
+                        <div class="section-card-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                            <h3>Account Information</h3>
+                        </div>
+                        <div class="profile-fields">
+                            <div class="detail-field"><label>Email</label><p id="profileDetailEmail">Loading...</p></div>
+                            <div class="detail-field"><label>Role</label><p id="profileAccountRole">Loading...</p></div>
+                            <div class="detail-field"><label>Status</label><p id="profileAccountStatus">Loading...</p></div>
+                        </div>
+                    </section>
+                    <section class="profile-section-card">
+                        <div class="section-card-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <h3>Activity Information</h3>
+                        </div>
+                        <div class="profile-fields">
+                            <div class="detail-field"><label>Member Since</label><p id="profileCreatedAt" class="profile-muted">Loading...</p></div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Actions -->
+                <div class="profile-actions">
+                    <button class="btn-primary" id="editProfileBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Profile</button>
+                    <button class="btn-secondary" id="changePasswordBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Change Password</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-modal-content">
+            <div class="modal-header">
+                <div class="modal-header-left"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#166734" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h3>Change Password</h3></div>
+                <button id="cancelBtn" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="success-message" id="successMessage"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Password changed successfully!</div>
+            <form id="passwordForm">
+                <div class="form-group"><label for="currentPassword">Current Password</label><input type="password" id="currentPassword" required placeholder="Enter current password"></div>
+                <div class="form-group"><label for="newPassword">New Password</label><input type="password" id="newPassword" required placeholder="Enter new password"></div>
+                <div class="form-group"><label for="confirmPassword">Confirm New Password</label><input type="password" id="confirmPassword" required placeholder="Confirm new password"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn2">Cancel</button>
+                    <button type="submit" class="btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="profile.js"></script>
+    <script type="module" src="authRedirect.js"></script>
+    <script>
+        const dateEl = document.getElementById('currentDate');
+        if (dateEl) {
+            dateEl.textContent = new Date().toLocaleDateString('en-US', { timeZone:'Asia/Manila', weekday:'long', year:'numeric', month:'long', day:'numeric' });
+        }
+        function updatePhTime() {
+            const timeEl = document.getElementById('currentTime');
+            if (timeEl) {
+                timeEl.textContent = new Date().toLocaleTimeString('en-US', { timeZone:'Asia/Manila', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            }
+        }
+        updatePhTime();
+        setInterval(updatePhTime, 1000);
+    </script>
+</body>
+</html>
