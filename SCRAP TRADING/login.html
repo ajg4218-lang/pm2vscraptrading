@@ -165,11 +165,17 @@
     </footer>
 
     <script type="module" src="login.js"></script>
-    <script type="module" src="authRedirect.js"></script>
     <script>
         function togglePassword() {
             const p = document.getElementById('password');
-            p.type = p.type === 'password' ? 'text' : 'password';
+            const eyeBtn = document.querySelector('.eye svg');
+            if (p.type === 'password') {
+                p.type = 'text';
+                if (eyeBtn) eyeBtn.style.opacity = '0.5';
+            } else {
+                p.type = 'password';
+                if (eyeBtn) eyeBtn.style.opacity = '1';
+            }
         }
     </script>
 </body>

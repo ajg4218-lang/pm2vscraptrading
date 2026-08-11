@@ -52,6 +52,10 @@ app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, curl, Postman in dev)
     if (!origin) return callback(null, true);
+    // Allow any localhost/127.0.0.1 origin in development
+    if (origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
+      return callback(null, true);
+    }
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
@@ -317,6 +321,292 @@ Rules:
     logToFile(`ERROR /api/classify: ${error.message}`);
     res.status(500).json({ error: "Classification failed. Please try again." });
   }
+});
+
+// ============================================================
+// ENDPOINT: /api/classify-yolo (YOLO-based scrap classification)
+// Uses Ultralytics Platform Inference API for object detection
+// Protected: requires Firebase auth token + rate limited
+// Inactive until ULTRALYTICS_API_KEY is configured in .env
+// ============================================================
+app.post("/api/classify-yolo", rateLimit, verifyFirebaseToken, upload.single("image"), async (req, res) => {
+  logToFile(`--- YOLO Classify Request from ${req.user.email || req.user.uid} ---`);
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image uploaded" });
+    }
+
+    const apiKey = process.env.ULTRALYTICS_API_KEY;
+    let modelId = process.env.ULTRALYTICS_MODEL_ID;
+
+    // Guard: API key must be set (not placeholder)
+    if (!apiKey || apiKey === 'your_ultralytics_api_key_here') {
+      return res.status(503).json({
+        error: "YOLO classification is not configured yet. The administrator needs to set the ULTRALYTICS_API_KEY in the server .env file.",
+        inactive: true
+      });
+    }
+
+    if (!modelId || modelId === 'your_model_id_here') {
+      return res.status(503).json({
+        error: "YOLO model ID is not configured yet. The administrator needs to set ULTRALYTICS_MODEL_ID in the server .env file.",
+        inactive: true
+      });
+    }
+
+    // Resolve common model name shortcuts to official Ultralytics model slugs
+    const officialModelMap = {
+      'yolo26n': 'ultralytics/yolo26/yolo26n',
+      'yolo26s': 'ultralytics/yolo26/yolo26s',
+      'yolo26m': 'ultralytics/yolo26/yolo26m',
+      'yolo26l': 'ultralytics/yolo26/yolo26l',
+      'yolo26x': 'ultralytics/yolo26/yolo26x',
+      'yolo11n': 'ultralytics/yolo11/yolo11n',
+      'yolo11s': 'ultralytics/yolo11/yolo11s',
+      'yolo11m': 'ultralytics/yolo11/yolo11m',
+      'yolo11l': 'ultralytics/yolo11/yolo11l',
+      'yolo11x': 'ultralytics/yolo11/yolo11x',
+      'yolov8n': 'ultralytics/yolov8/yolov8n',
+      'yolov8s': 'ultralytics/yolov8/yolov8s',
+      'yolov8m': 'ultralytics/yolov8/yolov8m',
+      'yolov8l': 'ultralytics/yolov8/yolov8l',
+      'yolov8x': 'ultralytics/yolov8/yolov8x',
+    };
+
+    // Normalize: strip .pt suffix, lowercase
+    const modelKey = modelId.replace(/\.pt$/i, '').toLowerCase();
+    if (officialModelMap[modelKey]) {
+      modelId = officialModelMap[modelKey];
+    }
+
+    logToFile(`YOLO: Sending image to Ultralytics Platform API (model: ${modelId}, ${req.file.size} bytes)`);
+
+    // Build multipart form data for Ultralytics Platform API
+    // Field name must be "file", params are "conf", "iou", "imgsz"
+    const boundary = '----FormBoundary' + Date.now().toString(16);
+    const fileName = req.file.originalname || 'scrap-image.jpg';
+
+    const parts = [];
+
+    // Image file part (field name: "file")
+    parts.push(Buffer.from(
+      `--${boundary}\r\n` +
+      `Content-Disposition: form-data; name="file"; filename="${fileName}"\r\n` +
+      `Content-Type: ${req.file.mimetype}\r\n\r\n`
+    ));
+    parts.push(req.file.buffer);
+    parts.push(Buffer.from('\r\n'));
+
+    // Inference params (correct field names for Platform API)
+    const params = { conf: 0.15, iou: 0.7, imgsz: 640 };
+    for (const [key, value] of Object.entries(params)) {
+      parts.push(Buffer.from(
+        `--${boundary}\r\n` +
+        `Content-Disposition: form-data; name="${key}"\r\n\r\n` +
+        `${value}\r\n`
+      ));
+    }
+
+    // Closing boundary
+    parts.push(Buffer.from(`--${boundary}--\r\n`));
+
+    const body = Buffer.concat(parts);
+
+    // Call Ultralytics Platform Inference API
+    // Try multiple URL formats to find the model
+    const urlsToTry = [
+      // Platform API with path segments (official models: ultralytics/yolo26/yolo26n)
+      `https://platform.ultralytics.com/api/models/${modelId}/predict`,
+      // Legacy HUB API format (older keys may use this)
+      `https://api.ultralytics.com/v1/predict/${modelId}`,
+    ];
+
+    let response = null;
+    let lastError = '';
+
+    for (const url of urlsToTry) {
+      logToFile(`YOLO: Trying ${url}`);
+      try {
+        response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'x-api-key': apiKey,
+            'Content-Type': `multipart/form-data; boundary=${boundary}`
+          },
+          body: body
+        });
+
+        if (response.ok) {
+          logToFile(`YOLO: Success with ${url}`);
+          break;
+        }
+
+        const errText = await response.text();
+        lastError = errText;
+        logToFile(`YOLO: ${url} returned ${response.status}: ${errText.substring(0, 150)}`);
+        response = null; // Reset so we try next URL
+      } catch (fetchErr) {
+        lastError = fetchErr.message;
+        logToFile(`YOLO: ${url} fetch error: ${fetchErr.message}`);
+        response = null;
+      }
+    }
+
+    if (!response || !response.ok) {
+      // All URLs failed
+      logToFile(`YOLO: All endpoints failed. Last error: ${lastError.substring(0, 200)}`);
+      return res.status(502).json({
+        error: `Could not reach YOLO model "${modelId}". Make sure your ULTRALYTICS_MODEL_ID is a valid model ID from your Ultralytics Platform account (found under your project's model list).`,
+        details: lastError.substring(0, 200)
+      });
+    }
+
+    const apiResult = await response.json();
+    logToFile(`YOLO: Raw response keys: ${Object.keys(apiResult).join(', ')}`);
+    if (apiResult.images) {
+      logToFile(`YOLO: images array length: ${apiResult.images.length}`);
+      if (apiResult.images[0]) {
+        logToFile(`YOLO: images[0] keys: ${Object.keys(apiResult.images[0]).join(', ')}`);
+        logToFile(`YOLO: images[0] results: ${JSON.stringify(apiResult.images[0].results || apiResult.images[0]).substring(0, 500)}`);
+      }
+    }
+    logToFile(`YOLO: Full response (first 800 chars): ${JSON.stringify(apiResult).substring(0, 800)}`);
+
+    // Parse Ultralytics Platform API response format:
+    // { images: [{ shape: [h, w], results: [{class, name, confidence, box}] }], metadata: {...} }
+    let detections = [];
+    if (apiResult.images && apiResult.images.length > 0) {
+      const img = apiResult.images[0];
+      if (img.results && img.results.length > 0) {
+        detections = img.results;
+      } else if (img.data && Array.isArray(img.data)) {
+        detections = img.data;
+      }
+    } else if (Array.isArray(apiResult)) {
+      // Legacy format: direct array of detections
+      detections = apiResult;
+    } else if (apiResult.results) {
+      detections = apiResult.results;
+    } else if (apiResult.data) {
+      detections = Array.isArray(apiResult.data) ? apiResult.data : [apiResult.data];
+    }
+
+    logToFile(`YOLO: Parsed ${detections.length} detections`);
+
+    // No detections
+    if (!detections || detections.length === 0) {
+      return res.json({
+        item_name: "Unknown",
+        category: "Other",
+        condition: "Good",
+        confidence: "Low",
+        notes: "No objects detected in the image. Try a clearer photo with the scrap material in focus.",
+        detections: []
+      });
+    }
+
+    // Get the top detection (highest confidence)
+    const sortedDetections = detections.sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+    const topDetection = sortedDetections[0];
+    const detectedClass = topDetection.name || topDetection.class || String(topDetection.class ?? 'Unknown');
+    const detectedConfidence = topDetection.confidence || 0;
+
+    // Map detected class to scrap categories
+    // This maps COCO-80 classes to scrap material types
+    const categoryMap = {
+      // Metal items (COCO objects that are typically metal)
+      'scissors': 'Metal', 'knife': 'Metal', 'fork': 'Metal', 'spoon': 'Metal',
+      'toaster': 'Metal', 'oven': 'Metal', 'microwave': 'Metal', 'sink': 'Metal',
+      'refrigerator': 'Metal', 'bicycle': 'Metal', 'car': 'Metal', 'motorcycle': 'Metal',
+      'bus': 'Metal', 'train': 'Metal', 'truck': 'Metal', 'boat': 'Metal',
+      'fire hydrant': 'Metal', 'stop sign': 'Metal', 'parking meter': 'Metal',
+      'keyboard': 'Metal', 'laptop': 'Metal', 'cell phone': 'Metal', 'mouse': 'Metal',
+      'remote': 'Metal', 'clock': 'Metal', 'tv': 'Metal',
+      'metal': 'Metal', 'aluminum': 'Metal', 'steel': 'Metal', 'iron': 'Metal',
+      'copper': 'Metal', 'can': 'Metal', 'tin': 'Metal',
+      // Plastic items
+      'bottle': 'Plastic', 'cup': 'Plastic', 'bowl': 'Plastic', 'vase': 'Plastic',
+      'frisbee': 'Plastic', 'sports ball': 'Plastic', 'skateboard': 'Plastic',
+      'surfboard': 'Plastic', 'tennis racket': 'Plastic', 'wine glass': 'Plastic',
+      'plastic': 'Plastic', 'container': 'Plastic', 'toothbrush': 'Plastic',
+      'hair drier': 'Plastic',
+      // Wood items
+      'bench': 'Wood', 'chair': 'Wood', 'dining table': 'Wood', 'bed': 'Wood',
+      'couch': 'Wood', 'baseball bat': 'Wood', 'skis': 'Wood',
+      'wood': 'Wood', 'pallet': 'Wood', 'lumber': 'Wood',
+      // Paper items
+      'book': 'Paper', 'kite': 'Paper',
+      'paper': 'Paper', 'cardboard': 'Paper', 'carton': 'Paper', 'box': 'Paper',
+      // Fiber items
+      'backpack': 'Fiber', 'handbag': 'Fiber', 'suitcase': 'Fiber',
+      'tie': 'Fiber', 'umbrella': 'Fiber', 'teddy bear': 'Fiber',
+      'fiber': 'Fiber', 'cloth': 'Fiber', 'textile': 'Fiber', 'sack': 'Fiber'
+    };
+
+    const classLower = detectedClass.toLowerCase().replace(/[_-]/g, ' ');
+    let category = 'Other';
+    for (const [keyword, cat] of Object.entries(categoryMap)) {
+      if (classLower.includes(keyword)) {
+        category = cat;
+        break;
+      }
+    }
+
+    // Map confidence to readable level
+    let confidenceLevel = 'Low';
+    if (detectedConfidence >= 0.75) confidenceLevel = 'High';
+    else if (detectedConfidence >= 0.45) confidenceLevel = 'Medium';
+
+    // Determine condition heuristic
+    const condition = detectedConfidence >= 0.5 ? 'Good' : 'Poor';
+
+    const result = {
+      item_name: detectedClass.charAt(0).toUpperCase() + detectedClass.slice(1).replace(/_/g, ' '),
+      category: category,
+      condition: condition,
+      confidence: confidenceLevel,
+      confidence_score: Math.round(detectedConfidence * 100),
+      notes: `YOLO detected "${detectedClass}" with ${Math.round(detectedConfidence * 100)}% confidence.${sortedDetections.length > 1 ? ` (${sortedDetections.length} objects detected total)` : ''}`,
+      detections: sortedDetections.slice(0, 5).map(d => ({
+        class: d.name || d.class || String(d.class ?? '?'),
+        confidence: Math.round((d.confidence || 0) * 100)
+      }))
+    };
+
+    // Save to Firestore (non-blocking)
+    db.collection('scrap_classifications').add({
+      ...result,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      source: 'yolo_classification',
+      classifiedBy: req.user.email || req.user.uid
+    }).catch(err => logToFile(`Firestore save error: ${err.message}`));
+
+    logToFile(`YOLO Classification success: ${result.item_name} -> ${result.category} (${result.confidence_score}%)`);
+    res.json(result);
+
+  } catch (error) {
+    logToFile(`ERROR /api/classify-yolo: ${error.message}`);
+    res.status(500).json({ error: "YOLO classification failed. Please try again.", details: error.message });
+  }
+});
+
+// ============================================================
+// ENDPOINT: /api/classify-yolo/status
+// Check if YOLO API is configured and active
+// ============================================================
+app.get("/api/classify-yolo/status", (req, res) => {
+  const apiKey = process.env.ULTRALYTICS_API_KEY;
+  const modelId = process.env.ULTRALYTICS_MODEL_ID;
+  const isActive = apiKey && apiKey !== 'your_ultralytics_api_key_here' &&
+                   modelId && modelId !== 'your_model_id_here';
+  res.json({
+    active: isActive,
+    model: modelId || null,
+    message: isActive
+      ? "YOLO classification is active and ready."
+      : "YOLO classification is inactive. Set ULTRALYTICS_API_KEY and ULTRALYTICS_MODEL_ID in .env to activate."
+  });
 });
 
 // ============================================================

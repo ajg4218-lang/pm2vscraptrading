@@ -1,24 +1,80 @@
+/**
+ * PM2V Scrap Trading - Auth Redirect & Role Protection
+ * 
+ * This module runs on every protected page (dashboards, profiles, etc.).
+ * It checks authentication state, enforces role-based access, updates the sidebar UI,
+ * and provides the logout function.
+ */
+
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { auth, db } from "./firebase.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔹 Hide loading
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+// Pages that don't require authentication
+const AUTH_EXEMPT_PAGES = ['login.html', 'signup.html', 'about.html', 'faqs.html', 'privacy-policy.html', 'terms-of-service.html'];
+
+// Map each protected page to the role(s) that can access it
+const PAGE_ROLE_ACCESS = {
+    // Owner pages
+    'owner-dashboard.html': ['owner'],
+    'owner-physical-inventory.html': ['owner'],
+    'owner-reports.html': ['owner'],
+    'owner-user-management.html': ['owner'],
+    // Secretary pages
+    'secretary-dashboard.html': ['secretary'],
+    'secretary-physical-inventory.html': ['secretary'],
+    'secretary-transactions.html': ['secretary'],
+    'secretary-reports.html': ['secretary'],
+    'secretary-profile.html': ['secretary'],
+    // Staff pages
+    'staff-dashboard.html': ['staff'],
+    'staff-physical-inventory.html': ['staff'],
+    'staff-collection-log.html': ['staff'],
+    'staff-profile.html': ['staff'],
+    // Shared pages accessible by owner (and secretary for transactions)
+    'transactions.html': ['owner', 'secretary'],
+    'profile.html': ['owner']
+};
+
+// Role-to-dashboard redirect map
+const ROLE_DASHBOARDS = {
+    owner: 'owner-dashboard.html',
+    secretary: 'secretary-dashboard.html',
+    staff: 'staff-dashboard.html'
+};
+
+// ============================================================
+// LOADING OVERLAY
+// ============================================================
 function hideLoading() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) {
-        console.log("AuthRedirect: Hiding loading overlay");
-        loadingOverlay.style.display = 'none';
-        loadingOverlay.classList.add('hidden');
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            overlay.classList.add('hidden');
+        }, 200);
     }
 }
 
-// 🔹 Force hide on window load (Task 1 - guaranteed fallback)
-window.addEventListener("load", () => {
-    console.log("AuthRedirect: Window loaded - forcing hideLoading");
-    hideLoading();
-});
+function showLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        overlay.classList.remove('hidden');
+    }
+}
 
-// 🔹 PROFILE UI
+// ============================================================
+// PROFILE UI UPDATE
+// ============================================================
 function updateProfileUI(data) {
     if (!data) return;
 
@@ -31,24 +87,19 @@ function updateProfileUI(data) {
     const statusBadgeEl = document.getElementById('profileStatusBadge');
     const createdAtEl = document.getElementById('profileCreatedAt');
 
-    nameEls.forEach(el => {
-        if (el) el.textContent = data.fullName || data.name || "User";
-    });
-    roleEls.forEach(el => {
-        if (el) el.textContent = data.role || "staff";
-    });
-    emailEls.forEach(el => {
-        if (el) el.textContent = data.displayEmail || data.email || "";
-    });
-
+    const displayName = data.fullName || data.name || "User";
     const role = String(data.role || "staff").toLowerCase();
     const status = String(data.status || "active").toLowerCase();
 
-    if (accountRoleEl) accountRoleEl.textContent = role;
-    if (accountStatusEl) accountStatusEl.textContent = status;
+    nameEls.forEach(el => { if (el) el.textContent = displayName; });
+    roleEls.forEach(el => { if (el) el.textContent = role.charAt(0).toUpperCase() + role.slice(1); });
+    emailEls.forEach(el => { if (el) el.textContent = data.displayEmail || data.email || ""; });
+
+    if (accountRoleEl) accountRoleEl.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    if (accountStatusEl) accountStatusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
 
     if (roleBadgeEl) {
-        roleBadgeEl.textContent = role;
+        roleBadgeEl.textContent = role.charAt(0).toUpperCase() + role.slice(1);
         roleBadgeEl.classList.remove('role-owner-badge', 'role-secretary-badge', 'role-staff-badge');
         if (role === "owner") roleBadgeEl.classList.add('role-owner-badge');
         else if (role === "secretary") roleBadgeEl.classList.add('role-secretary-badge');
@@ -56,7 +107,7 @@ function updateProfileUI(data) {
     }
 
     if (statusBadgeEl) {
-        statusBadgeEl.textContent = status;
+        statusBadgeEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
         statusBadgeEl.classList.remove('status-active', 'status-inactive', 'status-pending');
         if (status === "inactive") statusBadgeEl.classList.add('status-inactive');
         else if (status === "pending") statusBadgeEl.classList.add('status-pending');
@@ -69,136 +120,166 @@ function updateProfileUI(data) {
         createdAtEl.textContent = dt ? dt.toLocaleString() : "";
     }
 
-    // Also update avatar if exists
+    // Update avatar initial
     const avatarEl = document.getElementById('sidebarAvatar') || document.getElementById('userAvatar');
-    if (avatarEl && data.fullName) {
-        avatarEl.textContent = data.fullName.charAt(0).toUpperCase();
+    if (avatarEl && displayName) {
+        avatarEl.textContent = displayName.charAt(0).toUpperCase();
     }
-
-    console.log("AuthRedirect: Profile UI updated");
 }
 
-// 🔹 IMMEDIATELY show UI from sessionStorage if available (prevents blank screen)
-(function initSessionUI() {
+// ============================================================
+// RESTORE UI FROM SESSION (prevents blank flash)
+// ============================================================
+(function restoreSessionUI() {
     try {
-        const storedUser = sessionStorage.getItem('currentUser');
-        if (storedUser) {
-            const userData = JSON.parse(storedUser);
-            console.log("AuthRedirect: Restoring UI from sessionStorage:", userData.role);
+        const stored = sessionStorage.getItem('currentUser');
+        if (stored) {
+            const userData = JSON.parse(stored);
             updateProfileUI(userData);
         }
     } catch (e) {
-        console.warn("AuthRedirect: Could not restore session:", e);
+        // Non-critical, will be populated by auth check
     }
-    // Always hide loading overlay after short delay (prevents infinite loading)
-    setTimeout(hideLoading, 1500);
 })();
 
-// 🔹 Fail-safe timeout (Hide loading after 3 seconds regardless)
-setTimeout(() => {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay && loadingOverlay.style.display !== 'none') {
-        console.warn("AuthRedirect: Fail-safe triggered - hiding loading overlay after 3s");
-        hideLoading();
-    }
-}, 3000);
+// ============================================================
+// HELPER: Get current page filename
+// ============================================================
+function getCurrentPage() {
+    const path = window.location.pathname;
+    const parts = path.replace(/\\/g, '/').split('/');
+    return parts[parts.length - 1].toLowerCase() || 'index.html';
+}
 
-// 🔹 MAIN AUTH CHECK (NO LOOP)
-console.log("AuthRedirect: Initializing auth state check...");
+// ============================================================
+// HELPER: Check if page is auth-exempt
+// ============================================================
+function isAuthExempt(page) {
+    return AUTH_EXEMPT_PAGES.some(exempt => page.includes(exempt)) || page === '' || page === '/';
+}
+
+// ============================================================
+// MAIN AUTH STATE LISTENER
+// ============================================================
 onAuthStateChanged(auth, async (user) => {
-    console.log("AuthRedirect: Auth state changed. User:", user ? user.uid : "None");
+    const currentPage = getCurrentPage();
 
-    const path = window.location.pathname.toLowerCase();
-    const isAuthExemptPage = path.includes("login.html") || path.includes("signup.html") || path === "/" || path.endsWith("/");
-
-    // 🔹 If on login/signup page, hide loading immediately
-    if (isAuthExemptPage) {
-        console.log("AuthRedirect: On auth-exempt page (" + path + "), skipping auto-redirect and hiding loading.");
+    // Skip auth logic on login/signup and public pages
+    if (isAuthExempt(currentPage)) {
         hideLoading();
-        // Do NOT redirect away from login/signup automatically even if logged in
-        // This allows manual logout or switching accounts
         return;
     }
 
-    // ❌ Not logged in and not on an exempt page
+    // Not logged in on a protected page -> redirect to login
     if (!user) {
-        console.log("AuthRedirect: Not logged in on protected page, redirecting to login.html");
-        hideLoading(); // Ensure loading is hidden before redirect
+        console.log("AuthRedirect: No user session, redirecting to login");
+        hideLoading();
         window.location.replace("login.html");
         return;
     }
 
     try {
-        console.log("AuthRedirect: Fetching user data from Firestore...");
-        // 🔹 Get user data ONCE (no onSnapshot)
-        const docSnap = await getDoc(doc(db, "users", user.uid));
+        // Fetch user document from Firestore
+        const userSnap = await getDoc(doc(db, "users", user.uid));
 
-        console.log("AuthRedirect: User data fetched");
-
-        if (!docSnap.exists()) {
-            console.warn("AuthRedirect: User document missing in Firestore. Signing out and redirecting to login.");
+        if (!userSnap.exists()) {
+            console.warn("AuthRedirect: No Firestore profile found, signing out");
             hideLoading();
             await signOut(auth);
+            sessionStorage.clear();
             window.location.replace("login.html");
             return;
         }
 
-        const data = docSnap.data();
+        const data = userSnap.data();
+        const role = (data.role || 'staff').toLowerCase();
 
-        console.log("AuthRedirect: User data received. Role:", data.role);
+        // Block inactive/pending users
+        const status = (data.status || 'active').toLowerCase();
+        if (status === 'inactive' || status === 'pending') {
+            console.warn("AuthRedirect: Account not active, signing out");
+            hideLoading();
+            await signOut(auth);
+            sessionStorage.clear();
+            window.location.replace("login.html");
+            return;
+        }
 
-        // 🔹 SAVE SESSION (IMPORTANT FIX)
+        // Save session for quick UI restore
         sessionStorage.setItem("currentUser", JSON.stringify({
             uid: user.uid,
-            fullName: data.fullName,
-            role: data.role
+            fullName: data.fullName || '',
+            email: data.email || user.email || '',
+            role: role,
+            status: status
         }));
 
-        // 🔹 Update UI
+        // Update sidebar/profile UI
         updateProfileUI(data);
-        console.log("AuthRedirect: Profile updated");
 
-        // 🔹 ROLE PROTECTION (NO LOOP)
-        let unauthorized = false;
-        if (path.includes("owner") && data.role !== "owner") unauthorized = true;
-        if (path.includes("secretary") && data.role !== "secretary") unauthorized = true;
-        if (path.includes("staff") && data.role !== "staff") unauthorized = true;
+        // ============================================================
+        // ROLE-BASED ACCESS CONTROL
+        // ============================================================
+        const allowedRoles = PAGE_ROLE_ACCESS[currentPage];
 
-        if (unauthorized) {
-            console.warn("AuthRedirect: Unauthorized access to role-protected page. Redirecting to login.html");
+        if (allowedRoles && !allowedRoles.includes(role)) {
+            // User doesn't have permission for this page
+            console.warn(`AuthRedirect: Role "${role}" cannot access "${currentPage}". Redirecting to correct dashboard.`);
             hideLoading();
-            window.location.replace("login.html");
+            const correctDashboard = ROLE_DASHBOARDS[role] || ROLE_DASHBOARDS.staff;
+            window.location.replace(correctDashboard);
             return;
         }
 
-        console.log("AuthRedirect: Authorization successful");
-        console.log("AuthRedirect: Loading hidden");
+        // If page is not in the access map and not exempt, allow access
+        // (for any future pages that haven't been mapped yet)
+        console.log("AuthRedirect: Access granted for", role, "on", currentPage);
         hideLoading();
 
     } catch (err) {
-        console.error("AuthRedirect: Error during auth/role check:", err);
+        console.error("AuthRedirect: Error during auth check:", err);
         hideLoading();
+        // Don't redirect on transient errors - let the user stay on the page
+        // but show the page content so they can at least see something
     }
 });
 
-// 🔹 LOGOUT (FIXED)
+// ============================================================
+// FAIL-SAFE: Hide loading after 4 seconds no matter what
+// ============================================================
+setTimeout(() => {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay && overlay.style.display !== 'none') {
+        console.warn("AuthRedirect: Fail-safe triggered - hiding loading after 4s");
+        hideLoading();
+    }
+}, 4000);
+
+// ============================================================
+// LOGOUT
+// ============================================================
 window.logoutUser = async () => {
     try {
+        showLoading();
         sessionStorage.clear();
-        localStorage.clear();
+        localStorage.removeItem('currentUser');
         await signOut(auth);
         window.location.replace("login.html");
     } catch (error) {
         console.error("Logout error:", error);
+        // Force redirect even if signOut fails
+        window.location.replace("login.html");
     }
 };
 
-// 🔹 ATTACH LOGOUT HANDLER TO BUTTONS
+// ============================================================
+// ATTACH LOGOUT TO BUTTONS
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            console.log("Logout button clicked");
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             window.logoutUser();
         });
     }

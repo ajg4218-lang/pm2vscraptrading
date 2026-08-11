@@ -1,6 +1,5 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,478 +7,80 @@
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Specific styles for AI classification section */
-        .ai-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(0,0,0,0.03);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-        }
-
-        .ai-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-        }
-
-        .ai-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a202c;
-            margin: 0;
-        }
-
-        .ai-badge {
-            background: #e8f5e9;
-            color: #166734;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .drop-zone {
-            border: 2px dashed #e2e8f0;
-            border-radius: 16px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: #f8fafc;
-            position: relative;
-        }
-
-        .drop-zone:hover {
-            border-color: #166734;
-            background: #f0faf4;
-        }
-
-        .drop-zone input[type=file] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .drop-zone-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
-
-        .drop-zone p {
-            color: #718096;
-            font-size: 15px;
-        }
-
-        .drop-zone p span {
-            color: #166734;
-            font-weight: 600;
-        }
-
-        .preview-container {
-            display: none;
-            margin-top: 25px;
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .preview-flex {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .preview-flex img {
-            width: 140px;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .preview-actions {
-            flex: 1;
-        }
-
-        .btn-classify {
-            width: 100%;
-            padding: 14px;
-            background: #2d3748;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 12px;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-classify:hover {
-            background: #1a202c;
-            transform: translateY(-2px);
-        }
-
-        .btn-remove {
-            width: 100%;
-            padding: 10px;
-            background: white;
-            color: #e53e3e;
-            border: 1px solid #e53e3e;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-remove:hover {
-            background: #fff5f5;
-        }
-
-        .result-container {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background: #e8f5e9;
-            border: 1px solid #c6f6d5;
-            border-radius: 16px;
-        }
-
-        .result-title {
-            font-weight: 700;
-            font-size: 14px;
-            color: #166734;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .result-stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .stat-badge {
-            background: white;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 13px;
-            color: #2d3748;
-            border: 1px solid #c6f6d5;
-        }
-
-        .stat-badge strong {
-            color: #166734;
-        }
-
-        /* Form styling */
-        .form-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(0,0,0,0.03);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-        }
-
-        .form-card h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: #1a202c;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        .form-group input, .form-group select {
-            padding: 12px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #166734;
-            box-shadow: 0 0 0 3px rgba(22, 103, 52, 0.1);
-        }
-
-        .btn-save-item {
-            padding: 14px 24px;
-            background: #166734;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.2s;
-            height: 46px;
-        }
-
-        .btn-save-item:hover {
-            background: #0f4d26;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(22, 103, 52, 0.2);
-        }
-
-        /* Spinner */
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .form-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* Sidebar Profile Styles */
-        .sidebar-profile { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            margin: 20px 0; 
-            padding: 15px; 
-            border-radius: 12px; 
-            background: #ffffff; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(22, 103, 52, 0.05);
-        } 
-        
-        .profile-avatar { 
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%; 
-            background: #166534; 
-            color: white; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: bold; 
-            font-size: 20px;
-        }
-
-        .profile-info h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #2d3748;
-            margin: 0;
-        }
-
-        .profile-info p {
-            font-size: 12px;
-            color: #718096;
-            margin: 2px 0 0 0;
-        }
-
-        /* Camera Capture Styles */
-        .upload-actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .btn-upload, .btn-camera {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            color: #4a5568;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-upload:hover, .btn-camera:hover {
-            border-color: #166734;
-            background: #f0faf4;
-            color: #166734;
-        }
-
-        .btn-camera {
-            border-color: #166734;
-            background: #166734;
-            color: white;
-        }
-
-        .btn-camera:hover {
-            background: #0f4d26;
-        }
-
-        /* Camera Modal */
-        .camera-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        .camera-modal.active {
-            display: flex;
-        }
-
-        .camera-modal video {
-            width: 100%;
-            max-width: 640px;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .camera-modal canvas {
-            display: none;
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn-capture {
-            padding: 14px 40px;
-            background: #166734;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-capture:hover {
-            background: #0f4d26;
-            transform: translateY(-2px);
-        }
-
-        .btn-cancel-camera {
-            padding: 14px 40px;
-            background: white;
-            color: #e53e3e;
-            border: 2px solid #e53e3e;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-cancel-camera:hover {
-            background: #fff5f5;
-        }
-
-        .camera-error {
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .camera-error p {
-            margin-bottom: 15px;
-            color: #ffa0a0;
-        }
+        .ai-section { background:white; border-radius:20px; padding:30px; margin-bottom:24px; border:1px solid rgba(0,0,0,0.03); box-shadow:0 4px 6px -1px rgba(0,0,0,0.02); }
+        .ai-badge { background:#e8f5e9; color:#166734; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px; }
+        .drop-zone { border:2px dashed #e2e8f0; border-radius:16px; padding:40px 20px; text-align:center; cursor:pointer; transition:all 0.2s; background:#f8fafc; }
+        .drop-zone:hover { border-color:#166734; background:#f0faf4; }
+        .drop-zone p { color:#718096; font-size:15px; }
+        .drop-zone p span { color:#166734; font-weight:600; }
+        .preview-wrap { display:none; margin-top:20px; background:#f8fafc; padding:20px; border-radius:16px; border:1px solid #e2e8f0; gap:20px; align-items:center; }
+        .preview-wrap img { width:140px; height:140px; object-fit:cover; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+        .preview-wrap .preview-info { flex:1; display:flex; flex-direction:column; gap:10px; }
+        .ai-result { display:none; margin-top:20px; padding:20px; background:#e8f5e9; border:1px solid #c6f6d5; border-radius:16px; }
+        .ai-result-header { font-weight:700; font-size:14px; color:#166734; margin-bottom:15px; }
+        .ai-tags { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px; }
+        .ai-tag { background:white; padding:8px 14px; border-radius:10px; font-size:13px; color:#2d3748; border:1px solid #c6f6d5; }
+        .ai-tag strong { color:#166734; }
+        .ai-note { font-size:12px; color:#4a5568; margin-top:10px; font-style:italic; }
+        .btn-use { padding:10px 20px; background:#166734; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:600; font-size:13px; }
+        .btn-use:hover { background:#0f4d26; }
+        .btn-classify { width:100%; padding:14px; background:#2d3748; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:700; font-size:15px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:10px; }
+        .btn-classify:hover { background:#1a202c; }
+        .btn-remove { width:100%; padding:10px; background:white; color:#e53e3e; border:1px solid #e53e3e; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; }
+        .btn-remove:hover { background:#fff5f5; }
+        .spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .upload-actions { display:flex; gap:12px; margin-bottom:15px; }
+        .btn-upload, .btn-camera { flex:1; padding:14px; border:2px solid #e2e8f0; border-radius:12px; background:white; color:#4a5568; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .btn-upload:hover { border-color:#166734; background:#f0faf4; color:#166734; }
+        .btn-camera { border-color:#166734; background:#166734; color:white; }
+        .btn-camera:hover { background:#0f4d26; }
+        .camera-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; align-items:center; justify-content:center; flex-direction:column; }
+        .camera-modal.active { display:flex; }
+        .camera-modal video { width:100%; max-width:640px; border-radius:12px; }
+        .camera-modal canvas { display:none; }
+        .camera-controls { display:flex; gap:15px; margin-top:20px; }
+        .btn-capture { padding:14px 40px; background:#166734; color:white; border:none; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer; }
+        .btn-cancel-camera { padding:14px 40px; background:white; color:#e53e3e; border:2px solid #e53e3e; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer; }
+        .form-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; align-items:flex-end; }
+        .form-group { display:flex; flex-direction:column; gap:8px; }
+        .form-group label { font-size:13px; font-weight:600; color:#4a5568; }
+        .form-group input, .form-group select { padding:12px 16px; border:1px solid #e2e8f0; border-radius:12px; font-size:14px; }
+        .form-group input:focus, .form-group select:focus { outline:none; border-color:#166734; box-shadow:0 0 0 3px rgba(22,103,52,0.1); }
+        .btn-save { padding:14px 24px; background:#166734; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:700; font-size:15px; }
+        .btn-save:hover { background:#0f4d26; }
+        @media (max-width:1024px) { .form-grid { grid-template-columns:1fr 1fr; } }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo-section">
-                <img src="pm2v-logo.png" alt="PM2V Logo" class="sidebar-logo">
-            </div>
-
+            <div class="logo-section"><img src="pm2v-logo.png" alt="PM2V Logo" class="sidebar-logo"></div>
             <div class="user-profile">
                 <div class="avatar" id="profileInitial"></div>
-                <div>
-                    <h3 id="profileName">Staff</h3>
-                    <p id="profileRole">Staff Member</p>
-                </div>
+                <div><h3 id="profileName">Staff</h3><p id="profileRole">Staff Member</p></div>
             </div>
-
             <nav class="navigation">
                 <ul class="menu">
-                    <li><a href="staff-dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a></li>
-                    <li class="active"><a href="staff-physical-inventory.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Physical Inventory</a></li>
-                    <li><a href="staff-collection-log.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Collection Log</a></li>
-                    <li><a href="staff-profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
+                    <li><a href="staff-dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a></li>
+                    <li class="active"><a href="staff-physical-inventory.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Physical Inventory</a></li>
+                    <li><a href="staff-collection-log.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Collection Log</a></li>
+                    <li><a href="staff-profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
                 </ul>
             </nav>
-
-            <div class="sidebar-footer">
-                <a href="#" id="logout-btn" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a>
-            </div>
+            <div class="sidebar-footer"><a href="#" id="logout-btn" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a></div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="header">
-                <div>
-                    <h1>Physical Inventory</h1>
-                    <p class="header-subtitle">Manage scrap materials and classify items with AI.</p>
-                </div>
+                <div><h1>Physical Inventory</h1><p class="header-subtitle">Manage scrap materials and classify items with AI.</p></div>
                 <div class="header-date">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <span id="currentDate"></span>
-                    <span style="margin: 0 6px; color: #cbd5e1;">|</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span style="margin:0 6px;color:#cbd5e1;">|</span>
                     <span id="currentTime"></span>
                 </div>
             </header>
 
-            <!-- Category Filters -->
             <div class="category-filters">
                 <button class="filter-btn active" data-category="All">All</button>
                 <button class="filter-btn" data-category="Metal">Metal</button>
@@ -489,507 +90,305 @@
                 <button class="filter-btn" data-category="Fiber">Fiber</button>
             </div>
 
-            <!-- AI Classification Section -->
-    <section class="ai-section">
-      <h3>
-        AI Scrap Classifier
-        <span class="ai-badge">POWERED BY GEMINI AI</span>
-      </h3>
- 
-      <div class="upload-actions">
-        <button class="btn-upload" id="btnSelectFile">
-          Upload Image
-        </button>
-        <button class="btn-camera" id="btnOpenCamera">
-          Take Photo
-        </button>
-      </div>
+            <section class="ai-section">
+                <h3>AI Scrap Classifier <span class="ai-badge">POWERED BY YOLO AI</span></h3>
+                <div class="upload-actions">
+                    <button type="button" class="btn-upload" id="btnSelectFile">Upload Image</button>
+                    <button type="button" class="btn-camera" id="btnOpenCamera">Take Photo</button>
+                </div>
+                <div class="drop-zone" id="dropZone">
+                    <p><span>Click to upload</span> or drag and drop a scrap photo</p>
+                    <p style="font-size:12px;margin-top:4px;">JPG, PNG, WEBP supported</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;">
+                <div class="preview-wrap" id="previewWrap">
+                    <img id="previewImg" src="" alt="Preview">
+                    <div class="preview-info">
+                        <p id="previewName">photo.jpg</p>
+                        <button type="button" class="btn-classify" id="btnClassify"><span>Classify with AI</span><div class="spinner" id="spinner" style="display:none;"></div></button>
+                        <button type="button" class="btn-remove" id="btnRemove">Remove image</button>
+                    </div>
+                </div>
+                <div class="ai-result" id="aiResult">
+                    <div class="ai-result-header">AI Classification Result</div>
+                    <div class="ai-tags" id="aiTags"></div>
+                    <button type="button" class="btn-use" id="btnApplyResult">Use this result - Fill form</button>
+                    <p class="ai-note" id="aiNote"></p>
+                </div>
+            </section>
 
-      <div class="drop-zone" id="dropZone">
-        <input type="file" id="fileInput" accept="image/*">
-        <div class="drop-zone-icon"></div>
-        <p><span>Click to upload</span> or drag & drop a scrap photo</p>
-        <p style="font-size:12px; margin-top:4px;">JPG, PNG, WEBP supported</p>
-      </div>
- 
-      <div class="preview-wrap" id="previewWrap">
-        <img id="previewImg" src="" alt="Preview">
-        <div class="preview-info">
-          <p id="previewName">photo.jpg</p>
-          <button class="btn-classify" id="btnClassify" onclick="classifyImage()">
-            <span>Classify with AI</span>
-            <div class="spinner" id="spinner"></div>
-          </button>
-          <button class="btn-remove" onclick="removeImage()">✕ Remove image</button>
-        </div>
-      </div>
- 
-      <div class="ai-result" id="aiResult">
-        <div class="ai-result-header">
-          <span>✓ AI Classification Result</span>
-        </div>
-        <div class="ai-tags" id="aiTags"></div>
-        <button class="btn-use" onclick="applyAiResult()">Use this result → Fill form</button>
-        <p class="ai-note" id="aiNote"></p>
-      </div>
-    </section>
+            <div class="camera-modal" id="cameraModal">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <canvas id="cameraCanvas"></canvas>
+                <div class="camera-controls">
+                    <button type="button" class="btn-capture" id="btnCapture">Capture</button>
+                    <button type="button" class="btn-cancel-camera" id="btnCancelCamera">Cancel</button>
+                </div>
+                <div class="camera-error" id="cameraError" style="display:none;">
+                    <p style="color:#ffa0a0;">Camera not available.</p>
+                    <button type="button" class="btn-cancel-camera" id="btnCameraFallback">Use File Upload</button>
+                </div>
+            </div>
 
-    <!-- Camera Modal -->
-    <div class="camera-modal" id="cameraModal">
-      <video id="cameraVideo" autoplay playsinline></video>
-      <canvas id="cameraCanvas"></canvas>
-      <div class="camera-controls">
-        <button class="btn-capture" id="btnCapture">Capture</button>
-        <button class="btn-cancel-camera" id="btnCancelCamera">Cancel</button>
-      </div>
-      <div class="camera-error" id="cameraError" style="display:none;">
-        <p>Camera not available. Please use file upload instead.</p>
-        <button class="btn-cancel-camera" id="btnCameraFallback">Use File Upload</button>
-      </div>
+            <section class="add-form-section">
+                <h3>Add New Scrap Item</h3>
+                <div class="form-grid">
+                    <div class="form-group"><label>Item Name</label><input type="text" id="newItemName" placeholder="e.g. Aluminum Cans"></div>
+                    <div class="form-group"><label>Category</label><select id="newItemCategory"><option value="Metal">Metal</option><option value="Plastic">Plastic</option><option value="Wood">Wood</option><option value="Paper">Paper</option><option value="Fiber">Fiber</option></select></div>
+                    <div class="form-group"><label>Weight (kg)</label><input type="number" id="newItemQty" placeholder="0.00" step="0.01"></div>
+                    <div class="form-group"><label>Condition</label><select id="newItemCondition"><option value="Good">Good</option><option value="Poor">Poor</option></select></div>
+                    <div class="form-actions"><button type="button" class="btn-save" id="btnSaveItem">Save Item to Inventory</button></div>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <table class="inventory-table">
+                    <thead><tr><th>Item Name</th><th>Category</th><th>Weight</th><th>Condition</th><th>Last Updated</th></tr></thead>
+                    <tbody id="inventoryBody"><tr class="empty-row"><td colspan="5">No items yet.</td></tr></tbody>
+                </table>
+            </section>
+        </main>
     </div>
- 
-    <!-- Add Item Form -->
-    <section class="add-form-section">
-      <h3>Add New Scrap Item</h3>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Item Name</label>
-          <input type="text" id="newItemName" placeholder="e.g. Aluminum Cans">
-        </div>
-        <div class="form-group">
-          <label>Category</label>
-          <select id="newItemCategory">
-            <option value="Metal">Metal</option>
-            <option value="Plastic">Plastic</option>
-            <option value="Wood">Wood</option>
-            <option value="Paper">Paper</option>
-            <option value="Fiber">Fiber</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Weight (kg)</label>
-          <input type="number" id="newItemQty" placeholder="0.00" step="0.01">
-        </div>
-        <div class="form-group">
-          <label>Condition</label>
-          <select id="newItemCondition">
-            <option value="Good">Good</option>
-            <option value="Poor">Poor</option>
-          </select>
-        </div>
-        <div class="form-actions">
-          <button class="btn-save" onclick="saveItem()">Save Item to Inventory</button>
-        </div>
-      </div>
-    </section>
- 
-    <!-- Inventory Table -->
-    <section class="table-section">
-      <table class="inventory-table">
-        <thead>
-          <tr>
-            <th>Item Name</th>
-            <th>Category</th>
-            <th>Weight</th>
-            <th>Condition</th>
-            <th>Last Updated</th>
-          </tr>
-        </thead>
-        <tbody id="inventoryBody">
-          <tr class="empty-row"><td colspan="5">No items yet. Add your first scrap item above.</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
- 
-  <!-- Firebase & Config -->
-  <script type="module">
+
+    <script type="module">
     import { db, auth } from './firebase.js';
-    import { serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-    import { escapeHtml, showToast } from './utils.js';
+    import { collection, addDoc, doc, getDoc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-    // ============================================================
-    // AI Classification - Server-side via /api/classify
-    // No API keys in client code. Server handles authentication.
-    // ============================================================
-    const API_BASE_URL = 'http://localhost:3000';
+    console.log('MODULE LOADED OK');
+    window._firebaseAuth = auth;
+    window._firebaseDb = db;
+    window._firebaseImports = { collection, addDoc, doc, getDoc, query, orderBy, onSnapshot, serverTimestamp, onAuthStateChanged };
 
-    // ---- State ----
+    const API_URL = 'http://' + window.location.hostname + ':3000';
     let currentFile = null;
-    let currentImageBase64 = null;
-    let currentImageType = 'image/jpeg';
     let aiData = null;
     let inventory = [];
-    let editingId = null;
-    let currentCategoryFilter = 'All';
+    let categoryFilter = 'All';
 
-    // ---- Drop zone & file input ----
+    // Utility
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function toast(msg, type) {
+        const d = document.createElement('div');
+        const c = {success:'#166734',error:'#dc2626',warning:'#d97706',info:'#2563eb'};
+        d.textContent = msg;
+        d.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;padding:14px 24px;border-radius:12px;color:white;font-size:14px;font-weight:600;font-family:Poppins,sans-serif;background:'+(c[type]||c.info)+';box-shadow:0 10px 25px rgba(0,0,0,0.15);';
+        document.body.appendChild(d);
+        setTimeout(()=>{d.style.opacity='0';setTimeout(()=>d.remove(),300);},4000);
+    }
+
+    // File handling
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
+    const previewWrap = document.getElementById('previewWrap');
+    const previewImg = document.getElementById('previewImg');
+    const previewName = document.getElementById('previewName');
 
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file) handleFile(file);
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor='#166734'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor='#e2e8f0'; });
+    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.borderColor='#e2e8f0'; if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', () => { if(fileInput.files[0]) loadFile(fileInput.files[0]); });
+    document.getElementById('btnSelectFile').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); fileInput.click(); });
+
+    function loadFile(file) {
+        currentFile = file;
+        previewName.textContent = file.name;
+        const r = new FileReader();
+        r.onload = ev => { previewImg.src = ev.target.result; previewWrap.style.display='flex'; dropZone.style.display='none'; document.getElementById('aiResult').style.display='none'; };
+        r.readAsDataURL(file);
+    }
+
+    // Remove image
+    document.getElementById('btnRemove').addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        currentFile = null; aiData = null;
+        previewWrap.style.display='none'; previewImg.src=''; fileInput.value=''; dropZone.style.display='';
+        document.getElementById('aiResult').style.display='none';
     });
 
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files[0]) handleFile(fileInput.files[0]);
+    // Camera
+    let camStream = null;
+    document.getElementById('btnOpenCamera').addEventListener('click', async e => {
+        e.preventDefault(); e.stopPropagation();
+        document.getElementById('cameraModal').classList.add('active');
+        try { camStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); document.getElementById('cameraVideo').srcObject = camStream; }
+        catch(err) { document.getElementById('cameraError').style.display='block'; }
     });
-
-    // ---- File Upload Button ----
-    const btnSelectFile = document.getElementById('btnSelectFile');
-    if (btnSelectFile) {
-      btnSelectFile.addEventListener('click', () => fileInput.click());
-    }
-
-    // ---- Camera Capture ----
-    let cameraStream = null;
-    const cameraModal = document.getElementById('cameraModal');
-    const cameraVideo = document.getElementById('cameraVideo');
-    const cameraCanvas = document.getElementById('cameraCanvas');
-    const btnOpenCamera = document.getElementById('btnOpenCamera');
-    const btnCapture = document.getElementById('btnCapture');
-    const btnCancelCamera = document.getElementById('btnCancelCamera');
-    const cameraError = document.getElementById('cameraError');
-    const btnCameraFallback = document.getElementById('btnCameraFallback');
-
-    async function openCamera() {
-      cameraError.style.display = 'none';
-      cameraModal.classList.add('active');
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-          cameraVideo.srcObject = cameraStream;
-        } else {
-          throw new Error('Camera not supported');
-        }
-      } catch (err) {
-        console.error('Camera error:', err);
-        cameraError.style.display = 'block';
-        if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
-      }
-    }
-
-    function closeCamera() {
-      if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
-      cameraModal.classList.remove('active');
-    }
-
-    function captureImage() {
-      if (!cameraStream) return;
-      const ctx = cameraCanvas.getContext('2d');
-      cameraCanvas.width = cameraVideo.videoWidth;
-      cameraCanvas.height = cameraVideo.videoHeight;
-      ctx.drawImage(cameraVideo, 0, 0);
-
-      cameraCanvas.toBlob((blob) => {
-        currentFile = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-        const dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.9);
-        currentImageBase64 = dataUrl.split(',')[1];
-        currentImageType = 'image/jpeg';
-        document.getElementById('previewImg').src = dataUrl;
-        document.getElementById('previewName').textContent = 'camera-capture.jpg';
-        document.getElementById('previewWrap').classList.add('show');
-        document.getElementById('aiResult').classList.remove('show');
-        closeCamera();
-      }, 'image/jpeg', 0.9);
-    }
-
-    if (btnOpenCamera) btnOpenCamera.addEventListener('click', openCamera);
-    if (btnCapture) btnCapture.addEventListener('click', captureImage);
-    if (btnCancelCamera) btnCancelCamera.addEventListener('click', closeCamera);
-    if (btnCameraFallback) {
-      btnCameraFallback.addEventListener('click', () => { closeCamera(); fileInput.click(); });
-    }
-
-    function handleFile(file) {
-      currentFile = file;
-      currentImageType = file.type || 'image/jpeg';
-      document.getElementById('previewName').textContent = file.name;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const dataUrl = e.target.result;
-        currentImageBase64 = dataUrl.split(',')[1];
-        document.getElementById('previewImg').src = dataUrl;
-        document.getElementById('previewWrap').classList.add('show');
-        document.getElementById('aiResult').classList.remove('show');
-        dropZone.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removeImage() {
-      currentFile = null;
-      currentImageBase64 = null;
-      aiData = null;
-      document.getElementById('previewWrap').classList.remove('show');
-      document.getElementById('aiResult').classList.remove('show');
-      document.getElementById('previewImg').src = '';
-      fileInput.value = '';
-      dropZone.style.display = '';
-      const btn = document.getElementById('btnClassify');
-      const spinner = document.getElementById('spinner');
-      if (btn) { btn.disabled = false; btn.querySelector('span').textContent = 'Classify with AI'; }
-      if (spinner) spinner.style.display = 'none';
-    }
-
-    // ---- AI Classification via SERVER (secure, no client-side API key) ----
-    async function classifyImage() {
-      if (!currentFile && !currentImageBase64) return;
-
-      const btn = document.getElementById('btnClassify');
-      const spinner = document.getElementById('spinner');
-      btn.disabled = true;
-      spinner.style.display = 'inline-block';
-      btn.querySelector('span').textContent = 'Classifying...';
-
-      try {
-        // Get Firebase ID token for server authentication
-        const user = auth.currentUser;
-        if (!user) { showToast('Please log in to use AI classification.', 'error'); return; }
-        const idToken = await user.getIdToken();
-
-        // Build FormData with the image file
-        const formData = new FormData();
-        if (currentFile) {
-          formData.append('image', currentFile);
-        } else {
-          // Convert base64 to blob if we only have base64
-          const byteChars = atob(currentImageBase64);
-          const byteArr = new Uint8Array(byteChars.length);
-          for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
-          const blob = new Blob([byteArr], { type: currentImageType });
-          formData.append('image', blob, 'scrap-image.jpg');
-        }
-
-        const response = await fetch(`${API_BASE_URL}/api/classify`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${idToken}` },
-          body: formData
-        });
-
-        if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.error || `Server error (${response.status})`);
-        }
-
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'warning');
-        } else {
-          aiData = data;
-          showAiResult(aiData);
-          showToast('Classification complete!', 'success');
-        }
-      } catch (error) {
-        console.error('Classification error:', error);
-        showToast('Classification failed: ' + error.message, 'error');
-      } finally {
-        btn.disabled = false;
-        spinner.style.display = 'none';
-        btn.querySelector('span').textContent = 'Classify with AI';
-      }
-    }
-
-    function showAiResult(data) {
-      const tagsEl = document.getElementById('aiTags');
-      tagsEl.innerHTML = `
-        <div class="ai-tag"><strong>Item:</strong> ${escapeHtml(data.item_name)}</div>
-        <div class="ai-tag"><strong>Category:</strong> ${escapeHtml(data.category)}</div>
-        <div class="ai-tag"><strong>Condition:</strong> ${escapeHtml(data.condition)}</div>
-        <div class="ai-tag"><strong>Confidence:</strong> ${escapeHtml(data.confidence)}</div>
-      `;
-      document.getElementById('aiNote').textContent = data.notes || '';
-      document.getElementById('aiResult').classList.add('show');
-    }
-
-    function applyAiResult() {
-      if (!aiData) return;
-      const nameEl = document.getElementById('newItemName');
-      const catEl = document.getElementById('newItemCategory');
-      const condEl = document.getElementById('newItemCondition');
-      nameEl.value = aiData.item_name;
-      catEl.value = aiData.category;
-      condEl.value = aiData.condition;
-      [nameEl, catEl, condEl].forEach(el => {
-        el.classList.add('ai-filled');
-        setTimeout(() => el.classList.remove('ai-filled'), 3000);
-      });
-      document.querySelector('.add-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
- 
-    // ---- Save item ----
-    async function saveItem() {
-      const name = document.getElementById('newItemName').value.trim();
-      const category = document.getElementById('newItemCategory').value;
-      const weight = parseFloat(document.getElementById('newItemQty').value) || 0;
-      const condition = document.getElementById('newItemCondition').value;
-
-      if (!name) { showToast('Please enter an item name.', 'warning'); return; }
-      if (weight <= 0) { showToast('Please enter a valid weight.', 'warning'); return; }
-
-      const btn = document.querySelector('.btn-save');
-      const originalText = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Saving...';
-
-      const item = {
-        itemName: name,
-        category,
-        weight,
-        condition,
-        lastUpdated: serverTimestamp(),
-        updatedBy: auth.currentUser ? auth.currentUser.email : 'Staff'
-      };
-
-      try {
-        await db.collection("inventory").add(item);
-        showToast('Item added successfully!', 'success');
-        resetForm();
-      } catch (error) {
-        console.error("Error saving to Firestore: ", error);
-        showToast("Error saving to database: " + error.message, 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }
-    }
- 
-    function resetForm() {
-      document.getElementById('newItemName').value = '';
-      document.getElementById('newItemQty').value = '';
-      document.getElementById('newItemCategory').value = 'Metal';
-      document.getElementById('newItemCondition').value = 'Good';
-      removeImage();
-      editingId = null;
-      
-      const btn = document.querySelector('.btn-save');
-      if (btn) btn.textContent = 'Save Item to Inventory';
-    }
-
-    // Category Filter logic
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategoryFilter = btn.getAttribute('data-category');
-        renderTable();
-      });
+    document.getElementById('btnCapture').addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        if(!camStream) return;
+        const cv = document.getElementById('cameraCanvas'), v = document.getElementById('cameraVideo');
+        cv.width=v.videoWidth; cv.height=v.videoHeight; cv.getContext('2d').drawImage(v,0,0);
+        cv.toBlob(b => { currentFile=new File([b],'capture.jpg',{type:'image/jpeg'}); previewImg.src=cv.toDataURL('image/jpeg',0.9); previewName.textContent='capture.jpg'; previewWrap.style.display='flex'; dropZone.style.display='none'; closeCamera(); },'image/jpeg',0.9);
     });
+    document.getElementById('btnCancelCamera').addEventListener('click', e => { e.preventDefault(); closeCamera(); });
+    document.getElementById('btnCameraFallback').addEventListener('click', e => { e.preventDefault(); closeCamera(); fileInput.click(); });
+    function closeCamera() { if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;} document.getElementById('cameraModal').classList.remove('active'); }
 
-    // TASK 5: Load Data from Firestore on Init
-    function loadInventory() {
-      console.log('Setting up real-time listener for inventory...');
-      const unsubscribe = db.collection("inventory")
-        .orderBy("lastUpdated", "desc")
-        .onSnapshot((snapshot) => {
-          console.log('Received snapshot with', snapshot.size, 'documents');
-          inventory = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          renderTable();
-        }, (error) => {
-          console.error("Error loading data from Firestore: ", error);
-          if (error.code === 'failed-precondition') {
-            console.warn("Index might be missing, falling back to unordered snapshot");
-            db.collection("inventory").onSnapshot((snapshot) => {
-              inventory = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-              }));
-              renderTable();
+    // ========== CLASSIFY WITH AI ==========
+    document.getElementById('btnClassify').addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        console.log('CLASSIFY BUTTON CLICKED');
+
+        if (!currentFile) { toast('Upload an image first.','warning'); return; }
+
+        const btn = this;
+        const spinner = document.getElementById('spinner');
+        const txt = btn.querySelector('span');
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        txt.textContent = 'Classifying...';
+
+        try {
+            // Wait for auth to be ready
+            let user = auth.currentUser;
+            if (!user) {
+                // Wait up to 3 seconds for auth
+                user = await new Promise((resolve, reject) => {
+                    const unsub = onAuthStateChanged(auth, u => { unsub(); resolve(u); });
+                    setTimeout(() => reject(new Error('Auth timeout')), 3000);
+                });
+            }
+            if (!user) { toast('Please log in first.','error'); return; }
+            
+            console.log('Getting token for:', user.email);
+            const token = await user.getIdToken();
+
+            const fd = new FormData();
+            fd.append('image', currentFile);
+
+            console.log('Sending to:', API_URL + '/api/classify-yolo');
+            const res = await fetch(API_URL + '/api/classify-yolo', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token },
+                body: fd
             });
-          }
-        });
-      return unsubscribe;
-    }
 
+            console.log('Response status:', res.status);
+            const data = await res.json();
+            console.log('Response data:', data);
+            
+            if (!res.ok) throw new Error(data.error || 'Server error ' + res.status);
+            if (data.error) { toast(data.error, 'warning'); return; }
+
+            // Show result
+            aiData = data;
+            const tags = document.getElementById('aiTags');
+            tags.innerHTML = '<div class="ai-tag"><strong>Item:</strong> '+esc(data.item_name)+'</div>'
+                + '<div class="ai-tag"><strong>Category:</strong> '+esc(data.category)+'</div>'
+                + '<div class="ai-tag"><strong>Condition:</strong> '+esc(data.condition)+'</div>'
+                + '<div class="ai-tag"><strong>Confidence:</strong> '+esc(data.confidence)+(data.confidence_score?' ('+data.confidence_score+'%)':'')+'</div>'
+                + '<div class="ai-tag" style="background:#eff6ff;color:#1e40af;border-color:#93c5fd;"><strong>Engine:</strong> YOLO</div>';
+            document.getElementById('aiNote').textContent = data.notes || '';
+            document.getElementById('aiResult').style.display = 'block';
+            toast('Classification complete!', 'success');
+
+        } catch(err) {
+            console.error('Classify error:', err);
+            toast('Classification failed: ' + err.message, 'error');
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            txt.textContent = 'Classify with AI';
+        }
+    });
+
+    // Apply result to form
+    document.getElementById('btnApplyResult').addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        if(!aiData) return;
+        document.getElementById('newItemName').value = aiData.item_name || '';
+        document.getElementById('newItemCategory').value = aiData.category || 'Metal';
+        document.getElementById('newItemCondition').value = aiData.condition || 'Good';
+        document.querySelector('.add-form-section').scrollIntoView({behavior:'smooth'});
+        toast('Form filled with AI result.','success');
+    });
+
+    // Save item
+    document.getElementById('btnSaveItem').addEventListener('click', async e => {
+        e.preventDefault(); e.stopPropagation();
+        const name = document.getElementById('newItemName').value.trim();
+        const cat = document.getElementById('newItemCategory').value;
+        const wt = parseFloat(document.getElementById('newItemQty').value) || 0;
+        const cond = document.getElementById('newItemCondition').value;
+        if(!name){toast('Enter item name.','warning');return;}
+        if(wt<=0){toast('Enter valid weight.','warning');return;}
+        const btn = document.getElementById('btnSaveItem');
+        btn.disabled=true; btn.textContent='Saving...';
+        try {
+            await addDoc(collection(db,'inventory'),{itemName:name,category:cat,weight:wt,condition:cond,lastUpdated:serverTimestamp(),updatedBy:auth.currentUser?.email||'Staff'});
+            toast('Item saved!','success');
+            document.getElementById('newItemName').value='';
+            document.getElementById('newItemQty').value='';
+        } catch(err) { toast('Save failed: '+err.message,'error'); }
+        finally { btn.disabled=false; btn.textContent='Save Item to Inventory'; }
+    });
+
+    // Inventory
+    function loadInventory() {
+        const q = query(collection(db,'inventory'), orderBy('lastUpdated','desc'));
+        onSnapshot(q, snap => { inventory=snap.docs.map(d=>({id:d.id,...d.data()})); renderTable(); },
+        () => { onSnapshot(collection(db,'inventory'), snap => { inventory=snap.docs.map(d=>({id:d.id,...d.data()})); renderTable(); }); });
+    }
     function renderTable() {
-      const tbody = document.getElementById('inventoryBody');
-      if (!tbody) return;
-
-      let filteredItems = inventory;
-      if (currentCategoryFilter !== 'All') {
-        filteredItems = inventory.filter(item => item.category === currentCategoryFilter);
-      }
-
-      if (filteredItems.length > 0) {
-        tbody.innerHTML = filteredItems.map((item) => {
-          const displayWeight = item.weight !== undefined ? item.weight : item.quantity !== undefined ? item.quantity : 0;
-          const date = item.lastUpdated ? (item.lastUpdated.seconds ? new Date(item.lastUpdated.seconds * 1000) : new Date(item.lastUpdated)) : null;
-          const dateStr = date ? date.toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
-          
-          return `
-            <tr>
-              <td>${escapeHtml(item.itemName || item.name || 'Unknown')}</td>
-              <td><span class="badge badge-${escapeHtml((item.category || 'Metal').toLowerCase())}">${escapeHtml(item.category || 'Metal')}</span></td>
-              <td>${escapeHtml(String(displayWeight))} kg</td>
-              <td><span class="badge badge-${escapeHtml((item.condition || 'Good').toLowerCase())}">${escapeHtml(item.condition || 'Good')}</span></td>
-              <td>${dateStr}</td>
-            </tr>
-          `;
+        const tbody = document.getElementById('inventoryBody');
+        let items = categoryFilter==='All' ? inventory : inventory.filter(i=>i.category===categoryFilter);
+        if(!items.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;color:#718096;">No items.</td></tr>';return;}
+        tbody.innerHTML = items.map(i => {
+            const w=i.weight??i.quantity??0;
+            const d=i.lastUpdated?.seconds?new Date(i.lastUpdated.seconds*1000):null;
+            return '<tr><td>'+esc(i.itemName||i.name||'?')+'</td><td>'+esc(i.category||'')+'</td><td>'+w+' kg</td><td>'+esc(i.condition||'')+'</td><td>'+(d?d.toLocaleDateString():'N/A')+'</td></tr>';
         }).join('');
-        return;
-      }
-
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="5">${currentCategoryFilter === 'All' ? 'No items yet. Add your first scrap item above.' : 'No items found in this category.'}</td></tr>`;
     }
 
-    function initStaffInventoryPage() {
-      // Check auth state
-      auth.onAuthStateChanged(user => {
-        if (!user) {
-          window.location.href = 'login.html';
-          return;
-        }
-        
-        // Load sidebar info
-        db.collection('users').doc(user.uid).get().then(doc => {
-          if (doc.exists) {
-            const userData = doc.data();
-            document.getElementById('profileName').textContent = userData.fullName || userData.name || 'Staff User';
-            document.getElementById('profileRole').textContent = userData.role || 'Staff';
-            if (userData.fullName || userData.name) {
-              const name = userData.fullName || userData.name;
-              document.getElementById('profileInitial').textContent = name.charAt(0).toUpperCase();
-            }
-          }
-        });
-      });
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active'); categoryFilter=b.dataset.category; renderTable();
+    }));
 
-      const btn = document.getElementById('btnClassify');
-      const spinner = document.getElementById('spinner');
-      if (btn) {
-        btn.disabled = false;
-        const span = btn.querySelector('span');
-        if (span) span.textContent = 'Classify with AI';
-      }
-      if (spinner) spinner.style.display = 'none';
-      loadInventory();
-    }
+    // Auth init
+    onAuthStateChanged(auth, async user => {
+        if(!user){window.location.href='login.html';return;}
+        try{const s=await getDoc(doc(db,'users',user.uid));if(s.exists()){const d=s.data();
+        const n=d.fullName||d.name||'Staff';
+        document.getElementById('profileName').textContent=n;
+        document.getElementById('profileRole').textContent=d.role||'Staff';
+        document.getElementById('profileInitial').textContent=n.charAt(0).toUpperCase();}}catch(e){}
+    });
+    loadInventory();
 
-    initStaffInventoryPage();
-  </script>
+    // Date/time
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US',{timeZone:'Asia/Manila',weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    setInterval(()=>{document.getElementById('currentTime').textContent=new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',second:'2-digit'});},1000);
+    </script>
+    <script type="module" src="authRedirect.js"></script>
     <script>
-        const dateEl = document.getElementById('currentDate');
-        if (dateEl) {
-            dateEl.textContent = new Date().toLocaleDateString('en-US', { timeZone:'Asia/Manila', weekday:'long', year:'numeric', month:'long', day:'numeric' });
-        }
-        function updatePhTime() {
-            const timeEl = document.getElementById('currentTime');
-            if (timeEl) {
-                timeEl.textContent = new Date().toLocaleTimeString('en-US', { timeZone:'Asia/Manila', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    // BACKUP: If the module script failed to load, this ensures the classify button works
+    window.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('btnClassify');
+        if (!btn) return;
+        
+        // Wait 2 seconds for module to load, then check if it attached
+        setTimeout(function() {
+            // If module loaded successfully, window._firebaseAuth will exist
+            if (window._firebaseAuth) {
+                console.log('Module loaded - classify button should work via module handler');
+                return;
             }
-        }
-        updatePhTime();
-        setInterval(updatePhTime, 1000);
+            
+            // Module failed! Attach a direct handler
+            console.warn('Module did NOT load. Attaching direct classify handler.');
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                alert('Firebase module failed to load. Check browser console for errors.\n\nMake sure you are serving the page via a local web server (Live Server), not opening the file directly.');
+            });
+        }, 2000);
+    });
     </script>
 </body>
 </html>
- 
- 
