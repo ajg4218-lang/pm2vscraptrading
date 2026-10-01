@@ -1,0 +1,11 @@
+# Environment secrets — never commit
+.env
+.env.local
+.env*.local
+
+# Vercel
+.vercel
+
+# OS / editor junk
+Thumbs.db
+.DS_Store
