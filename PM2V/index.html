@@ -10222,15 +10222,38 @@
       const isSecretary = r === 'secretary';
       const elevated    = isOwner || isSecretary;
 
-      ['tab-tx-history', 'tab-daily-exp', 'tab-exp-history'].forEach(tabId => {
+      // Secretary: all 4 tabs. Owner: history tabs only (no manual record forms. Staff: daily only.
+      const txTabVisibility = {
+        'tab-daily-tx':    !isOwner,
+        'tab-tx-history':    elevated,
+        'tab-daily-exp':  !isOwner,
+        'tab-exp-history': elevated
+      };
+
+      Object.keys(txTabVisibility).forEach(tabId => {
+        const show  = txTabVisibility[tabId];
         const btn   = document.querySelector(`.pm2v-tab-btn[data-tab="${tabId}"]`);
         const panel = document.getElementById(tabId);
-        if (btn)   btn.style.display   = elevated ? '' : 'none';
-        if (panel) panel.style.display = elevated ? '' : 'none';
+        if (btn)   btn.style.display   = show ? '' : 'none';
+        if (panel && panel.style) panel.style.display = '';
+      });
+      // For hidden panels should stay hidden regardless of active state
+      Object.keys(txTabVisibility).forEach(tabId => {
+        if (!txTabVisibility[tabId]) {
+          const panel = document.getElementById(tabId);
+          if (panel) panel.style.display = 'none';
+        }
       });
 
-      if (!elevated) {
-        const activePanel = document.querySelector('.pm2v-tab-panel.active');
+      // Default active tab correction based on role
+      const activePanel = document.querySelector('.pm2v-tab-panel.active');
+      if (isOwner) {
+        // Owner always starts on Transaction History; never on record-only tabs
+        if (!activePanel || ['tab-daily-tx', 'tab-daily-exp'].includes(activePanel.id)) {
+          pm2vSwitchTab('tab-tx-history');
+        }
+      } else if (!elevated) {
+        // Staff: stays on Daily Transactions when navigating away from forbidden tabs
         if (activePanel && ['tab-tx-history', 'tab-daily-exp', 'tab-exp-history'].includes(activePanel.id)) {
           pm2vSwitchTab('tab-daily-tx');
         }
