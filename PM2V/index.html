@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PM2V CURRENT BASELINE / SOURCE OF TRUTH - VERSION V19: Professional split-screen public landing/login, left pm2v-shop.jpg storefront photo with brand overlay, right pm2v-logo.png logo with inline Email/Password login, login attempts counter, Forgot password, Sign In, and Apply for Access. All login element IDs and Firebase auth flows preserved. This is the current baseline/source of truth and replaces V18. -->
+<!-- PM2V CURRENT BASELINE / SOURCE OF TRUTH - VERSION V20: Professional split-screen public landing/login, left pm2v-shop.jpg storefront photo with brand overlay, right pm2v-logo.png logo with inline Email/Password login, login attempts counter, Forgot password, and Sign In. Accounts are created by the Owner in User Management. This replaces V19. -->
 
 <html lang="en">
 
@@ -2198,130 +2198,6 @@
       color: #146b35
     }
 
-    /* Public application modal */
-    #pm2vAccessModal {
-      position: fixed;
-      inset: 0;
-      z-index: 21000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: rgba(5, 25, 16, .56);
-      backdrop-filter: blur(7px)
-    }
-
-    #pm2vAccessModal.open {
-      display: flex
-    }
-
-    .pm2v-access-card {
-      position: relative;
-      width: min(474px, 100%);
-      background: #fff;
-      border-radius: 22px;
-      padding: 31px 34px 34px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, .26);
-      max-height: calc(100vh - 40px);
-      overflow: auto
-    }
-
-    .pm2v-access-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      align-items: flex-start;
-      margin-bottom: 20px
-    }
-
-    .pm2v-access-head h2 {
-      margin: 0;
-      color: #172235;
-      font-size: 24px;
-      letter-spacing: -.4px
-    }
-
-    .pm2v-access-sub {
-      margin: 7px 0 0;
-      color: #77879c;
-      font-size: 13px
-    }
-
-    .pm2v-access-close {
-      border: 0;
-      background: #f1f5f8;
-      color: #8293a8;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      font-size: 22px;
-      cursor: pointer
-    }
-
-    .pm2v-access-form {
-      display: grid;
-      gap: 14px
-    }
-
-    .pm2v-access-form label {
-      font-size: 11px;
-      color: #4e6076;
-      font-weight: 900;
-      letter-spacing: .7px
-    }
-
-    .pm2v-access-form input,
-    .pm2v-access-form select {
-      width: 100%;
-      height: 51px;
-      margin-top: 7px;
-      border: 1px solid #d7e0e9;
-      border-radius: 11px;
-      padding: 0 13px;
-      color: #24364d;
-      background: #fbfcfd;
-      outline: none;
-      font-size: 14px
-    }
-
-    .pm2v-access-form input:focus,
-    .pm2v-access-form select:focus {
-      border-color: #149149;
-      box-shadow: 0 0 0 4px rgba(20, 145, 73, .08);
-      background: #fff
-    }
-
-    .pm2v-role-info {
-      padding: 13px 14px;
-      border: 1px solid #dfe7ee;
-      border-radius: 10px;
-      color: #61748b;
-      font-size: 12px;
-      line-height: 1.55;
-      background: #fbfcfd
-    }
-
-    .pm2v-role-info strong {
-      color: #11713b
-    }
-
-    .pm2v-access-submit {
-      height: 53px;
-      border: 0;
-      border-radius: 11px;
-      background: #146d35;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 900;
-      cursor: pointer;
-      margin-top: 1px
-    }
-
-    .pm2v-access-submit:disabled {
-      opacity: .65;
-      cursor: wait
-    }
-
     .pm2v-access-msg {
       min-height: 18px;
       text-align: center;
@@ -2572,11 +2448,6 @@
         padding-top: 15px;
         font-size: 10px;
         line-height: 1.45
-      }
-
-      .pm2v-access-card {
-        padding: 22px 18px;
-        border-radius: 18px
       }
 
       .login-screen {
@@ -8261,6 +8132,7 @@
       color: #fff;
       margin-bottom: 22px;
     }
+    #reports [hidden] { display: none !important; }
     .pm2v-daily-header-left h2 {
       margin: 0 0 4px;
       font-size: 20px;
@@ -8803,11 +8675,10 @@
                   <circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.8"></circle>
                 </svg></button></div>
             <button class="login-forgot" id="forgotBtn" type="button">Forgot password?</button>
-            <button class="login-submit" id="loginBtn" type="submit">Sign In &#8594;</button>
+            <button class="login-submit" id="loginBtn" type="submit">Log in &#8594;</button>
             <div class="login-message" id="loginMessage"></div>
           </form>
-          <div class="pm2v-auth-apply"><em>Don&#8217;t have an access? <button id="openAccessBtn" type="button">Apply
-                for Access.</button></em></div>
+
         </section>
       </div>
       <section aria-label="PM2V frequently asked questions" class="pm2v-faq-view" hidden id="pm2vFaqView">
@@ -8849,16 +8720,14 @@
                   <li><b>Physical Inventory</b> &#8212; add and update every scrap item (category, weight, status).</li>
                   <li><b>Transactions</b> &#8212; record each scrap purchase or sale so nothing goes untracked.</li>
                   <li><b>Reports</b> &#8212; review inventory totals and activity over time.</li>
-                  <li><b>User Management</b> (Owner only) &#8212; approve access requests and manage accounts.</li>
+                  <li><b>User Management</b> (Owner only) &#8212; create and manage staff and secretary accounts.</li>
                 </ul>
               </div>
             </div>
             <div class="pm2v-faq-item"><button class="pm2v-faq-q" type="button"><span>How do I get an
                   account?</span><span aria-hidden="true" class="pm2v-faq-chev">&#8250;</span></button>
               <div class="pm2v-faq-a">
-                <p>Accounts are created through owner approval. Click <b>&#8220;Apply for Access.&#8221;</b> under the
-                  Sign In form, submit your full name, email, and role, then wait. Once the owner approves your
-                  application, you can sign in with your email and password.</p>
+                <p>Accounts are created directly by the Owner. Ask your PM2V Owner to set up your Staff or Secretary account, then sign in with the email and password they provide.</p>
               </div>
             </div>
             <div class="pm2v-faq-item"><button class="pm2v-faq-q" type="button"><span>What do the stock statuses
@@ -8873,17 +8742,17 @@
                   aria-hidden="true" class="pm2v-faq-chev">&#8250;</span></button>
               <div class="pm2v-faq-a">
                 <p><b>Owner</b> &#8212; full control: inventory, transactions, and reports, plus User Management
-                  (approving access requests, assigning roles, managing accounts). <b>Secretary</b> &#8212; inventory,
-                  transactions, and reports. <b>Staff</b> &#8212; dashboard, physical inventory, and profile. Your
-                  sidebar only shows the pages your role can open.</p>
+                  (creating Secretary and Staff accounts, assigning roles, managing accounts). <b>Secretary</b>
+                  &#8212; inventory, transactions, and reports. <b>Staff</b> &#8212; dashboard, physical inventory,
+                  and profile. Your sidebar only shows the pages your role can open.</p>
               </div>
             </div>
             <div class="pm2v-faq-item"><button class="pm2v-faq-q" type="button"><span>My sign-in is not working. What
                   now?</span><span aria-hidden="true" class="pm2v-faq-chev">&#8250;</span></button>
               <div class="pm2v-faq-a">
-                <p>First, confirm the owner has approved your account &#8212; pending applications cannot sign in yet.
-                  Already approved? Use <b>&#8220;Forgot password?&#8221;</b> to reset it via your email, or ask the
-                  owner to check your account under User Management.</p>
+                <p>First, confirm the Owner has created your Staff or Secretary account in User Management. If you
+                  already have an account, use <b>&#8220;Forgot password?&#8221;</b> to reset it via your email, or ask
+                  the Owner to check your account under User Management.</p>
               </div>
             </div>
             <div class="pm2v-faq-item"><button class="pm2v-faq-q" type="button"><span>How do I update my name or
@@ -8902,35 +8771,11 @@
               </div>
             </div>
           </div>
-          <div class="pm2v-faq-cta"><button id="pm2vFaqLoginCta" type="button">Go to Sign In</button><button
-              id="pm2vFaqApplyCta" type="button">Apply for Access</button></div>
+          <div class="pm2v-faq-cta"><button id="pm2vFaqLoginCta" type="button">Go to Sign In</button></div>
         </div>
       </section>
       <footer class="pm2v-landing-foot"><span><strong>PM2V Scrap Trading</strong> - Smart Inventory. Sustainable
           Future.</span><span>&#169; 2026 PM2V Scrap Trading. All Rights Reserved.</span></footer>
-    </div>
-    <div aria-hidden="true" id="pm2vAccessModal">
-      <div aria-labelledby="pm2vAccessTitle" aria-modal="true" class="pm2v-access-card" role="dialog">
-        <div class="pm2v-access-head">
-          <div>
-            <h2 id="pm2vAccessTitle">Apply for Access</h2>
-            <p class="pm2v-access-sub">Submit your application for review</p>
-          </div>
-          <button aria-label="Close" class="pm2v-access-close" id="closeAccessBtn" type="button">×</button>
-        </div>
-        <form class="pm2v-access-form" id="accessForm">
-          <label>FULL NAME<input id="accessFullName" placeholder="Enter your full name" required=""
-              type="text" /></label>
-          <label>EMAIL ADDRESS<input id="accessEmail" placeholder="Enter your email" required="" type="email" /></label>
-          <label>REQUESTED ROLE<select id="accessRole" required="">
-              <option disabled="" selected="" value="">Select a role</option>
-              <option value="staff">Staff</option>
-              <option value="secretary">Secretary</option>
-            </select></label>
-          <div class="pm2v-access-msg" id="accessMessage"></div>
-          <button class="pm2v-access-submit" id="accessSubmitBtn" type="submit">Submit Application</button>
-        </form>
-      </div>
     </div>
   </div>
   <div class="auth-loading" id="authLoading">
@@ -8939,7 +8784,7 @@
     </div>
   </div>
   <div class="app">
-    <aside class="sidebar">
+    <aside aria-label="Primary navigation" class="sidebar" id="primarySidebar">
       <div class="logo-wrap"><img alt="PM2V Scrap Trading" class="logo" src="pm2v-logo.png" /></div>
       <div class="user-card">
         <div class="avatar">N</div>
@@ -9019,7 +8864,15 @@
             <div class="mobile-header-clock" aria-live="polite" id="mobileClock">—</div>
           </div>
         </div>
+        <button aria-controls="primarySidebar" aria-expanded="false" aria-label="Open navigation menu"
+          class="mobile-menu-toggle" id="mobileMenuToggle" type="button">
+          <svg aria-hidden="true" fill="none" viewbox="0 0 24 24">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+          </svg>
+        </button>
       </div>
+      <button aria-label="Close navigation menu" class="mobile-drawer-backdrop" hidden
+        id="mobileMenuBackdrop" type="button"></button>
       <!-- DASHBOARD -->
       <section class="page active" id="dashboard">
         <section class="dashboard-stats">
@@ -9298,7 +9151,6 @@
           </div>
           <div class="date" id="transactionsDate"></div>
         </div>
-
         <!-- MODULE TABS -->
         <div class="pm2v-tabs" id="pm2vTxTabs" role="tablist" aria-label="Transaction modules">
           <button class="pm2v-tab-btn active" data-tab="tab-daily-tx" role="tab" aria-selected="true" type="button">Daily Transactions</button>
@@ -9355,7 +9207,7 @@
                 <input id="txAmount" min="0" placeholder="e.g. 20, 5, 150–170" step="0.01" type="number" />
               </div>
               <!-- Row 2: Date → Notes (Buyer/Customer removed from UI) -->
-              <div class="pm2v-form-group">
+              <div class="pm2v-form-group role-owner">
                 <label for="txDate">Date</label>
                 <input id="txDate" type="date" />
               </div>
@@ -9457,6 +9309,10 @@
             <!-- Mobile list (existing mobile card renderer reuses txMobileList) -->
             <div aria-live="polite" class="tx-mobile-list" id="txMobileList">
               <div class="tx-empty-state">Loading transactions…</div>
+            </div>
+            <div class="pm2v-expense-total-row pm2v-history-total-row">
+              <span>Total Transactions Amount (₱)</span>
+              <strong id="pm2vHistoryTxTotal">₱0.00</strong>
             </div>
           </div>
 
@@ -9586,6 +9442,10 @@
             </div>
             <!-- Mobile cards -->
             <div class="pm2v-mobile-cards" id="pm2vHistoryExpCards"></div>
+            <div class="pm2v-expense-total-row pm2v-history-total-row">
+              <span>Total Expenses Amount (₱)</span>
+              <strong id="pm2vHistoryExpTotal">₱0.00</strong>
+            </div>
           </div>
 
         </div><!-- /tab-exp-history -->
@@ -9597,13 +9457,10 @@
           <div>
             <h1>Reports</h1>
           </div>
-          <div class="report-topbar-actions"><button type="button" class="report-export-btn" id="reportExportPdf"
-              title="Download the full filtered report as a PDF file">Export PDF</button>
-            <div class="date" id="reportsDate"></div>
-          </div>
+          <div class="date" id="reportsDate"></div>
         </div>
         <div class="report-dashboard-v7">
-          <div class="report-grid report-kpi-grid">
+          <div class="report-grid report-kpi-grid" hidden>
             <button class="role-card report-kpi-card report-kpi-action" data-report-action="all" type="button">
               <div class="report-kpi-label">Total Items</div>
               <div class="report-kpi-value" id="rTotal">0</div>
@@ -9657,7 +9514,35 @@
             </div>
           </section>
 
-          <section class="report-section-card report-filter-card" aria-label="Report filters">
+          <section class="report-section-card report-financial-total-section" aria-label="Financial totals">
+            <div class="report-section-card-header"><div><h2>Financial Totals</h2><p>Calculated from all saved transaction and expense records.</p></div></div>
+            <div class="report-grid report-kpi-grid financial-total-grid">
+              <div class="role-card report-kpi-card"><div class="report-kpi-label">Total Transaction Amount</div><div class="report-kpi-value" id="reportsTransactionTotal">₱0.00</div></div>
+              <div class="role-card report-kpi-card"><div class="report-kpi-label">Total Expenses Amount</div><div class="report-kpi-value" id="reportsExpenseTotal">₱0.00</div></div>
+            </div>
+          </section>
+
+          <section class="report-section-card report-history-card" aria-label="Transaction history">
+            <div class="report-section-card-header"><div><h2>Transaction History</h2><p id="reportTransactionHistoryCount">All recorded transactions</p></div></div>
+            <div class="role-table-wrap"><table class="role-table"><thead><tr><th>DATE</th><th>ITEM</th><th>TYPE</th><th>QUANTITY</th><th>AMOUNT</th></tr></thead><tbody id="reportTransactionsBody"></tbody></table></div>
+          </section>
+
+          <section class="report-section-card report-history-card" aria-label="Expense history">
+            <div class="report-section-card-header"><div><h2>Expense History</h2><p id="reportExpenseHistoryCount">All recorded expenses</p></div></div>
+            <div class="role-table-wrap"><table class="role-table"><thead><tr><th>DATE</th><th>DESCRIPTION</th><th>NOTES</th><th>AMOUNT</th></tr></thead><tbody id="reportExpensesBody"></tbody></table></div>
+          </section>
+
+          <section class="report-section-card report-history-card" aria-label="Monthly reports">
+            <div class="report-section-card-header"><div><h2>Monthly Reports</h2><p>Transaction and expense totals by saved record month.</p></div></div>
+            <div class="role-table-wrap"><table class="role-table"><thead><tr><th>MONTH</th><th>TOTAL TRANSACTIONS</th><th>TOTAL EXPENSES</th></tr></thead><tbody id="reportMonthlyBody"></tbody></table></div>
+          </section>
+
+          <section class="report-section-card report-history-card" aria-label="Yearly reports">
+            <div class="report-section-card-header"><div><h2>Yearly Reports</h2><p>Transaction and expense totals by saved record year.</p></div></div>
+            <div class="role-table-wrap"><table class="role-table"><thead><tr><th>YEAR</th><th>TOTAL TRANSACTIONS</th><th>TOTAL EXPENSES</th></tr></thead><tbody id="reportYearlyBody"></tbody></table></div>
+          </section>
+
+          <section class="report-section-card report-filter-card" aria-label="Report filters" hidden>
             <button class="report-filter-toggle" id="reportFilterToggle" type="button" aria-expanded="true"
               aria-controls="reportFilterContent">
               <span><strong>Report Filters</strong><small>Filter inventory and trading records</small></span><span
@@ -9693,7 +9578,7 @@
             </div>
           </section>
 
-          <div class="report-analytics-grid">
+          <div class="report-analytics-grid" hidden>
             <section class="report-section-card report-chart-card">
               <div class="report-section-card-header">
                 <div>
@@ -9727,7 +9612,7 @@
             </section>
           </div>
 
-          <section class="report-section-card report-activity-card">
+          <section class="report-section-card report-activity-card" hidden>
             <div class="report-section-card-header">
               <div>
                 <h2>Trading Activity</h2>
@@ -9746,7 +9631,7 @@
           </section>
 
 
-          <section class="report-section-card report-category-v7">
+          <section class="report-section-card report-category-v7" hidden>
             <div class="report-section-card-header">
               <div>
                 <h2>Material Category Breakdown</h2>
@@ -9778,24 +9663,34 @@
           <div class="date" id="usersDate"></div>
         </div>
         <section class="role-card" style="margin-bottom:18px">
-          <h2 class="card-title">Manage Users</h2>
-          <div style="overflow:auto">
-            <table class="role-table">
-              <thead>
-                <tr>
-                  <th>NAME</th>
-                  <th>EMAIL</th>
-                  <th>STATUS</th>
-                  <th>ACTION</th>
-                </tr>
-              </thead>
-              <tbody id="applicantBody">
-                <tr>
-                  <td class="empty-role" colspan="4">Loading applicants…</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <h2 class="card-title">Create User</h2>
+          <form class="pm2v-create-user-form" id="createUserForm">
+            <div class="pm2v-tx-form-grid" style="gap:12px;margin-bottom:10px">
+              <div class="pm2v-form-group">
+                <label for="newUserName">Full Name</label>
+                <input id="newUserName" placeholder="e.g. Maria Santos" required="" type="text" />
+              </div>
+              <div class="pm2v-form-group">
+                <label for="newUserEmail">Email</label>
+                <input id="newUserEmail" placeholder="name@gmail.com" required="" type="email" />
+              </div>
+              <div class="pm2v-form-group">
+                <label for="newUserPassword">Password</label>
+                <input id="newUserPassword" minlength="6" placeholder="At least 6 characters" required="" type="password" autocomplete="new-password" />
+              </div>
+              <div class="pm2v-form-group">
+                <label for="newUserRole">Role</label>
+                <select id="newUserRole" required="">
+                  <option value="staff">Staff</option>
+                  <option value="secretary">Secretary</option>
+                </select>
+              </div>
+            </div>
+            <div class="pm2v-create-user-foot">
+              <div class="pm2v-access-msg" id="createUserMessage"></div>
+              <button class="pm2v-save-btn" id="createUserBtn" type="submit" style="min-width:180px">+ Create Account</button>
+            </div>
+          </form>
         </section>
         <section class="role-card">
           <h2 class="card-title">Current Users</h2>
@@ -9884,9 +9779,9 @@
           </div>
         </section>
         <div class="profile-actions">
-          <button class="profile-action profile-edit" id="profileEditBtn" type="button">♧   Edit Profile</button>
-          <button class="profile-action profile-password" id="changePasswordBtn">♧   Change Password</button>
-          <button class="profile-action profile-password" id="mobileProfileLogoutBtn" type="button">↪   Log Out</button>
+          <button class="profile-action profile-edit" id="profileEditBtn" type="button">Edit Profile</button>
+          <button class="profile-action profile-password" id="changePasswordBtn">Change Password</button>
+          <button class="profile-action profile-password" id="mobileProfileLogoutBtn" type="button">Log Out</button>
         </div>
       </section>
       <nav aria-label="Mobile navigation" class="mobile-bottom-nav">
@@ -10000,11 +9895,12 @@
         const body = document.getElementById('inventoryTableBody'), dash = document.getElementById('dashboardInventoryBody');
         const role = String(PM2V_PROFILE?.role || '').trim().toLowerCase();
         const canManage = role === 'secretary' || role === 'owner';
-        const canCreate = role === 'staff';
         const actionHead = document.getElementById('inventoryActionsHeader');
         if (actionHead) actionHead.style.display = canManage ? '' : 'none';
         const manualToggle = document.getElementById('manualEntryToggle');
-        if (manualToggle) manualToggle.style.display = canCreate ? '' : 'none';
+        if (manualToggle) manualToggle.style.display = 'none';
+        const scannerApply = document.getElementById('aiApplyBtn');
+        if (scannerApply) scannerApply.style.display = role === 'staff' ? 'none' : '';
 
         const activeRows = rows.filter(x => !x.archived);
         const archivedRows = rows.filter(x => x.archived);
@@ -10043,13 +9939,13 @@
         if (summaryCount) summaryCount.textContent = String(activeRows.length);
         if (summaryWeight) summaryWeight.textContent = activeRows.reduce((sum, x) => sum + pm2vNum(x.weight), 0).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' kg';
         const writeSection = document.getElementById('inventoryWriteSection');
-        if (writeSection && !document.body.classList.contains('inventory-editing')) writeSection.style.display = canCreate ? '' : 'none';
+        if (writeSection && !document.body.classList.contains('inventory-editing')) writeSection.style.display = 'none';
       } catch (e) { console.error(e); toast('Could not load inventory. Check Firestore rules.', 'error') }
     }
 
     async function saveInventory() {
       const role = String(PM2V_PROFILE?.role || '').trim().toLowerCase();
-      if (role !== 'staff') { toast('Only staff can create new inventory items.', 'error'); return }
+      if (!['secretary', 'owner'].includes(role)) { toast('Only secretary and owner can add new inventory items.', 'error'); return }
       const name = document.getElementById('inventoryItemName')?.value.trim();
       const category = document.getElementById('inventoryCategory')?.value;
       const weight = pm2vNum(document.getElementById('inventoryWeight')?.value, NaN);
@@ -10290,7 +10186,7 @@
         await loadTransactions();
         await loadReports();
         await loadExpenses();
-        if (role === 'owner') { await loadApplicants(); await loadUsers(); }
+        if (role === 'owner') { await loadUsers(); }
       }
       document.body.classList.remove('auth-pending');
       document.getElementById('authLoading')?.remove();
@@ -10313,21 +10209,6 @@
       if (c.includes('network-request-failed')) return 'Network error. Check your internet connection.';
       return e?.message || 'Unable to sign in.';
     }
-    function closeAccessModal() {
-      const modal = document.getElementById('pm2vAccessModal');
-      if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
-    }
-    function openAccessModal() {
-      const modal = document.getElementById('pm2vAccessModal');
-      if (!modal) return;
-      document.getElementById('accessMessage').textContent = '';
-      document.getElementById('accessMessage').className = 'pm2v-access-msg';
-      modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
-      setTimeout(() => document.getElementById('accessFullName')?.focus(), 80);
-    }
-    document.getElementById('openAccessBtn')?.addEventListener('click', openAccessModal);
-    document.getElementById('closeAccessBtn')?.addEventListener('click', closeAccessModal);
-    document.getElementById('pm2vAccessModal')?.addEventListener('click', e => { if (e.target.id === 'pm2vAccessModal') closeAccessModal() });
     function openPM2VFaq() {
       const view = document.getElementById('pm2vFaqView'), card = document.getElementById('pm2vAuthCard');
       if (!view) return;
@@ -10345,7 +10226,6 @@
     document.getElementById('pm2vFaqBtn')?.addEventListener('click', togglePM2VFaq);
     document.getElementById('pm2vFaqBack')?.addEventListener('click', closePM2VFaq);
     document.getElementById('pm2vFaqLoginCta')?.addEventListener('click', () => { closePM2VFaq(); setTimeout(() => document.getElementById('loginEmail')?.focus(), 60) });
-    document.getElementById('pm2vFaqApplyCta')?.addEventListener('click', openAccessModal);
     document.querySelectorAll('#pm2vFaqView .pm2v-faq-q').forEach(q => q.addEventListener('click', () => q.closest('.pm2v-faq-item')?.classList.toggle('open')));
     document.getElementById('pm2vNavLogin')?.addEventListener('click', () => { closePM2VFaq(); document.getElementById('loginEmail')?.focus() });
     function applyProfile(user, p) {
@@ -10371,7 +10251,6 @@
       document.getElementById('profileLastSignIn')?.replaceChildren(document.createTextNode(fmtDateTime(user.metadata?.lastSignInTime)));
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAccessModal() });
     document.getElementById('loginPasswordToggle')?.addEventListener('click', () => {
       const input = document.getElementById('loginPassword'), btn = document.getElementById('loginPasswordToggle');
       if (!input) return; const show = input.type === 'password'; input.type = show ? 'text' : 'password'; btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
@@ -10380,41 +10259,21 @@
     const pm2vLoginModal = document.getElementById('pm2vLoginModal');
     function openPM2VLogin() { document.getElementById('loginEmail')?.focus() }
     function closePM2VLogin() { }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAccessModal(); closePM2VFaq(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePM2VFaq() });
 
     document.querySelectorAll('[data-login-info]').forEach(a => a.addEventListener('click', e => {
       e.preventDefault();
       const key = a.dataset.loginInfo;
-      const text = { about: 'PM2V Scrap Trading — smart inventory and sustainable scrap management.', faqs: 'For access questions, use Apply for Access and wait for owner approval.', privacy: 'Your PM2V account information is used to authenticate and manage your access.', terms: 'Use of PM2V is subject to your organization’s account and access policies.' }[key] || 'PM2V Scrap Trading';
+      const text = { about: 'PM2V Scrap Trading — smart inventory and sustainable scrap management.', faqs: 'For access questions, contact your PM2V Owner to have your Staff or Secretary account created.', privacy: 'Your PM2V account information is used to authenticate and manage your access.', terms: 'Use of PM2V is subject to your organization’s account and access policies.' }[key] || 'PM2V Scrap Trading';
       toast(text, 'success');
     }));
-    document.getElementById('accessForm')?.addEventListener('submit', async e => {
-      e.preventDefault();
-      const btn = document.getElementById('accessSubmitBtn'), msg = document.getElementById('accessMessage');
-      const fullName = document.getElementById('accessFullName').value.trim();
-      const email = document.getElementById('accessEmail').value.trim().toLowerCase();
-      const role = document.getElementById('accessRole').value;
-      msg.textContent = ''; msg.className = 'pm2v-access-msg';
-      if (!fullName || !email || !role) { msg.textContent = 'Please complete all fields.'; return }
-      btn.disabled = true; btn.textContent = 'Submitting…';
-      try {
-        await addDoc(collection(db, 'applicants'), { name: fullName, fullName, email, roleRequested: role, status: 'pending', submittedAt: serverTimestamp() });
-        msg.textContent = 'Application submitted successfully. Please wait for owner approval.'; msg.className = 'pm2v-access-msg success';
-        document.getElementById('accessForm').reset();
-        setTimeout(closeAccessModal, 1800);
-      } catch (err) {
-        console.error('Access application failed:', err);
-        msg.textContent = (err?.code === 'permission-denied') ? 'Application submission is blocked by Firestore rules.' : 'Could not submit your application. Please try again.';
-      } finally { btn.disabled = false; btn.textContent = 'Submit Application' }
-    });
-
     document.getElementById('loginForm')?.addEventListener('submit', async e => {
       e.preventDefault();
       const btn = document.getElementById('loginBtn'), msg = document.getElementById('loginMessage');
       btn.disabled = true; btn.textContent = 'Signing In…'; msg.textContent = ''; msg.className = 'login-message';
       try { await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value.trim(), document.getElementById('loginPassword').value); }
       catch (err) { msg.textContent = friendlyLoginError(err); }
-      finally { btn.disabled = false; btn.textContent = 'Sign In →'; }
+      finally { btn.disabled = false; btn.textContent = 'Log in →'; }
     });
     document.getElementById('forgotBtn')?.addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim(), msg = document.getElementById('loginMessage');
@@ -10423,7 +10282,7 @@
       catch (e) { msg.textContent = friendlyLoginError(e) }
     });
     document.getElementById('sidebarLogoutLink')?.addEventListener('click', async e => {
-      e.preventDefault(); await signOut(auth); document.body.classList.add('auth-pending'); document.getElementById('loginScreen').style.display = 'flex'; closePM2VLogin(); closePM2VFaq(); showPage('dashboard');
+      e.preventDefault(); setMobileMenuOpen(false, false); await signOut(auth); document.body.classList.add('auth-pending'); document.getElementById('loginScreen').style.display = 'flex'; closePM2VLogin(); closePM2VFaq(); showPage('dashboard');
     });
     onAuthStateChanged(auth, async user => {
       if (!user) {
@@ -10447,6 +10306,8 @@
 
     const links = document.querySelectorAll('.nav a[data-page]');
     const pages = document.querySelectorAll('.page');
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
     const INTERNAL_PAGE_TITLES = { dashboard: 'Dashboard', inventory: 'Physical Inventory', transactions: 'Transactions', reports: 'Reports', users: 'User Management', profile: 'Profile' };
     function updateGlobalClock() {
       const d = new Date();
@@ -10463,13 +10324,46 @@
     updateGlobalClock(); setInterval(updateGlobalClock, 1000);
     function showPage(id) {
       if (PM2V_PROFILE && !canAccessPage(id, String(PM2V_PROFILE.role || '').toLowerCase())) id = 'dashboard';
+      if (id === 'transactions') pm2vResetHistoryDateFilters();
       updateGlobalPageTitle(id);
       pages.forEach(p => p.classList.toggle('active', p.id === id));
-      links.forEach(a => a.classList.toggle('active', a.dataset.page === id));
+      links.forEach(a => {
+        const selected = a.dataset.page === id;
+        a.classList.toggle('active', selected);
+        if (selected) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
       document.querySelectorAll('.mobile-nav-btn[data-mobile-page]').forEach(b => b.classList.toggle('active', b.dataset.mobilePage === id && !b.hidden));
       history.replaceState(null, '', '#' + id); window.scrollTo(0, 0);
     }
-    links.forEach(link => link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page) }));
+    function setMobileMenuOpen(open, restoreFocus = true) {
+      const isMobile = window.matchMedia('(max-width:760px)').matches;
+      document.body.classList.toggle('mobile-menu-open', open);
+      mobileMenuToggle?.setAttribute('aria-expanded', String(open));
+      mobileMenuToggle?.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      if (mobileMenuBackdrop) mobileMenuBackdrop.hidden = !open;
+      if (open) {
+        const firstLink = [...document.querySelectorAll('.sidebar .nav a')]
+          .find(link => getComputedStyle(link).display !== 'none');
+        firstLink?.focus({ preventScroll: true });
+      } else if (restoreFocus && isMobile) {
+        mobileMenuToggle?.focus({ preventScroll: true });
+      }
+    }
+    mobileMenuToggle?.addEventListener('click', () => {
+      setMobileMenuOpen(!document.body.classList.contains('mobile-menu-open'));
+    });
+    mobileMenuBackdrop?.addEventListener('click', () => setMobileMenuOpen(false));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && document.body.classList.contains('mobile-menu-open')) {
+        setMobileMenuOpen(false);
+      }
+    });
+    links.forEach(link => link.addEventListener('click', e => {
+      e.preventDefault();
+      showPage(link.dataset.page);
+      setMobileMenuOpen(false);
+    }));
 
     // Mobile app navigation: dynamic role-aware bottom navigation.
     const mobilePageTitleMap = { dashboard: 'Dashboard', inventory: 'Physical Inventory', transactions: 'Transactions', reports: 'Reports', users: 'User Management', profile: 'Profile' };
@@ -10477,7 +10371,7 @@
     function showMobilePage(id) {
       showPage(id);
       const resolvedPage = document.querySelector('.page.active')?.id || id;
-      if (document.body.classList.contains('mobile-menu-open')) document.body.classList.remove('mobile-menu-open');
+      if (document.body.classList.contains('mobile-menu-open')) setMobileMenuOpen(false, false);
       document.querySelectorAll('.mobile-nav-btn[data-mobile-page]').forEach(b => b.classList.toggle('active', b.dataset.mobilePage === resolvedPage));
     }
     document.querySelectorAll('.mobile-nav-btn[data-mobile-page]').forEach(btn => btn.addEventListener('click', () => showMobilePage(btn.dataset.mobilePage)));
@@ -10889,6 +10783,13 @@
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
+    function pm2vPhilippineDateIso(date = new Date()) {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(date);
+      const fields = Object.fromEntries(parts.map(part => [part.type, part.value]));
+      return `${fields.year}-${fields.month}-${fields.day}`;
+    }
     // Format a Firestore Timestamp / Date / ISO string as YYYY-MM-DD local
     function pm2vDateIso(v) {
       const d = valueDate(v);
@@ -10915,11 +10816,8 @@
       const today = pm2vTodayIso();
       // Match by the explicit `date` field saved with the record (YYYY-MM-DD),
       // falling back to the date portion of `createdAt` for older records.
-      const daily = PM2V_TRANSACTIONS_CACHE.filter(x => {
-        const d = x.date || pm2vDateIso(x.createdAt);
-        return d === today;
-      });
-      const totalAmt = daily.reduce((s, x) => s + Math.max(0, Number(x.amount || 0)), 0);
+      const daily = PM2V_TRANSACTIONS_CACHE.filter(x => pm2vFinancialDateKey(x) === today);
+      const totalAmt = daily.reduce((s, x) => s + pm2vFinancialAmount(x, 'transaction'), 0);
 
       // Update header
       const titleEl = document.getElementById('pm2vDailyTxTitle');
@@ -10998,9 +10896,12 @@
       const filtered = rows.filter(x => {
         const type   = String(x.type || '').toLowerCase();
         const typeOk = PM2V_TX_FILTER === 'all' || type === PM2V_TX_FILTER;
-        const dateOk = !dateF || pm2vDateIso(x.createdAt) === dateF;
+        const dateOk = !dateF || pm2vFinancialDateKey(x) === dateF;
         return typeOk && dateOk && (!query || txSearchText(x).includes(query));
       });
+      const dailyTotal = pm2vFinancialTotalForDate(rows, dateF || pm2vPhilippineDateIso(), 'transaction');
+      const totalEl = document.getElementById('pm2vHistoryTxTotal');
+      if (totalEl) totalEl.textContent = pm2vFinancialMoney(dailyTotal);
 
       // Desktop history table (new columns)
       const body = document.getElementById('txBody');
@@ -11063,6 +10964,7 @@
         document.getElementById('rTransactions')?.replaceChildren(document.createTextNode(String(PM2V_TRANSACTIONS_CACHE.length)));
         renderTransactions();
         renderDailyTransactions();
+        pm2vRenderFinancialReports();
       } catch (e) {
         console.error(e);
         const tbody = document.getElementById('pm2vDailyTxBody');
@@ -11176,8 +11078,8 @@
     // ─── EXPENSE RENDERING ────────────────────────────────────────────────────────
     function renderDailyExpenses() {
       const today  = pm2vTodayIso();
-      const daily  = PM2V_EXPENSES_CACHE.filter(x => (x.date || pm2vDateIso(x.createdAt)) === today);
-      const totalAmt = daily.reduce((s, x) => s + Math.max(0, Number(x.amount || 0)), 0);
+      const daily  = PM2V_EXPENSES_CACHE.filter(x => pm2vFinancialDateKey(x) === today);
+      const totalAmt = daily.reduce((s, x) => s + pm2vFinancialAmount(x, 'expense'), 0);
       const friendly = pm2vFriendlyDate(today);
 
       const titleEl       = document.getElementById('pm2vDailyExpTitle');
@@ -11237,10 +11139,13 @@
       const dateF  = PM2V_EXP_DATE_FILTER;
       const rows   = PM2V_EXPENSES_CACHE;
       const filtered = rows.filter(x => {
-        const dateOk  = !dateF || (x.date || pm2vDateIso(x.createdAt)) === dateF;
+        const dateOk  = !dateF || pm2vFinancialDateKey(x) === dateF;
         const searchOk = !query || [x.description, x.expenseType, x.type, x.notes, x.date].filter(Boolean).join(' ').toLowerCase().includes(query);
         return dateOk && searchOk;
       });
+      const dailyTotal = pm2vFinancialTotalForDate(rows, dateF || pm2vPhilippineDateIso(), 'expense');
+      const totalEl = document.getElementById('pm2vHistoryExpTotal');
+      if (totalEl) totalEl.textContent = pm2vFinancialMoney(dailyTotal);
 
       const tbody = document.getElementById('pm2vHistoryExpBody');
       if (tbody) {
@@ -11290,6 +11195,7 @@
           .sort((a, b) => (valueDate(b.createdAt)?.getTime() || 0) - (valueDate(a.createdAt)?.getTime() || 0));
         renderDailyExpenses();
         renderExpenseHistory();
+        pm2vRenderFinancialReports();
       } catch (e) {
         console.error(e);
         const tbody = document.getElementById('pm2vDailyExpBody');
@@ -11340,12 +11246,27 @@
 
     // ─── TAB SWITCHING ────────────────────────────────────────────────────────────
     function pm2vSwitchTab(tabId) {
+      if (tabId === 'tab-tx-history' || tabId === 'tab-exp-history') pm2vResetHistoryDateFilters(tabId);
       document.querySelectorAll('.pm2v-tab-btn').forEach(b => {
         const on = b.dataset.tab === tabId;
         b.classList.toggle('active', on);
         b.setAttribute('aria-selected', String(on));
       });
       document.querySelectorAll('.pm2v-tab-panel').forEach(p => p.classList.toggle('active', p.id === tabId));
+    }
+    function pm2vResetHistoryDateFilters(tabId) {
+      const today = pm2vPhilippineDateIso();
+      if (!tabId || tabId === 'tab-tx-history') {
+        const filter = document.getElementById('txHistoryDateFilter');
+        if (filter) filter.value = today;
+        renderTransactions();
+      }
+      if (!tabId || tabId === 'tab-exp-history') {
+        const filter = document.getElementById('expHistoryDateFilter');
+        if (filter) filter.value = today;
+        PM2V_EXP_DATE_FILTER = today;
+        renderExpenseHistory();
+      }
     }
     let PM2V_REPORT_CACHE = { inv: [], tx: [] };
     const PM2V_REPORT_COLORS = ['#168342', '#173f68', '#d59b16', '#8b5fbf', '#c85b52', '#4f8f8a', '#8b6f47', '#6b7280'];
@@ -11355,6 +11276,84 @@
       if (typeof v.toDate === 'function') return v.toDate();
       if (v instanceof Date) return v;
       const d = new Date(v); return Number.isNaN(d.getTime()) ? null : d;
+    }
+    function pm2vFinancialAmount(record, kind) {
+      const fields = kind === 'expense' ? ['amount'] : ['amount', 'price'];
+      for (const field of fields) {
+        const value = record?.[field];
+        if (value === null || value === undefined || String(value).trim() === '') continue;
+        const amount = Number(value);
+        if (Number.isFinite(amount)) return Math.max(0, amount);
+      }
+      return 0;
+    }
+    function pm2vFinancialDateKey(record) {
+      const explicit = String(record?.date || '').trim();
+      const explicitIsIso = /^\d{4}-\d{2}-\d{2}$/.test(explicit);
+      if (explicitIsIso) {
+        const date = new Date(explicit + 'T00:00:00');
+        if (!Number.isNaN(date.getTime()) && pm2vDateIso(date) === explicit) return explicit;
+      }
+      for (const value of [explicitIsIso ? null : record?.date, record?.recordDate, record?.createdAt]) {
+        const date = pm2vReportDate(value);
+        if (date) return pm2vPhilippineDateIso(date);
+      }
+      return '';
+    }
+    function pm2vFinancialMoney(value) {
+      return '₱' + Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function pm2vFinancialTotalForDate(records, dateKey, kind) {
+      return records
+        .filter(record => pm2vFinancialDateKey(record) === dateKey)
+        .reduce((total, record) => total + pm2vFinancialAmount(record, kind), 0);
+    }
+    function pm2vRenderFinancialReports() {
+      const transactions = PM2V_TRANSACTIONS_CACHE;
+      const expenses = PM2V_EXPENSES_CACHE;
+      const transactionTotal = transactions.reduce((total, record) => total + pm2vFinancialAmount(record, 'transaction'), 0);
+      const expenseTotal = expenses.reduce((total, record) => total + pm2vFinancialAmount(record, 'expense'), 0);
+      const transactionTotalEl = document.getElementById('reportsTransactionTotal');
+      const expenseTotalEl = document.getElementById('reportsExpenseTotal');
+      if (transactionTotalEl) transactionTotalEl.textContent = pm2vFinancialMoney(transactionTotal);
+      if (expenseTotalEl) expenseTotalEl.textContent = pm2vFinancialMoney(expenseTotal);
+
+      const transactionBody = document.getElementById('reportTransactionsBody');
+      const transactionRows = [...transactions].sort((a, b) => pm2vFinancialDateKey(b).localeCompare(pm2vFinancialDateKey(a)));
+      if (transactionBody) transactionBody.innerHTML = transactionRows.map(record => {
+        const quantity = record.quantity ?? record.quantityWeight ?? record.weight;
+        return `<tr><td>${esc(pm2vFinancialDateKey(record) || '—')}</td><td>${esc(record.itemName || record.itemMaterial || record.material || '—')}</td><td>${esc(record.type || record.transactionType || '—')}</td><td>${esc(quantity == null ? '—' : String(quantity))} ${esc(record.unit || '')}</td><td>${pm2vFinancialMoney(pm2vFinancialAmount(record, 'transaction'))}</td></tr>`;
+      }).join('') || '<tr><td colspan="5" class="empty-role">No transactions recorded.</td></tr>';
+      const transactionCount = document.getElementById('reportTransactionHistoryCount');
+      if (transactionCount) transactionCount.textContent = `${transactions.length.toLocaleString()} recorded transaction${transactions.length === 1 ? '' : 's'}`;
+
+      const expenseBody = document.getElementById('reportExpensesBody');
+      const expenseRows = [...expenses].sort((a, b) => pm2vFinancialDateKey(b).localeCompare(pm2vFinancialDateKey(a)));
+      if (expenseBody) expenseBody.innerHTML = expenseRows.map(record => `<tr><td>${esc(pm2vFinancialDateKey(record) || '—')}</td><td>${esc(record.description || record.expenseType || record.type || '—')}</td><td>${esc(record.notes || '—')}</td><td>${pm2vFinancialMoney(pm2vFinancialAmount(record, 'expense'))}</td></tr>`).join('') || '<tr><td colspan="4" class="empty-role">No expenses recorded.</td></tr>';
+      const expenseCount = document.getElementById('reportExpenseHistoryCount');
+      if (expenseCount) expenseCount.textContent = `${expenses.length.toLocaleString()} recorded expense${expenses.length === 1 ? '' : 's'}`;
+
+      const monthly = new Map();
+      const yearly = new Map();
+      const addPeriods = (records, kind) => records.forEach(record => {
+        const dateKey = pm2vFinancialDateKey(record);
+        if (!dateKey) return;
+        const monthKey = dateKey.slice(0, 7), yearKey = dateKey.slice(0, 4), amount = pm2vFinancialAmount(record, kind);
+        const month = monthly.get(monthKey) || { transactions: 0, expenses: 0 };
+        const year = yearly.get(yearKey) || { transactions: 0, expenses: 0 };
+        month[kind === 'expense' ? 'expenses' : 'transactions'] += amount;
+        year[kind === 'expense' ? 'expenses' : 'transactions'] += amount;
+        monthly.set(monthKey, month); yearly.set(yearKey, year);
+      });
+      addPeriods(transactions, 'transaction');
+      addPeriods(expenses, 'expense');
+      const monthlyBody = document.getElementById('reportMonthlyBody');
+      if (monthlyBody) monthlyBody.innerHTML = [...monthly.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([key, totals]) => {
+        const label = new Date(`${key}-01T00:00:00`).toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
+        return `<tr><td>${esc(label)}</td><td>${pm2vFinancialMoney(totals.transactions)}</td><td>${pm2vFinancialMoney(totals.expenses)}</td></tr>`;
+      }).join('') || '<tr><td colspan="3" class="empty-role">No dated records available.</td></tr>';
+      const yearlyBody = document.getElementById('reportYearlyBody');
+      if (yearlyBody) yearlyBody.innerHTML = [...yearly.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([year, totals]) => `<tr><td>${esc(year)}</td><td>${pm2vFinancialMoney(totals.transactions)}</td><td>${pm2vFinancialMoney(totals.expenses)}</td></tr>`).join('') || '<tr><td colspan="3" class="empty-role">No dated records available.</td></tr>';
     }
     function pm2vReportFmtWeight(v) { return Number(v || 0).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' kg' }
     function pm2vReportFmtShortDate(d) { return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) }
@@ -11435,19 +11434,21 @@
       body.innerHTML = entries.map(([c, v], i) => { const pct = totalWeight ? Number(v.weight || 0) / totalWeight * 100 : 0; const visual = maxWeight ? Number(v.weight || 0) / maxWeight * 100 : 0; return `<tr data-weight="${Number(v.weight || 0)}"><td>${pm2vReportEsc(c)}</td><td>${v.count}</td><td class="category-weight-cell"><div class="category-weight-line"><div class="category-weight-track"><div class="category-weight-fill" style="width:${visual}%;background:${PM2V_REPORT_COLORS[i % PM2V_REPORT_COLORS.length]}"></div></div><span class="category-weight-number">${pm2vReportFmtWeight(v.weight)}</span><span class="report-category-percent">${Math.round(pct)}%</span></div></td></tr>` }).join('') || '<tr><td colspan="3" class="empty-role">No inventory data matches the selected filters.</td></tr>';
     }
     function pm2vRenderReports() {
-      const invAll = PM2V_REPORT_CACHE.inv || [], txAll = PM2V_REPORT_CACHE.tx || []; const cat = document.getElementById('reportCategoryFilter')?.value || '__all__', status = document.getElementById('reportStatusFilter')?.value || '__all__';
-      const inv = invAll.filter(x => (cat === '__all__' || String(x.category || 'Uncategorized') === cat) && (status === '__all__' || pm2vStockStatus(x) === status)); const statusCounts = { 'In Stock': 0, 'Low Stock': 0, 'Out of Stock': 0, 'Overstock': 0, 'Inactive': 0 }; inv.forEach(x => { const st = pm2vStockStatus(x); statusCounts[st] = (statusCounts[st] || 0) + 1 });
-      const totalWeight = inv.reduce((a, x) => a + Math.max(0, pm2vNum(x.weight)), 0); const map = {}; inv.forEach(x => { const c = x.category || 'Uncategorized'; if (!map[c]) map[c] = { count: 0, weight: 0 }; map[c].count++; map[c].weight += Math.max(0, pm2vNum(x.weight)) }); const entries = Object.entries(map).sort((a, b) => b[1].weight - a[1].weight || b[1].count - a[1].count);
-      const days = Number(document.getElementById('reportPeriodFilter')?.value || 7), periodTx = pm2vReportTransactionFilter(txAll, days, cat); const top = entries[0];
-      document.getElementById('rTotal')?.replaceChildren(document.createTextNode(String(inv.length))); document.getElementById('rAvailable')?.replaceChildren(document.createTextNode(String(statusCounts['In Stock'] || 0))); document.getElementById('rInStock')?.replaceChildren(document.createTextNode(String(statusCounts['In Stock'] || 0))); document.getElementById('rLowStock')?.replaceChildren(document.createTextNode(String(statusCounts['Low Stock'] || 0))); document.getElementById('rOutOfStock')?.replaceChildren(document.createTextNode(String(statusCounts['Out of Stock'] || 0))); document.getElementById('rOverstock')?.replaceChildren(document.createTextNode(String(statusCounts['Overstock'] || 0))); document.getElementById('rInactive')?.replaceChildren(document.createTextNode(String(statusCounts['Inactive'] || 0))); document.getElementById('rTransactions')?.replaceChildren(document.createTextNode(String(periodTx.length))); document.getElementById('rWeight')?.replaceChildren(document.createTextNode(pm2vReportFmtWeight(totalWeight)));
-      const filterResult = document.getElementById('reportFilterResult'); if (filterResult) filterResult.textContent = `Showing ${inv.length.toLocaleString()} of ${invAll.length.toLocaleString()} inventory record${invAll.length === 1 ? '' : 's'}`;
-      const periodLabel = days === 0 ? 'All Time' : `Last ${days} Days`; const filterSummary = document.getElementById('reportFilterSummary'); if (filterSummary) filterSummary.textContent = `Current inventory: ${inv.length.toLocaleString()} record${inv.length === 1 ? '' : 's'} · ${pm2vReportFmtWeight(totalWeight)} · Trading analytics: ${periodLabel}${cat !== '__all__' ? ` · ${cat}` : ''}`;
-      const topCategory = document.getElementById('reportTopCategory'); if (topCategory) topCategory.textContent = top ? `${pm2vReportEsc(top[0])} · ${Math.round((Number(top[1].weight || 0) / Math.max(1, totalWeight)) * 100)}%` : 'Top category —';
-      pm2vRenderReportDonut(entries, totalWeight); pm2vRenderReportHealth(statusCounts, inv.length); pm2vRenderReportCategoryTable(entries, totalWeight); pm2vRenderReportInsights(inv, statusCounts, totalWeight, entries, txAll, days, cat); pm2vRenderReportActivity(txAll, days, cat); pm2vRenderReportPerformance(txAll, days, cat);
+      const inv = PM2V_REPORT_CACHE.inv || [];
+      const statusCounts = { 'In Stock': 0, 'Low Stock': 0, 'Out of Stock': 0, 'Overstock': 0, 'Inactive': 0 };
+      inv.forEach(record => { const status = pm2vStockStatus(record); statusCounts[status] = (statusCounts[status] || 0) + 1 });
+      document.getElementById('rTotal')?.replaceChildren(document.createTextNode(String(inv.length)));
+      document.getElementById('rAvailable')?.replaceChildren(document.createTextNode(String(statusCounts['In Stock'] || 0)));
+      document.getElementById('rInStock')?.replaceChildren(document.createTextNode(String(statusCounts['In Stock'] || 0)));
+      document.getElementById('rLowStock')?.replaceChildren(document.createTextNode(String(statusCounts['Low Stock'] || 0)));
+      document.getElementById('rOutOfStock')?.replaceChildren(document.createTextNode(String(statusCounts['Out of Stock'] || 0)));
+      document.getElementById('rOverstock')?.replaceChildren(document.createTextNode(String(statusCounts['Overstock'] || 0)));
+      document.getElementById('rInactive')?.replaceChildren(document.createTextNode(String(statusCounts['Inactive'] || 0)));
+      pm2vRenderFinancialReports();
     }
     function pm2vPopulateReportFilters(inv) { const select = document.getElementById('reportCategoryFilter'); if (!select) return; const current = select.value; const cats = [...new Set(inv.map(x => String(x.category || 'Uncategorized')))].sort((a, b) => a.localeCompare(b)); select.innerHTML = '<option value="__all__">All Categories</option>' + cats.map(c => `<option value="${pm2vReportEsc(c)}">${pm2vReportEsc(c)}</option>`).join(''); if (cats.includes(current)) select.value = current; }
     function pm2vResetReportFilters() { const c = document.getElementById('reportCategoryFilter'), s = document.getElementById('reportStatusFilter'), p = document.getElementById('reportPeriodFilter'); if (c) c.value = '__all__'; if (s) s.value = '__all__'; if (p) p.value = '7'; pm2vRenderReports(); }
-    async function loadReports() { try { const invSnap = await getDocs(collection(db, 'inventory')); PM2V_REPORT_CACHE.inv = invSnap.docs.map(d => d.data()).filter(x => !x.archived); const txSnap = await getDocs(collection(db, 'transactions')); PM2V_REPORT_CACHE.tx = txSnap.docs.map(d => d.data()); pm2vPopulateReportFilters(PM2V_REPORT_CACHE.inv); pm2vRenderReports(); } catch (e) { console.error(e); toast('Could not load reports. Check Firestore rules.', 'error') } }
+    async function loadReports() { try { const invSnap = await getDocs(collection(db, 'inventory')); PM2V_REPORT_CACHE.inv = invSnap.docs.map(d => d.data()).filter(x => !x.archived); PM2V_REPORT_CACHE.tx = PM2V_TRANSACTIONS_CACHE; pm2vRenderReports(); } catch (e) { console.error(e); toast('Could not load reports. Check Firestore rules.', 'error') } }
     /* =========================================================
        PM2V REPORTS — CLIENT-SIDE PDF EXPORT
        Uses pinned jsPDF + AutoTable CDN libraries only when export is requested.
@@ -11585,13 +11586,51 @@
       return status === '—' ? status : status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     }
 
-    async function loadApplicants() {
-      const body = document.getElementById('applicantBody'); if (!body) return;
+    function clearCreateUserForm() {
+      ['newUserName', 'newUserEmail', 'newUserPassword'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '' });
+      const roleEl = document.getElementById('newUserRole'); if (roleEl) roleEl.value = 'staff';
+    }
+    async function createPM2VAccount(name, email, password, role) {
+      const r = String(PM2V_PROFILE?.role || '').trim().toLowerCase();
+      if (r !== 'owner') throw new Error('Only the Owner can create accounts.');
+      const n = String(name || '').trim();
+      const e = String(email || '').trim().toLowerCase();
+      const pw = String(password || '');
+      const rr = String(role || 'staff').trim().toLowerCase();
+      if (!n) throw new Error('Enter a full name.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) throw new Error('Enter a valid email address.');
+      if (!['staff', 'secretary'].includes(rr)) throw new Error('Role must be Secretary or Staff.');
+      if (pw.length < 6) throw new Error('Password must be at least 6 characters.');
+      const msg = document.getElementById('createUserMessage');
+      if (msg) { msg.textContent = ''; msg.className = 'pm2v-access-msg' }
+      const btn = document.getElementById('createUserBtn');
+      if (btn) { btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Creating…'; btn._origText = orig }
+      let createdAuthUser = null;
       try {
-        const snap = await getDocs(collection(db, 'applicants'));
-        const rows = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => String(x.status || 'pending').toLowerCase() === 'pending');
-        body.innerHTML = rows.length ? rows.map(x => `<tr><td>${esc(x.name || x.fullName || '—')}</td><td>${esc(x.email || '—')}</td><td>${esc(pm2vUserStatusLabel(x.status || 'pending'))}</td><td><div class="pm2v-user-actions"><button type="button" class="pm2v-user-trigger" aria-label="Actions for ${esc(x.name || x.fullName || 'applicant')}" aria-expanded="false"></button><div class="pm2v-user-menu"><button type="button" class="role-btn pm2v-user-btn edit" data-edit="${x.id}">Edit</button><button type="button" class="role-btn pm2v-user-btn delete" data-delete="${x.id}">Delete</button><button type="button" class="role-btn primary" data-approve="${x.id}">Approve</button><button type="button" class="role-btn pm2v-user-btn pwd" data-pwd="${x.id}">Change password</button></div></div></td></tr>`).join('') : '<tr><td colspan="4" class="empty-role">No pending applicants.</td></tr>';
-      } catch (e) { console.error(e); body.innerHTML = '<tr><td colspan="4" class="empty-role">Could not load applicants.</td></tr>' }
+        const cred = await createUserWithEmailAndPassword(provisionAuth, e, pw);
+        createdAuthUser = cred.user;
+        await setDoc(doc(db, 'users', cred.user.uid), {
+          fullName: n,
+          email: e,
+          role: rr,
+          status: 'active',
+          memberSince: serverTimestamp(),
+          createdBy: PM2V_USER?.email || '',
+          createdAt: serverTimestamp()
+        });
+        return { uid: cred.user.uid, email: e, name: n, role: rr };
+      } catch (err) {
+        console.error('Create PM2V account failed:', err);
+        if (createdAuthUser) { try { await deleteUser(createdAuthUser) } catch (cleanErr) { console.error('Could not roll back created Auth user:', cleanErr) } }
+        let m = err?.message || 'Could not create account.';
+        if (err?.code === 'auth/email-already-in-use') m = 'An account already exists for this email address.';
+        else if (err?.code === 'auth/operation-not-allowed') m = 'Email/password sign-in is not enabled in Firebase.';
+        else if (err?.code === 'auth/weak-password') m = 'Password is too weak. Use at least 6 characters.';
+        else if (err?.code === 'permission-denied') m = 'Update was blocked by Firestore rules. Only the Owner can write users/{uid}.';
+        throw new Error(m);
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = btn._origText || '+ Create Account' }
+      }
     }
     async function loadUsers() {
       const body = document.getElementById('usersBody'); if (!body) return;
@@ -11905,14 +11944,24 @@
       }
       if (!e.target.closest('.pm2v-user-actions')) document.querySelectorAll('.pm2v-user-menu.open').forEach(item => { item.classList.remove('open'); item.previousElementSibling?.setAttribute('aria-expanded', 'false') });
     });
-    document.getElementById('applicantBody')?.addEventListener('click', async e => {
-      const editBtn = e.target.closest('[data-edit]'); if (editBtn) { await editApplicant(editBtn.dataset.edit, editBtn); return }
-      const delBtn = e.target.closest('[data-delete]'); if (delBtn) { await deleteApplicant(delBtn.dataset.delete, delBtn); return }
-      const pwdBtn = e.target.closest('[data-pwd]'); if (pwdBtn) { await sendApplicantPasswordReset(pwdBtn.dataset.pwd, pwdBtn); return }
-      const approveBtn = e.target.closest('[data-approve]'); if (!approveBtn) return;
-      await approveApplicant(approveBtn.dataset.approve, approveBtn);
+    /* Applicant approval UI removed: accounts are created directly in Create User form. */
+    document.getElementById('createUserForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const msg = document.getElementById('createUserMessage');
+      try {
+        const name = document.getElementById('newUserName').value;
+        const email = document.getElementById('newUserEmail').value;
+        const password = document.getElementById('newUserPassword').value;
+        const role = document.getElementById('newUserRole').value;
+        const created = await createPM2VAccount(name, email, password, role);
+        if (msg) { msg.textContent = `${created.name || 'User'} was created. They can sign in immediately with ${created.email}.`; msg.className = 'pm2v-access-msg success' }
+        clearCreateUserForm();
+        await loadUsers();
+      } catch (err) {
+        console.error(err);
+        if (msg) { msg.textContent = err?.message || 'Could not create account.'; msg.className = 'pm2v-access-msg' }
+      }
     });
-    window.approveApplicant = approveApplicant; window.editApplicant = editApplicant; window.deleteApplicant = deleteApplicant; window.sendApplicantPasswordReset = sendApplicantPasswordReset;
     function updateRoleClocks() { const d = new Date(), text = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) + ' | ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });['transactionsDate', 'reportsDate', 'usersDate', 'profileDate'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = text }) }
     setInterval(updateRoleClocks, 1000); updateRoleClocks();
 
@@ -13249,26 +13298,6 @@
     color: #146b35
   }
 
-  .pm2v-auth-apply {
-    margin: 14px 0 0;
-    font-size: 13.5px;
-    color: #5b6f83;
-    font-style: italic
-  }
-
-  .pm2v-auth-apply button {
-    border: 0;
-    background: none;
-    padding: 0;
-    color: #172235;
-    font-size: 13.5px;
-    font-style: italic;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-    font-weight: 600
-  }
-
   .pm2v-landing-foot {
     display: flex;
     align-items: center;
@@ -13502,16 +13531,6 @@
     filter: brightness(1.06)
   }
 
-  #pm2vFaqApplyCta {
-    border: 1.5px solid #dfe7e2;
-    background: #fff;
-    color: #2c4b36
-  }
-
-  #pm2vFaqApplyCta:hover {
-    background: #f2f8f4
-  }
-
   .pm2v-landing-nav-link.active {
     color: #fff;
     background: rgba(255, 255, 255, .16)
@@ -13674,10 +13693,6 @@
       height: 44px
     }
 
-    .pm2v-auth-apply {
-      margin-top: 9px;
-      font-size: 12px
-    }
   }
 
   @media(max-width:360px) {
@@ -13975,6 +13990,401 @@
       grid-column: auto;
       grid-row: auto;
       justify-self: auto
+    }
+  }
+
+  @media (min-width:761px) and (max-width:1050px) {
+    .main {
+      padding: 28px 24px 54px !important
+    }
+
+    .form-grid-inventory,
+    .form-grid-collection,
+    .pm2v-tx-form-grid,
+    .pm2v-exp-form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important
+    }
+
+    .dashboard-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important
+    }
+  }
+
+  @media (max-width:760px) {
+    :root {
+      --mobile-nav-h: 96px
+    }
+
+    .main,
+    .page,
+    .page > section,
+    .card,
+    .dashboard-card,
+    .role-card,
+    .inventory-card,
+    .report-card {
+      min-width: 0 !important;
+      max-width: 100% !important
+    }
+
+    .mobile-header-brand {
+      flex: 1 1 auto;
+      gap: 8px
+    }
+
+    .mobile-header-copy {
+      flex: 1 1 auto
+    }
+
+    .mobile-menu-toggle {
+      display: grid !important;
+      flex: 0 0 46px;
+      width: 46px !important;
+      height: 46px !important;
+      min-width: 46px;
+      margin: 0 !important;
+      padding: 0;
+      border: 1px solid #dce9df !important;
+      border-radius: 13px !important;
+      background: #146b35 !important;
+      color: #fff !important;
+      box-shadow: 0 3px 10px rgba(20, 107, 53, .18) !important;
+      cursor: pointer;
+      touch-action: manipulation
+    }
+
+    .mobile-menu-toggle svg {
+      width: 23px !important;
+      height: 23px !important;
+      transform: none !important
+    }
+
+    .mobile-menu-toggle:focus-visible,
+    .sidebar .nav a:focus-visible {
+      outline: 3px solid #f2c14e;
+      outline-offset: 2px
+    }
+
+    .mobile-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1190;
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: rgba(7, 28, 35, .48);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .2s ease, visibility .2s ease;
+      touch-action: manipulation
+    }
+
+    .mobile-drawer-backdrop[hidden] {
+      display: none !important
+    }
+
+    body.mobile-menu-open .mobile-drawer-backdrop {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto
+    }
+
+    .sidebar {
+      position: fixed !important;
+      z-index: 1201 !important;
+      top: 0 !important;
+      right: auto !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      display: flex !important;
+      flex-direction: column;
+      width: min(320px, calc(100vw - 48px)) !important;
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100%;
+      padding: max(16px, env(safe-area-inset-top)) 18px max(16px, env(safe-area-inset-bottom)) !important;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      box-shadow: 12px 0 32px rgba(5, 30, 18, .2);
+      transform: translateX(-105%);
+      visibility: hidden;
+      transition: transform .24s ease, visibility .24s ease;
+      touch-action: pan-y
+    }
+
+    body.mobile-menu-open .sidebar {
+      transform: translateX(0);
+      visibility: visible
+    }
+
+    .sidebar .logo-wrap {
+      flex: 0 0 96px;
+      height: 96px !important
+    }
+
+    .sidebar .logo {
+      width: 78px !important;
+      height: 78px !important
+    }
+
+    .sidebar .user-card {
+      flex: 0 0 auto;
+      margin: 0 0 18px !important
+    }
+
+    .sidebar .nav {
+      flex: 1 0 auto;
+      gap: 5px;
+      padding-bottom: 8px
+    }
+
+    .sidebar .nav a {
+      flex: 0 0 auto;
+      min-height: 48px;
+      height: auto !important;
+      padding: 10px 12px !important;
+      gap: 12px;
+      border-radius: 11px;
+      font-size: 15px;
+      touch-action: manipulation
+    }
+
+    #primarySidebar .nav a#sidebarLogoutLink {
+      display: flex !important;
+      min-height: 50px;
+      margin-top: auto;
+      padding-top: 14px !important;
+      border-top: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 0;
+      color: #ffb0a9
+    }
+
+    .sidebar .nav a.active {
+      box-shadow: inset 3px 0 0 #fff
+    }
+
+    .dashboard-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important
+    }
+
+    .dashboard-stat {
+      height: auto !important;
+      min-height: 88px !important;
+      padding: 12px !important;
+      gap: 9px !important
+    }
+
+    .dashboard-stat-label {
+      font-size: 10px !important;
+      line-height: 1.2 !important;
+      letter-spacing: .25px !important
+    }
+
+    .dashboard-stat-value {
+      font-size: 21px !important
+    }
+
+    .form-grid-inventory,
+    .form-grid-collection,
+    .pm2v-tx-form-grid,
+    .pm2v-exp-form-grid,
+    .pm2v-approval-grid,
+    .pm2v-create-user-form {
+      grid-template-columns: minmax(0, 1fr) !important
+    }
+
+    .form-grid-inventory > *,
+    .form-grid-collection > *,
+    .pm2v-tx-form-grid > *,
+    .pm2v-exp-form-grid > *,
+    .pm2v-create-user-form > * {
+      min-width: 0
+    }
+
+    input,
+    select,
+    textarea {
+      max-width: 100%;
+      min-width: 0;
+      font-size: 16px !important
+    }
+
+    button,
+    .nav a {
+      touch-action: manipulation
+    }
+
+    .pm2v-tabs {
+      max-width: 100%;
+      gap: 4px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin
+    }
+
+    .pm2v-tab-btn {
+      flex: 0 0 auto;
+      min-height: 44px;
+      padding: 0 12px;
+      white-space: nowrap
+    }
+
+    #inventory .table-wrap,
+    .dashboard-table-wrap,
+    #transactions .pm2v-daily-list-card [style*="overflow-x:auto"],
+    #users [style*="overflow:auto"] {
+      max-width: 100%;
+      overflow-x: auto !important;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch
+    }
+
+    #inventory .table-wrap table {
+      min-width: 760px
+    }
+
+    .dashboard-table {
+      min-width: 680px !important
+    }
+
+    #pm2vApprovalModal {
+      align-items: flex-start !important;
+      overflow-y: auto;
+      padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)) !important
+    }
+
+    .pm2v-approval-card {
+      max-height: calc(100vh - 20px);
+      max-height: calc(100dvh - 20px);
+      margin: auto 0;
+      overflow-y: auto;
+      overscroll-behavior: contain
+    }
+
+    .pm2v-approval-actions {
+      flex-wrap: wrap
+    }
+
+    .pm2v-approval-actions button {
+      flex: 1 1 120px;
+      min-height: 44px
+    }
+
+    .pm2v-receipt-modal {
+      overflow-y: auto;
+      overscroll-behavior: contain
+    }
+
+    .pm2v-receipt-card {
+      min-height: 0;
+      max-height: 100%
+    }
+
+    #pm2vReceiptFrame {
+      min-height: 0
+    }
+
+    .profile-actions {
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .profile-actions > button {
+      flex: 1 1 150px;
+      min-height: 44px
+    }
+
+    .pm2v-daily-header,
+    .pm2v-daily-list-head {
+      flex-wrap: wrap;
+      gap: 12px
+    }
+
+    .pm2v-daily-header-left,
+    .pm2v-daily-totals {
+      min-width: 0;
+      max-width: 100%
+    }
+
+    .pm2v-landing-wrap {
+      min-height: 100vh;
+      min-height: 100svh
+    }
+
+    #reports .report-grid .role-card {
+      height: auto !important;
+      min-height: 94px !important;
+      padding: 12px !important
+    }
+
+    #reports .report-grid .role-card h3 {
+      font-size: 11px !important;
+      line-height: 1.2 !important
+    }
+
+    #reports .report-grid .role-card .big {
+      font-size: 23px !important
+    }
+
+    #reports .report-grid .role-card .muted {
+      font-size: 10px !important;
+      line-height: 1.3 !important
+    }
+
+    #reports #categoryReport .role-table td:nth-child(1) {
+      font-size: 12px !important
+    }
+
+    #reports #categoryReport .role-table td:nth-child(2),
+    #reports #categoryReport .role-table td:nth-child(3) {
+      font-size: 10.5px !important
+    }
+
+    #profile .profile-activity-grid .profile-field-label {
+      font-size: 10px !important
+    }
+
+    #profile .profile-activity-grid .profile-field-value {
+      font-size: 12px !important
+    }
+  }
+
+  @media (max-width:430px) {
+    .mobile-app-header {
+      gap: 8px !important
+    }
+
+    .mobile-header-logo {
+      width: 36px !important;
+      height: 36px !important
+    }
+
+    .mobile-header-title {
+      font-size: 17px !important
+    }
+
+    .mobile-header-clock {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .inventory-stats {
+      grid-template-columns: 1fr !important
+    }
+
+    .pm2v-landing-header-inner {
+      gap: 8px
     }
   }
 </style>
