@@ -601,11 +601,55 @@
     }
 
     .ai-class-manager {
-      margin: -4px 0 20px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 29001;
+      width: min(560px, 94vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
       border: 1px solid #dce8df;
-      background: #f9fcfa;
-      border-radius: 15px;
-      padding: 16px
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .25)
+    }
+
+    .ai-class-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 29000;
+      background: rgba(10, 25, 15, .45)
+    }
+
+    .ai-class-backdrop[hidden] {
+      display: none
+    }
+
+    .ai-manager-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 50%;
+      background: #f0f3f1;
+      color: #4b5d51;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer
+    }
+
+    .ai-manager-close:hover {
+      background: #e2e8e4
+    }
+
+    .ai-class-manager-head {
+      padding-right: 38px
     }
 
     .ai-class-manager[hidden] {
@@ -675,17 +719,53 @@
 
     .ai-class-list {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 7px;
-      max-height: 310px;
+      flex: 1 1 auto;
+      min-height: 0;
       overflow: auto;
       padding-right: 2px
     }
 
+    .ai-class-list>.ai-class-manager-note {
+      grid-column: 1 / -1;
+      margin-top: 0
+    }
+
     .ai-class-row {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 7px;
-      align-items: center
+      position: relative;
+      min-width: 0
+    }
+
+    .ai-class-row .ai-class-edit {
+      width: 100%;
+      box-sizing: border-box;
+      height: 34px;
+      margin: 0;
+      padding: 0 24px 0 9px;
+      font-size: 11.5px;
+      text-overflow: ellipsis
+    }
+
+    .ai-class-row .ai-class-delete {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      line-height: 1
+    }
+
+    @media(max-width:560px) {
+      .ai-class-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
     }
 
     .ai-class-edit {
@@ -710,6 +790,83 @@
     .ai-class-delete:disabled {
       opacity: .45;
       cursor: not-allowed
+    }
+
+    .ai-add-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(10, 25, 15, .45)
+    }
+
+    .ai-add-modal.open {
+      display: flex
+    }
+
+    .ai-add-card {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 18px 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .25)
+    }
+
+    .ai-add-card h3 {
+      margin: 0 34px 12px 0;
+      font-size: 14px;
+      color: #17335a
+    }
+
+    .ai-add-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 50%;
+      background: #f0f3f1;
+      color: #4b5d51;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer
+    }
+
+    .ai-add-close:hover {
+      background: #e2e8e4
+    }
+
+    .ai-add-card input {
+      width: 100%;
+      box-sizing: border-box;
+      height: 42px;
+      margin: 0
+    }
+
+    .ai-add-error {
+      min-height: 14px;
+      margin: 6px 0 0;
+      color: #b52e2e;
+      font-size: 10.5px
+    }
+
+    .ai-add-submit {
+      width: 100%;
+      margin-top: 10px;
+      border: 0;
+      border-radius: 9px;
+      height: 40px;
+      background: #146f37;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer
     }
 
     .ai-class-manager-note {
@@ -2812,7 +2969,7 @@
     #pm2vApprovalModal {
       position: fixed;
       inset: 0;
-      z-index: 9999;
+      z-index: 30000;
       display: none;
       align-items: center;
       justify-content: center;
@@ -6326,7 +6483,7 @@
     .pm2v-receipt-modal {
       position: fixed;
       inset: 0;
-      z-index: 9999;
+      z-index: 30000;
       display: none;
       align-items: center;
       justify-content: center;
@@ -7853,7 +8010,7 @@
     #pm2vEditProfileModal {
       position: fixed;
       inset: 0;
-      z-index: 9999;
+      z-index: 30000;
       display: none;
       align-items: center;
       justify-content: center;
@@ -7874,7 +8031,7 @@
     #pm2vEditApplicantModal {
       position: fixed;
       inset: 0;
-      z-index: 9999;
+      z-index: 30000;
       display: none;
       align-items: center;
       justify-content: center;
@@ -9028,18 +9185,15 @@
               </div>
             </div>
           </div>
-          <div class="scanner-guidance"><span class="scanner-guidance-icon">✦</span>
-            <div><strong>Start with a clear photo</strong><span>Center the scrap in the frame for a better
-                classification.</span></div>
-          </div>
           <div class="ai-class-manager" id="aiClassManager">
+            <button class="ai-manager-close" id="aiClassClose" type="button" aria-label="Close">&times;</button>
             <div class="ai-class-manager-head">
               <div><strong>Scanner Classes</strong><span>Add, edit, or delete the classes the AI scanner is allowed to
                   identify.</span></div>
               <span class="ai-class-count" id="aiClassCount">0 classes</span>
             </div>
             <div class="ai-class-add">
-              <input id="aiClassInput" maxlength="80" placeholder="e.g. Copper Wire" type="text" />
+              <input id="aiClassInput" maxlength="80" placeholder="Search classes…" type="search" autocomplete="off" aria-label="Search classes" />
               <button id="aiAddClassBtn" type="button">Add Class</button>
             </div>
             <div class="ai-class-list" id="aiClassList"></div>
@@ -9977,12 +10131,12 @@
         const recordCount = document.getElementById('inventoryRecordCount');
         const archivedCount = document.getElementById('inventoryArchivedCount');
         if (archivedCount) archivedCount.textContent = String(archivedRows.length);
-        const visibleInventoryRows = body ? [...body.querySelectorAll('tr[data-stock-status]')].filter(row => !row.classList.contains('inventory-category-hidden')).length : listView.length;
-        const hasInventoryFilter = PM2V_INVENTORY_CATEGORY !== 'All' || PM2V_INVENTORY_STATUS !== 'All';
+        const visibleCount = body ? [...body.querySelectorAll('tr[data-stock-status]')].filter(row => !row.classList.contains('inventory-category-hidden')).length : listView.length;
+        const hasFilter = PM2V_INVENTORY_CATEGORY !== 'All' || PM2V_INVENTORY_STATUS !== 'All';
         if (recordCount) {
           const noun = showingArchived ? 'archived record' : 'record';
-          recordCount.textContent = hasInventoryFilter
-            ? `${visibleInventoryRows} of ${listView.length} ${noun}${listView.length === 1 ? '' : 's'}`
+          recordCount.textContent = hasFilter
+            ? `${visibleCount} of ${listView.length} ${noun}${listView.length === 1 ? '' : 's'}`
             : `${listView.length} ${noun}${listView.length === 1 ? '' : 's'}`;
         }
         if (summaryCount) summaryCount.textContent = String(activeRows.length);
@@ -10521,6 +10675,7 @@
     document.querySelectorAll('[data-report-action]').forEach(btn => btn.addEventListener('click', () => {
       const action = btn.dataset.reportAction; const c = document.getElementById('reportCategoryFilter'), s = document.getElementById('reportStatusFilter');
       if (c) c.value = '__all__'; if (s) s.value = action === 'in-stock' ? 'In Stock' : '__all__';
+      pm2vSetInventoryStatusFilter(action === 'in-stock' ? 'In Stock' : 'All');
       focusReports(); pm2vRenderReports(); pm2vSyncReportFilterUI();
       if (action === 'transactions') document.getElementById('reportActivitySvg')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       if (action === 'weight') document.getElementById('reportDonutWrap')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -10573,9 +10728,9 @@
       const rows = [...body.querySelectorAll('tr[data-stock-status]')];
       let visibleCount = 0;
       rows.forEach(row => {
-        const categoryMatches = PM2V_INVENTORY_CATEGORY === 'All' || row.dataset.inventoryCategory === PM2V_INVENTORY_CATEGORY;
-        const statusMatches = PM2V_INVENTORY_STATUS === 'All' || row.dataset.stockStatus === pm2vStockClass(PM2V_INVENTORY_STATUS);
-        const hidden = !categoryMatches || !statusMatches;
+        const matchesCategory = PM2V_INVENTORY_CATEGORY === 'All' || row.dataset.inventoryCategory === PM2V_INVENTORY_CATEGORY;
+        const matchesStatus = PM2V_INVENTORY_STATUS === 'All' || row.dataset.stockStatus === pm2vStockClass(PM2V_INVENTORY_STATUS);
+        const hidden = !matchesCategory || !matchesStatus;
         row.classList.toggle('inventory-category-hidden', hidden);
         if (!hidden) visibleCount++;
       });
@@ -10599,9 +10754,8 @@
       const recordCount = document.getElementById('inventoryRecordCount');
       if (recordCount) {
         const totalCount = rows.length;
-        const showingArchived = PM2V_INVENTORY_SHOW_ARCHIVED;
-        const noun = showingArchived ? 'archived record' : 'record';
         const hasFilter = PM2V_INVENTORY_CATEGORY !== 'All' || PM2V_INVENTORY_STATUS !== 'All';
+        const noun = PM2V_INVENTORY_SHOW_ARCHIVED ? 'archived record' : 'record';
         recordCount.textContent = hasFilter
           ? `${visibleCount} of ${totalCount} ${noun}${totalCount === 1 ? '' : 's'}`
           : `${totalCount} ${noun}${totalCount === 1 ? '' : 's'}`;
@@ -11550,7 +11704,7 @@
       pm2vRenderFinancialReports();
     }
     function pm2vPopulateReportFilters(inv) { const select = document.getElementById('reportCategoryFilter'); if (!select) return; const current = select.value; const cats = [...new Set(inv.map(x => String(x.category || 'Uncategorized')))].sort((a, b) => a.localeCompare(b)); select.innerHTML = '<option value="__all__">All Categories</option>' + cats.map(c => `<option value="${pm2vReportEsc(c)}">${pm2vReportEsc(c)}</option>`).join(''); if (cats.includes(current)) select.value = current; }
-    function pm2vResetReportFilters() { const c = document.getElementById('reportCategoryFilter'), s = document.getElementById('reportStatusFilter'), p = document.getElementById('reportPeriodFilter'); if (c) c.value = '__all__'; if (s) s.value = '__all__'; if (p) p.value = '7'; pm2vRenderReports(); }
+    function pm2vResetReportFilters() { const c = document.getElementById('reportCategoryFilter'), s = document.getElementById('reportStatusFilter'), p = document.getElementById('reportPeriodFilter'); if (c) c.value = '__all__'; if (s) s.value = '__all__'; if (p) p.value = '7'; pm2vSetInventoryStatusFilter('All'); pm2vRenderReports(); }
     async function loadReports() { try { const invSnap = await getDocs(collection(db, 'inventory')); PM2V_REPORT_CACHE.inv = invSnap.docs.map(d => d.data()).filter(x => !x.archived); PM2V_REPORT_CACHE.tx = PM2V_TRANSACTIONS_CACHE; pm2vRenderReports(); } catch (e) { console.error(e); toast('Could not load reports. Check Firestore rules.', 'error') } }
     /* =========================================================
        PM2V REPORTS — CLIENT-SIDE PDF EXPORT
@@ -11689,7 +11843,7 @@
         const periodLabel = key => isMonthly
           ? new Date(`${key}-01T00:00:00`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
           : key;
-        const rangeLabel = keys.length
+        const reportingPeriod = keys.length
           ? `${periodLabel(keys[0])} to ${periodLabel(keys[keys.length - 1])}`
           : 'No dated records available';
         const rows = [...totalsByPeriod.entries()]
@@ -11714,7 +11868,7 @@
         pm2vReportPdfText(doc, reportTitle, 48, 26, 18, 'bold', [255, 255, 255]);
         pm2vReportPdfText(doc, `Generated: ${generatedAt.toLocaleString()}`, 48, 35, 8, 'normal', [226, 242, 231]);
         pm2vReportPdfText(doc, 'Reporting period:', 15, 53, 9, 'bold', [82, 106, 96]);
-        pm2vReportPdfText(doc, rangeLabel, 48, 53, 9, 'normal', [23, 51, 90]);
+        pm2vReportPdfText(doc, reportingPeriod, 48, 53, 9, 'normal', [23, 51, 90]);
 
         const summaryY = 62;
         [[15, 'TOTAL TRANSACTIONS', totalTransactions], [106, 'TOTAL EXPENSES', totalExpenses]].forEach(([x, label, value]) => {
@@ -11737,16 +11891,14 @@
           headStyles: { fillColor: [23, 63, 104], textColor: [255, 255, 255], fontStyle: 'bold' },
           footStyles: { fillColor: [239, 247, 241], textColor: [23, 51, 90], fontStyle: 'bold' },
           alternateRowStyles: { fillColor: [248, 251, 249] },
-          columnStyles: { 0: { cellWidth: 66, fontStyle: 'bold' }, 1: { halign: 'right' }, 2: { halign: 'right' } },
-          didDrawPage: () => {
-            doc.setDrawColor(222, 232, 226);
-            doc.line(15, 285, 195, 285);
-            pm2vReportPdfText(doc, 'PM2V Scrap Trading', 15, 291, 7, 'normal', [123, 141, 130]);
-          }
+          columnStyles: { 0: { cellWidth: 66, fontStyle: 'bold' }, 1: { halign: 'right' }, 2: { halign: 'right' } }
         });
         const pageCount = doc.internal.getNumberOfPages();
         for (let page = 1; page <= pageCount; page++) {
           doc.setPage(page);
+          doc.setDrawColor(222, 232, 226);
+          doc.line(15, 285, 195, 285);
+          pm2vReportPdfText(doc, 'PM2V Scrap Trading', 15, 291, 7, 'normal', [123, 141, 130]);
           pm2vReportPdfText(doc, `Page ${page} of ${pageCount}`, 175, 291, 7, 'normal', [123, 141, 130]);
         }
         doc.save(`PM2V_${filePrefix}_Report_${generatedAt.toISOString().slice(0, 10)}.pdf`);
@@ -11761,7 +11913,13 @@
     }
 
     function pm2vInitReportControls() {
-      ['reportCategoryFilter', 'reportStatusFilter', 'reportPeriodFilter'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { pm2vRenderReports(); pm2vSyncReportFilterUI() }));
+      ['reportCategoryFilter', 'reportPeriodFilter'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { pm2vRenderReports(); pm2vSyncReportFilterUI() }));
+      document.getElementById('reportStatusFilter')?.addEventListener('change', event => {
+        const status = event.currentTarget.value;
+        pm2vSetInventoryStatusFilter(status === '__all__' ? 'All' : status);
+        pm2vRenderReports();
+        pm2vSyncReportFilterUI();
+      });
       document.getElementById('reportFilterReset')?.addEventListener('click', () => { pm2vResetReportFilters(); pm2vSyncReportFilterUI() });
       document.getElementById('reportFilterToggle')?.addEventListener('click', () => {
         const b = document.getElementById('reportFilterToggle'), c = document.getElementById('reportFilterContent');
@@ -12168,7 +12326,12 @@
       workflowUrl: 'https://serverless.roboflow.com/infer/workflows/jhave-larios/muse-spark-1-1-classification',
       workspace: 'jhave-larios',
       workflowId: 'muse-spark-1-1-classification',
-      modelName: 'Muse Spark 1.1',
+      modelName: 'On-device CLIP',
+      // 'local' = runs in the browser (no tokens, no credits, no server). 'cloud' = old Roboflow/OpenRouter workflow.
+      engine: 'local',
+      localModel: 'Xenova/clip-vit-base-patch32',
+      transformersUrl: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2/+esm',
+      minConfidence: 0.20,
       // PM2V Scrap Trading V18 — CURRENT BASELINE / SOURCE OF TRUTH.
       // Frontend calls the serverless AI proxy deployed on Vercel (see /api/roboflow.js).
       proxyUrl: 'https://pm2v.vercel.app/api/roboflow',
@@ -12205,12 +12368,16 @@
       const count = document.getElementById('aiClassCount');
       if (!list) return;
       const classes = getAIClasses();
-      if (count) count.textContent = `${classes.length} ${classes.length === 1 ? 'class' : 'classes'}`;
-      list.innerHTML = classes.map((name, index) => `
+      const q = (document.getElementById('aiClassInput')?.value || '').trim().toLowerCase();
+      const visible = classes.map((name, index) => ({ name, index })).filter(x => !q || x.name.toLowerCase().includes(q));
+      if (count) count.textContent = q
+        ? `${visible.length} of ${classes.length} ${classes.length === 1 ? 'class' : 'classes'}`
+        : `${classes.length} ${classes.length === 1 ? 'class' : 'classes'}`;
+      list.innerHTML = visible.length ? visible.map(({ name, index }) => `
     <div class="ai-class-row" data-index="${index}">
       <input class="ai-class-edit" value="${esc(name)}" maxlength="80" aria-label="Class ${esc(name)}">
-      <button type="button" class="ai-class-delete" data-index="${index}" ${classes.length === 1 ? 'disabled' : ''}>Delete</button>
-    </div>`).join('');
+      <button type="button" class="ai-class-delete" data-index="${index}" title="Delete class" aria-label="Delete class ${esc(name)}" ${classes.length === 1 ? 'disabled' : ''}>&minus;</button>
+    </div>`).join('') : `<div class="ai-class-manager-note">No classes match "${esc(q)}". Click Add Class to create it.</div>`;
     }
     function initAIClassManager() {
       const toggle = document.getElementById('aiClassManagerBtn');
@@ -12220,23 +12387,60 @@
       if (!toggle || !panel || !input || !add) return;
       renderAIClassManager();
       // Keep the scanner compact; open the class manager only when requested.
-      panel.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
-      const togglePanel = () => {
-        const open = panel.hidden;
+      // Manage Classes opens as a centered dialog with a backdrop and an X button.
+      document.body.appendChild(panel);
+      const backdrop = document.createElement('div');
+      backdrop.className = 'ai-class-backdrop';
+      document.body.appendChild(backdrop);
+      const setOpen = open => {
+        const wasOpen = !panel.hidden;
         panel.hidden = !open;
+        backdrop.hidden = !open;
         toggle.setAttribute('aria-expanded', String(open));
-        if (open) setTimeout(() => input.focus(), 30);
+        if (open) setTimeout(() => input.focus(), 30); else if (wasOpen) toggle.focus();
       };
-      toggle.addEventListener('click', togglePanel);
-      const addClass = () => {
-        const value = input.value.trim();
-        if (!value) return;
-        if (getAIClasses().some(x => x.toLowerCase() === value.toLowerCase())) { input.focus(); return; }
-        aiClasses.push(value); saveAIClasses(); input.value = ''; renderAIClassManager(); input.focus();
+      setOpen(false);
+      toggle.addEventListener('click', () => setOpen(panel.hidden));
+      document.getElementById('aiClassClose')?.addEventListener('click', () => setOpen(false));
+      backdrop.addEventListener('click', () => setOpen(false));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !e.defaultPrevented && !panel.hidden) setOpen(false);
+      });
+      // Add Class opens a small popup; the X (or Esc / clicking outside) closes it without adding anything.
+      const wireAddModal = () => {
+      const modal = document.getElementById('aiAddModal');
+      const nameInput = document.getElementById('aiAddName');
+      const errBox = document.getElementById('aiAddError');
+      const closeModal = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); nameInput.value = ''; errBox.textContent = ''; add.focus(); };
+      const openModal = () => {
+        const q = input.value.trim();
+        nameInput.value = (q && !getAIClasses().some(x => x.toLowerCase() === q.toLowerCase())) ? q : '';
+        errBox.textContent = '';
+        modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
+        setTimeout(() => nameInput.focus(), 30);
       };
-      add.addEventListener('click', addClass);
-      input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addClass(); } });
+      const submitClass = () => {
+        const value = nameInput.value.trim();
+        if (!value) { errBox.textContent = 'Please enter a class name.'; nameInput.focus(); return; }
+        if (getAIClasses().some(x => x.toLowerCase() === value.toLowerCase())) { errBox.textContent = 'That class already exists.'; nameInput.focus(); return; }
+        aiClasses.push(value); saveAIClasses();
+        input.value = ''; renderAIClassManager();
+        closeModal();
+      };
+      add.addEventListener('click', openModal);
+      document.getElementById('aiAddClose').addEventListener('click', closeModal);
+      document.getElementById('aiAddSubmit').addEventListener('click', submitClass);
+      modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+      nameInput.addEventListener('input', () => { errBox.textContent = ''; });
+      nameInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); submitClass(); }
+        else if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
+      });
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireAddModal); else wireAddModal();
+      // The field in the panel is a search box: typing filters the class list.
+      input.addEventListener('input', renderAIClassManager);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
       panel.addEventListener('click', e => {
         const del = e.target.closest('.ai-class-delete');
         if (del) {
@@ -12431,9 +12635,82 @@
       catch { throw new Error(`${label} returned non-JSON (HTTP ${response.status}).`); }
       if (!response.ok) {
         const msg = data?.error || data?.message || text.slice(0, 300);
-        throw new Error(`${label} HTTP ${response.status}: ${msg}`);
+        const raw = typeof msg === 'string' ? msg : JSON.stringify(msg);
+        // OpenRouter out-of-credits / token-limit error (HTTP 402) surfaced through the Roboflow workflow.
+        if (/\b402\b|openrouter_credits|requires more credits|can only afford/i.test(raw)) {
+          throw new Error('The AI classification service is temporarily unavailable (the AI provider account is out of credits). Please notify the admin, or enter the item manually below.');
+        }
+        throw new Error(`${label} HTTP ${response.status}: ${raw}`);
       }
       return data;
+    }
+    /* ---------- On-device classifier (CLIP zero-shot, runs fully in the browser) ---------- */
+    const LOCAL_AI_PROMPTS = {
+      'cardboard': 'cardboard boxes', 'paper': 'sheets of paper', 'newspaper': 'newspapers',
+      'mixed paper': 'a pile of mixed paper', 'plastic': 'plastic scrap', 'pet plastic': 'PET plastic bottles',
+      'hdpe plastic': 'HDPE plastic containers', 'aluminum': 'aluminum cans or aluminum scrap',
+      'steel': 'steel or iron scrap metal', 'copper': 'copper wire or copper scrap', 'glass': 'glass bottles',
+      'wood': 'wooden planks and lumber', 'electronic waste': 'electronic waste and circuit boards',
+      'textile': 'old clothes and textile', 'mixed scrap': 'a pile of mixed scrap', 'not a scrap': 'a person, face, room or object that is not scrap material'
+    };
+    let localClassifierPromise = null;
+    function loadLocalClassifier() {
+      if (!localClassifierPromise) {
+        localClassifierPromise = (async () => {
+          setAIMode('Loading AI model (first time only)…', 'busy');
+          const mod = await import(AI_CONFIG.transformersUrl);
+          return await mod.pipeline('zero-shot-image-classification', AI_CONFIG.localModel, {
+            dtype: 'q8',
+            progress_callback: p => {
+              if (p && p.status === 'progress' && Number.isFinite(p.progress)) setAIMode(`Downloading AI model… ${Math.round(p.progress)}%`, 'busy');
+            }
+          });
+        })().catch(e => { localClassifierPromise = null; throw e; });
+      }
+      return localClassifierPromise;
+    }
+    async function callLocalClassifier() {
+      if (!aiBlob) throw new Error('Capture or upload a scrap image first.');
+      let classifier;
+      try { classifier = await loadLocalClassifier(); }
+      catch (e) { throw new Error('Could not load the on-device AI model. Check your internet connection for the first-time download, then try again.'); }
+      setAIMode('Analyzing…', 'busy');
+      const names = [...getAIClasses(), 'Not a Scrap']
+        .filter((x, i, a) => !/^unknown$/i.test(x) && a.findIndex(y => y.toLowerCase() === x.toLowerCase()) === i);
+      // Describe each class in plain words so CLIP understands it (e.g. "Wood Palette" would otherwise read as a paint palette).
+      const KEYWORD_PROMPTS = [
+        [/pall?ett?e?s?\b/i, 'a wooden shipping pallet'],
+        [/wire|cable/i, 'bundles of electrical wire and cable'],
+        [/batter/i, 'used batteries'],
+        [/tire|tyre/i, 'used rubber tires'],
+        [/\bcans?\b/i, 'crushed metal cans']
+      ];
+      const labelOf = n => {
+        const key = n.toLowerCase();
+        if (LOCAL_AI_PROMPTS[key]) return LOCAL_AI_PROMPTS[key];
+        const hit = KEYWORD_PROMPTS.find(([re]) => re.test(n));
+        return hit ? hit[1] : `${n} scrap material`;
+      };
+      const promptToName = new Map(names.map(n => [labelOf(n), n]));
+      const url = URL.createObjectURL(aiBlob);
+      let out;
+      try { out = await classifier(url, [...promptToName.keys()], { hypothesis_template: 'a photo of {}.' }); }
+      finally { URL.revokeObjectURL(url); }
+      const ranked = out.map(o => ({ name: promptToName.get(o.label) || o.label, confidence: o.score })).sort((a, b) => b.confidence - a.confidence);
+      // Only classes from the Manage Classes list may be reported ("Not a Scrap" is just an internal guard label).
+      const allowed = new Set(getAIClasses().map(x => x.toLowerCase()));
+      const classOnly = ranked.filter(x => allowed.has(x.name.toLowerCase()));
+      const top = ranked[0];
+      if (!top || top.confidence < AI_CONFIG.minConfidence) {
+        return { material: 'Unknown', confidence: Math.max(top ? top.confidence : 0, 0.01), is_scrap: false, condition: 'Unidentifiable', description: 'The image did not clearly match any scrap material.', evidence: [], alternatives: classOnly.slice(0, 6) };
+      }
+      const isNot = /^not\s+a\s*scrap$/i.test(top.name);
+      return {
+        material: top.name, confidence: top.confidence, is_scrap: !isNot, condition: 'Detected',
+        description: `On-device AI classified this image as ${top.name}.`,
+        evidence: ranked.slice(0, 6).map(x => `${x.name}: ${(x.confidence * 100).toFixed(1)}%`),
+        alternatives: classOnly.filter(x => x.name !== top.name).slice(0, 6)
+      };
     }
     async function callAIWorkflow() {
       if (!aiBlob) throw new Error('Capture or upload a scrap image first.');
@@ -12621,7 +12898,12 @@
       let material = String(r.material || r.primary_material || r.label || r.class || '').trim();
       const notScrap = /^not\s+a\s*scrap$/i.test(material);
       if (notScrap) material = 'Not a scrap';
-      const unidentifiable = !material || /^(unknown|unidentified|unidentifiable|null|undefined|n\/a)$/i.test(material);
+      let unidentifiable = !material || /^(unknown|unidentified|unidentifiable|null|undefined|n\/a)$/i.test(material);
+      // The result must be one of the classes in the Manage Classes list; otherwise treat it as not identified.
+      if (!notScrap && !unidentifiable) {
+        const match = getAIClasses().find(x => x.toLowerCase() === material.toLowerCase());
+        if (match) material = match; else unidentifiable = true;
+      }
       if (unidentifiable) material = 'Not a scrap';
       return {
         material,
@@ -12650,14 +12932,15 @@
         let q = Number(x.confidence ?? x.score ?? 0); if (q > 1) q /= 100;
         const existing = classScores.get(name.toLowerCase());
         if (existing) existing.confidence = Math.max(existing.confidence, q);
-        else classScores.set(name.toLowerCase(), { name, confidence: q });
+        // Ignore anything that is not in the Manage Classes list.
       }
       const primaryKey = String(result.material || '').toLowerCase();
       classScores.delete(primaryKey);
       // Only show alternative classifications that have a confidence above 0%.
       const rows = [...classScores.values()]
-        .filter(x => Number.isFinite(x.confidence) && x.confidence > 0)
-        .sort((a, b) => b.confidence - a.confidence || a.name.localeCompare(b.name));
+        .filter(x => Number.isFinite(x.confidence) && Math.round(x.confidence * 100) > 0)
+        .sort((a, b) => b.confidence - a.confidence || a.name.localeCompare(b.name))
+        .slice(0, 3); // top 3 only
       if (rows.length) {
         ai.altsBox.style.display = 'block';
         ai.alts.innerHTML = rows.map(x => `<div class="scanner-alt-row"><span>${esc(x.name)}</span><strong>${Math.round(x.confidence * 100)}%</strong></div>`).join('');
@@ -12681,7 +12964,7 @@
       ai.error.style.display = 'none';
       setAIMode('Analyzing…', 'busy');
       try {
-        const data = await callAIWorkflow();
+        const data = AI_CONFIG.engine === 'local' ? await callLocalClassifier() : await callAIWorkflow();
         const result = normalizeResult(data);
         renderAIResult(result);
         setAIMode('AI result ready');
@@ -12721,6 +13004,16 @@
     window.addEventListener('beforeunload', () => { stopAICamera(); revokeAIUrl(); });
     pm2vInitReportControls();
   </script>
+
+  <div class="ai-add-modal" id="aiAddModal" aria-hidden="true">
+    <div class="ai-add-card" role="dialog" aria-modal="true" aria-labelledby="aiAddTitle">
+      <button class="ai-add-close" id="aiAddClose" type="button" aria-label="Close">&times;</button>
+      <h3 id="aiAddTitle">Add New Class</h3>
+      <input id="aiAddName" maxlength="80" placeholder="Class name, e.g. Copper Wire" type="text" autocomplete="off" />
+      <div class="ai-add-error" id="aiAddError" role="alert"></div>
+      <button class="ai-add-submit" id="aiAddSubmit" type="button">Add Class</button>
+    </div>
+  </div>
 
   <div class="pm2v-receipt-modal" id="pm2vReceiptModal" aria-hidden="true">
     <div class="pm2v-receipt-card" role="dialog" aria-modal="true" aria-labelledby="pm2vReceiptTitle">
