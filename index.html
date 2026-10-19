@@ -6526,6 +6526,50 @@
       line-height: 1.4
     }
 
+    #reports .report-period-header {
+      align-items: center
+    }
+
+    #reports .report-period-export {
+      flex: 0 0 auto;
+      min-height: 36px;
+      padding: 8px 13px;
+      border: 1px solid #168342;
+      border-radius: 9px;
+      background: #168342;
+      color: #fff;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease
+    }
+
+    #reports .report-period-export:hover:not(:disabled) {
+      border-color: #116b36;
+      background: #116b36
+    }
+
+    #reports .report-period-export:disabled {
+      cursor: wait;
+      opacity: .7
+    }
+
+    @media (max-width:760px) {
+      #reports .report-period-header {
+        gap: 10px;
+        padding-right: 14px;
+        padding-left: 14px
+      }
+
+      #reports .report-period-export {
+        min-height: 34px;
+        padding: 7px 9px;
+        font-size: 11px
+      }
+    }
+
     #reports .report-kpi-grid {
       margin: 0
     }
@@ -9533,12 +9577,12 @@
           </section>
 
           <section class="report-section-card report-history-card" aria-label="Monthly reports">
-            <div class="report-section-card-header"><div><h2>Monthly Reports</h2><p>Transaction and expense totals by saved record month.</p></div></div>
+            <div class="report-section-card-header report-period-header"><div><h2>Monthly Reports</h2><p>Transaction and expense totals by saved record month.</p></div><button class="report-period-export" id="reportMonthlyExportPdf" type="button">Generate PDF</button></div>
             <div class="role-table-wrap"><table class="role-table"><thead><tr><th>MONTH</th><th>TOTAL TRANSACTIONS</th><th>TOTAL EXPENSES</th></tr></thead><tbody id="reportMonthlyBody"></tbody></table></div>
           </section>
 
           <section class="report-section-card report-history-card" aria-label="Yearly reports">
-            <div class="report-section-card-header"><div><h2>Yearly Reports</h2><p>Transaction and expense totals by saved record year.</p></div></div>
+            <div class="report-section-card-header report-period-header"><div><h2>Yearly Reports</h2><p>Transaction and expense totals by saved record year.</p></div><button class="report-period-export" id="reportYearlyExportPdf" type="button">Generate PDF</button></div>
             <div class="role-table-wrap"><table class="role-table"><thead><tr><th>YEAR</th><th>TOTAL TRANSACTIONS</th><th>TOTAL EXPENSES</th></tr></thead><tbody id="reportYearlyBody"></tbody></table></div>
           </section>
 
@@ -9912,9 +9956,9 @@
           const actions = showingArchived
             ? `<button type="button" class="inventory-action restore" data-inventory-action="restore" data-inventory-id="${encodeURIComponent(x.id)}">Restore</button>`
             : `<button type="button" class="inventory-action edit" data-inventory-action="edit" data-inventory-id="${encodeURIComponent(x.id)}">Edit</button><button type="button" class="inventory-action archive" data-inventory-action="archive" data-inventory-id="${encodeURIComponent(x.id)}">Archive</button>`;
-          return `<tr><td><strong>${esc(x.itemName || 'Unnamed Item')}</strong></td><td><span class="inventory-category-pill">${esc(x.category || '—')}</span></td><td>${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</td><td><span class="stock-range">${min.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg — ${max.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</span></td><td>${pm2vStockPill(status)}</td><td><span class="inventory-condition-pill condition-${String(x.condition || 'unknown').toLowerCase().replace(/[^a-z]+/g, '-')}">${esc(x.condition || '—')}</span></td><td>${fmtDate(x.lastUpdated)}</td>${canManage ? `<td><div class="inventory-actions">${actions}</div></td>` : ''}</tr>`;
+          return `<tr data-inventory-category="${esc(x.category || '—')}" data-stock-status="${pm2vStockClass(status)}"><td><strong>${esc(x.itemName || 'Unnamed Item')}</strong></td><td><span class="inventory-category-pill">${esc(x.category || '—')}</span></td><td>${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</td><td><span class="stock-range">${min.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg — ${max.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</span></td><td>${pm2vStockPill(status)}</td><td><span class="inventory-condition-pill condition-${String(x.condition || 'unknown').toLowerCase().replace(/[^a-z]+/g, '-')}">${esc(x.condition || '—')}</span></td><td>${fmtDate(x.lastUpdated)}</td>${canManage ? `<td><div class="inventory-actions">${actions}</div></td>` : ''}</tr>`;
         }).join('') : `<tr><td colspan="${canManage ? 8 : 7}" class="empty">${showingArchived ? 'No archived inventory records.' : 'No inventory records found.'}</td></tr>`;
-        if (typeof applyInventoryCategoryFilter === 'function') applyInventoryCategoryFilter(PM2V_INVENTORY_CATEGORY);
+        if (typeof pm2vApplyInventoryFilters === 'function') pm2vApplyInventoryFilters();
 
         if (dash) dash.innerHTML = activeRows.slice(0, 10).map(x => {
           const status = pm2vStockStatus(x);
@@ -9933,9 +9977,14 @@
         const recordCount = document.getElementById('inventoryRecordCount');
         const archivedCount = document.getElementById('inventoryArchivedCount');
         if (archivedCount) archivedCount.textContent = String(archivedRows.length);
-        if (recordCount) recordCount.textContent = showingArchived
-          ? (listView.length + ' archived record' + (listView.length === 1 ? '' : 's'))
-          : (listView.length + ' record' + (listView.length === 1 ? '' : 's'));
+        const visibleInventoryRows = body ? [...body.querySelectorAll('tr[data-stock-status]')].filter(row => !row.classList.contains('inventory-category-hidden')).length : listView.length;
+        const hasInventoryFilter = PM2V_INVENTORY_CATEGORY !== 'All' || PM2V_INVENTORY_STATUS !== 'All';
+        if (recordCount) {
+          const noun = showingArchived ? 'archived record' : 'record';
+          recordCount.textContent = hasInventoryFilter
+            ? `${visibleInventoryRows} of ${listView.length} ${noun}${listView.length === 1 ? '' : 's'}`
+            : `${listView.length} ${noun}${listView.length === 1 ? '' : 's'}`;
+        }
         if (summaryCount) summaryCount.textContent = String(activeRows.length);
         if (summaryWeight) summaryWeight.textContent = activeRows.reduce((sum, x) => sum + pm2vNum(x.weight), 0).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' kg';
         const writeSection = document.getElementById('inventoryWriteSection');
@@ -10481,7 +10530,10 @@
       const target = REPORT_STATUS_VALUES[btn.dataset.reportStatus] || '__all__';
       // Clicking the same status again clears the filter back to all statuses.
       s.value = (s.value === target) ? '__all__' : target;
-      focusReports(); pm2vRenderReports(); pm2vSyncReportFilterUI();
+      pm2vSetInventoryStatusFilter(s.value === '__all__' ? 'All' : s.value);
+      pm2vRenderReports(); pm2vSyncReportFilterUI();
+      showPage('inventory');
+      document.querySelector('#inventory .table-wrap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
 
 
@@ -10491,6 +10543,7 @@
     const inventoryCategoryLabel = document.getElementById('inventoryCategoryLabel');
     const inventoryCategoryOptions = [...document.querySelectorAll('.inventory-category-option')];
     let PM2V_INVENTORY_CATEGORY = 'All';
+    let PM2V_INVENTORY_STATUS = 'All';
     let PM2V_INVENTORY_SHOW_ARCHIVED = false;
     function closeInventoryCategoryMenu() {
       inventoryCategoryMenu?.classList.remove('open');
@@ -10500,13 +10553,59 @@
       PM2V_INVENTORY_CATEGORY = category || 'All';
       if (inventoryCategoryLabel) inventoryCategoryLabel.textContent = PM2V_INVENTORY_CATEGORY === 'All' ? 'All Categories' : PM2V_INVENTORY_CATEGORY;
       inventoryCategoryOptions.forEach(option => option.setAttribute('aria-selected', option.dataset.category === PM2V_INVENTORY_CATEGORY ? 'true' : 'false'));
-      const rows = document.querySelectorAll('#inventory .table-wrap table tbody tr');
+      pm2vApplyInventoryFilters();
+    }
+    function pm2vSetInventoryStatusFilter(status) {
+      PM2V_INVENTORY_STATUS = status || 'All';
+      if (PM2V_INVENTORY_SHOW_ARCHIVED) {
+        PM2V_INVENTORY_SHOW_ARCHIVED = false;
+        const toggle = document.getElementById('inventoryArchiveToggle');
+        toggle?.setAttribute('aria-pressed', 'false');
+        toggle?.classList.remove('active');
+        loadInventory();
+        return;
+      }
+      pm2vApplyInventoryFilters();
+    }
+    function pm2vApplyInventoryFilters() {
+      const body = document.getElementById('inventoryTableBody');
+      if (!body) return;
+      const rows = [...body.querySelectorAll('tr[data-stock-status]')];
+      let visibleCount = 0;
       rows.forEach(row => {
-        const cell = row.children[1];
-        const rowCategory = cell?.textContent?.trim() || '';
-        const hidden = !!cell && PM2V_INVENTORY_CATEGORY !== 'All' && rowCategory !== PM2V_INVENTORY_CATEGORY;
+        const categoryMatches = PM2V_INVENTORY_CATEGORY === 'All' || row.dataset.inventoryCategory === PM2V_INVENTORY_CATEGORY;
+        const statusMatches = PM2V_INVENTORY_STATUS === 'All' || row.dataset.stockStatus === pm2vStockClass(PM2V_INVENTORY_STATUS);
+        const hidden = !categoryMatches || !statusMatches;
         row.classList.toggle('inventory-category-hidden', hidden);
+        if (!hidden) visibleCount++;
       });
+
+      let emptyRow = body.querySelector('.inventory-filter-empty');
+      if (rows.length && !visibleCount) {
+        if (!emptyRow) {
+          emptyRow = document.createElement('tr');
+          emptyRow.className = 'inventory-filter-empty';
+          const cell = document.createElement('td');
+          cell.className = 'empty';
+          cell.colSpan = document.getElementById('inventoryActionsHeader')?.style.display === 'none' ? 7 : 8;
+          cell.textContent = 'No inventory records match the selected filters.';
+          emptyRow.appendChild(cell);
+          body.appendChild(emptyRow);
+        }
+      } else {
+        emptyRow?.remove();
+      }
+
+      const recordCount = document.getElementById('inventoryRecordCount');
+      if (recordCount) {
+        const totalCount = rows.length;
+        const showingArchived = PM2V_INVENTORY_SHOW_ARCHIVED;
+        const noun = showingArchived ? 'archived record' : 'record';
+        const hasFilter = PM2V_INVENTORY_CATEGORY !== 'All' || PM2V_INVENTORY_STATUS !== 'All';
+        recordCount.textContent = hasFilter
+          ? `${visibleCount} of ${totalCount} ${noun}${totalCount === 1 ? '' : 's'}`
+          : `${totalCount} ${noun}${totalCount === 1 ? '' : 's'}`;
+      }
     }
     inventoryCategoryTrigger?.addEventListener('click', e => {
       e.preventDefault();
@@ -11308,6 +11407,23 @@
         .filter(record => pm2vFinancialDateKey(record) === dateKey)
         .reduce((total, record) => total + pm2vFinancialAmount(record, kind), 0);
     }
+    function pm2vFinancialPeriodTotals() {
+      const monthly = new Map();
+      const yearly = new Map();
+      const addPeriods = (records, kind) => records.forEach(record => {
+        const dateKey = pm2vFinancialDateKey(record);
+        if (!dateKey) return;
+        const monthKey = dateKey.slice(0, 7), yearKey = dateKey.slice(0, 4), amount = pm2vFinancialAmount(record, kind);
+        const month = monthly.get(monthKey) || { transactions: 0, expenses: 0 };
+        const year = yearly.get(yearKey) || { transactions: 0, expenses: 0 };
+        month[kind === 'expense' ? 'expenses' : 'transactions'] += amount;
+        year[kind === 'expense' ? 'expenses' : 'transactions'] += amount;
+        monthly.set(monthKey, month); yearly.set(yearKey, year);
+      });
+      addPeriods(PM2V_TRANSACTIONS_CACHE, 'transaction');
+      addPeriods(PM2V_EXPENSES_CACHE, 'expense');
+      return { monthly, yearly };
+    }
     function pm2vRenderFinancialReports() {
       const transactions = PM2V_TRANSACTIONS_CACHE;
       const expenses = PM2V_EXPENSES_CACHE;
@@ -11333,20 +11449,7 @@
       const expenseCount = document.getElementById('reportExpenseHistoryCount');
       if (expenseCount) expenseCount.textContent = `${expenses.length.toLocaleString()} recorded expense${expenses.length === 1 ? '' : 's'}`;
 
-      const monthly = new Map();
-      const yearly = new Map();
-      const addPeriods = (records, kind) => records.forEach(record => {
-        const dateKey = pm2vFinancialDateKey(record);
-        if (!dateKey) return;
-        const monthKey = dateKey.slice(0, 7), yearKey = dateKey.slice(0, 4), amount = pm2vFinancialAmount(record, kind);
-        const month = monthly.get(monthKey) || { transactions: 0, expenses: 0 };
-        const year = yearly.get(yearKey) || { transactions: 0, expenses: 0 };
-        month[kind === 'expense' ? 'expenses' : 'transactions'] += amount;
-        year[kind === 'expense' ? 'expenses' : 'transactions'] += amount;
-        monthly.set(monthKey, month); yearly.set(yearKey, year);
-      });
-      addPeriods(transactions, 'transaction');
-      addPeriods(expenses, 'expense');
+      const { monthly, yearly } = pm2vFinancialPeriodTotals();
       const monthlyBody = document.getElementById('reportMonthlyBody');
       if (monthlyBody) monthlyBody.innerHTML = [...monthly.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([key, totals]) => {
         const label = new Date(`${key}-01T00:00:00`).toLocaleDateString(undefined, { year: 'numeric', month: 'long' });
@@ -11570,6 +11673,93 @@
       } catch (e) { console.error('PM2V PDF export failed', e); toast(`Could not generate PDF: ${e.message || 'Unknown error'}`, 'error') } finally { btn.disabled = false; btn.textContent = old }
     }
 
+    async function pm2vExportPeriodReportPdf(period, btn) {
+      if (!btn) return;
+      const oldLabel = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Generating…';
+      try {
+        await pm2vEnsurePdfLibraries();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const { monthly, yearly } = pm2vFinancialPeriodTotals();
+        const isMonthly = period === 'monthly';
+        const totalsByPeriod = isMonthly ? monthly : yearly;
+        const keys = [...totalsByPeriod.keys()].sort();
+        const periodLabel = key => isMonthly
+          ? new Date(`${key}-01T00:00:00`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+          : key;
+        const rangeLabel = keys.length
+          ? `${periodLabel(keys[0])} to ${periodLabel(keys[keys.length - 1])}`
+          : 'No dated records available';
+        const rows = [...totalsByPeriod.entries()]
+          .sort((a, b) => b[0].localeCompare(a[0]))
+          .map(([key, totals]) => [
+            periodLabel(key),
+            pm2vPdfMoney(totals.transactions),
+            pm2vPdfMoney(totals.expenses)
+          ]);
+        const totalTransactions = [...totalsByPeriod.values()].reduce((sum, totals) => sum + totals.transactions, 0);
+        const totalExpenses = [...totalsByPeriod.values()].reduce((sum, totals) => sum + totals.expenses, 0);
+        const generatedAt = new Date();
+        const reportTitle = isMonthly ? 'Monthly Reports' : 'Yearly Reports';
+        const filePrefix = isMonthly ? 'Monthly' : 'Yearly';
+
+        doc.setFillColor(31, 107, 61);
+        doc.rect(0, 0, 210, 42, 'F');
+        if (typeof PM2V_RECEIPT_LOGO_B64 === 'string' && PM2V_RECEIPT_LOGO_B64.length > 100) {
+          doc.addImage(`data:image/jpeg;base64,${PM2V_RECEIPT_LOGO_B64}`, 'JPEG', 15, 8, 26, 26);
+        }
+        pm2vReportPdfText(doc, 'PM2V SCRAP TRADING', 48, 14, 9, 'bold', [255, 255, 255]);
+        pm2vReportPdfText(doc, reportTitle, 48, 26, 18, 'bold', [255, 255, 255]);
+        pm2vReportPdfText(doc, `Generated: ${generatedAt.toLocaleString()}`, 48, 35, 8, 'normal', [226, 242, 231]);
+        pm2vReportPdfText(doc, 'Reporting period:', 15, 53, 9, 'bold', [82, 106, 96]);
+        pm2vReportPdfText(doc, rangeLabel, 48, 53, 9, 'normal', [23, 51, 90]);
+
+        const summaryY = 62;
+        [[15, 'TOTAL TRANSACTIONS', totalTransactions], [106, 'TOTAL EXPENSES', totalExpenses]].forEach(([x, label, value]) => {
+          doc.setFillColor(246, 250, 247);
+          doc.setDrawColor(222, 232, 226);
+          doc.roundedRect(x, summaryY, 89, 21, 3, 3, 'FD');
+          pm2vReportPdfText(doc, label, x + 5, summaryY + 7, 7, 'bold', [82, 106, 96]);
+          pm2vReportPdfText(doc, pm2vPdfMoney(value), x + 5, summaryY + 16, 12, 'bold', [23, 51, 90]);
+        });
+
+        doc.autoTable({
+          startY: 94,
+          margin: { left: 15, right: 15, bottom: 20 },
+          theme: 'grid',
+          head: [[isMonthly ? 'MONTH' : 'YEAR', 'TOTAL TRANSACTIONS', 'TOTAL EXPENSES']],
+          body: rows.length ? rows : [['No dated records available', '', '']],
+          foot: [['TOTAL', pm2vPdfMoney(totalTransactions), pm2vPdfMoney(totalExpenses)]],
+          showFoot: 'lastPage',
+          styles: { font: 'helvetica', fontSize: 9, textColor: [23, 51, 90], cellPadding: 3.5, lineColor: [222, 232, 226] },
+          headStyles: { fillColor: [23, 63, 104], textColor: [255, 255, 255], fontStyle: 'bold' },
+          footStyles: { fillColor: [239, 247, 241], textColor: [23, 51, 90], fontStyle: 'bold' },
+          alternateRowStyles: { fillColor: [248, 251, 249] },
+          columnStyles: { 0: { cellWidth: 66, fontStyle: 'bold' }, 1: { halign: 'right' }, 2: { halign: 'right' } },
+          didDrawPage: () => {
+            doc.setDrawColor(222, 232, 226);
+            doc.line(15, 285, 195, 285);
+            pm2vReportPdfText(doc, 'PM2V Scrap Trading', 15, 291, 7, 'normal', [123, 141, 130]);
+          }
+        });
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let page = 1; page <= pageCount; page++) {
+          doc.setPage(page);
+          pm2vReportPdfText(doc, `Page ${page} of ${pageCount}`, 175, 291, 7, 'normal', [123, 141, 130]);
+        }
+        doc.save(`PM2V_${filePrefix}_Report_${generatedAt.toISOString().slice(0, 10)}.pdf`);
+        toast(`${reportTitle} PDF generated successfully.`, 'success');
+      } catch (e) {
+        console.error(`PM2V ${period} report PDF export failed`, e);
+        toast(`Could not generate ${period} report PDF: ${e.message || 'Unknown error'}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = oldLabel;
+      }
+    }
+
     function pm2vInitReportControls() {
       ['reportCategoryFilter', 'reportStatusFilter', 'reportPeriodFilter'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { pm2vRenderReports(); pm2vSyncReportFilterUI() }));
       document.getElementById('reportFilterReset')?.addEventListener('click', () => { pm2vResetReportFilters(); pm2vSyncReportFilterUI() });
@@ -11579,6 +11769,9 @@
       });
       // Export PDF — generates the filtered multi-page business report on demand.
       document.getElementById('reportExportPdf')?.addEventListener('click', () => { pm2vExportReportsPdf().catch(e => console.error(e)) });
+      document.getElementById('reportMonthlyExportPdf')?.addEventListener('click', event => { pm2vExportPeriodReportPdf('monthly', event.currentTarget) });
+      document.getElementById('reportYearlyExportPdf')?.addEventListener('click', event => { pm2vExportPeriodReportPdf('yearly', event.currentTarget) });
+      pm2vSyncReportFilterUI();
     }
 
     function pm2vUserStatusLabel(value) {
