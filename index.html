@@ -442,6 +442,17 @@
       color: #58708d
     }
 
+    .scanner-preset {
+      margin: 10px 0 0;
+      padding: 10px 13px;
+      border-radius: 10px;
+      background: #eef8f0;
+      border: 1px solid #d9eedc;
+      color: #16743c;
+      font-size: 13px;
+      font-weight: 700
+    }
+
     .scanner-meta {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -517,6 +528,43 @@
       font-size: 13px;
       font-weight: 800;
       cursor: pointer
+    }
+
+    .scanner-qty {
+      margin: 10px 0 0;
+      padding: 12px 13px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #dce5ee
+    }
+
+    .scanner-qty label {
+      margin: 0 0 8px;
+      font-size: 11px
+    }
+
+    .scanner-qty-row {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .scanner-qty-row input {
+      width: 110px;
+      height: 42px
+    }
+
+    .scanner-qty-row span {
+      font-size: 13px;
+      font-weight: 800;
+      color: #334b6a
+    }
+
+    .scanner-qty-note {
+      margin-top: 7px;
+      font-size: 11px;
+      color: #7c8ea3;
+      line-height: 1.45
     }
 
     .scanner-note {
@@ -8828,6 +8876,48 @@
       font-weight: 800;
     }
   </style>
+<style id="inv-unit-toggle-style">
+  .inv-weight-label{display:flex;align-items:center;gap:8px}
+  .inv-unit-toggle{display:inline-flex;border:1px solid #cfd8e3;border-radius:999px;padding:2px;background:#f1f5f9;flex:none}
+  .inv-unit-toggle button{border:0;background:transparent;padding:3px 12px;border-radius:999px;font:inherit;font-size:12px;font-weight:700;color:#64748b;cursor:pointer;line-height:1.4}
+  .inv-unit-toggle button.active{background:#1e7a46;color:#fff}
+</style>
+<style id="tx-item-search-style">
+  .pm2v-form-group:has(#txItem){position:relative}
+  .tx-item-results{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #cfd8e3;border-radius:10px;box-shadow:0 10px 24px rgba(15,23,42,.14);z-index:60;overflow:hidden}
+  .tx-item-results[hidden]{display:none}
+  .tx-item-opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;font-size:14px;color:#1f2937;border-bottom:1px solid #eef2f6}
+  .tx-item-opt:last-child{border-bottom:0}
+  .tx-item-opt.active,.tx-item-opt:hover{background:#eaf6ef}
+  .tx-item-opt small{color:#64748b;white-space:nowrap;font-size:12px}
+  .tx-item-opt mark{background:transparent;color:#1e7a46;font-weight:700}
+  .tx-item-empty{padding:10px 12px;font-size:13px;color:#64748b}
+</style>
+<style id="tx-noitem-style">
+  .tx-noitem-modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:10000}
+  .tx-noitem-modal.open{display:flex}
+  .tx-noitem-card{background:#fff;border-radius:16px;max-width:380px;width:100%;padding:24px 22px 20px;text-align:center;box-shadow:0 20px 50px rgba(15,23,42,.3)}
+  .tx-noitem-icon{width:44px;height:44px;margin:0 auto 10px;border-radius:50%;background:#fdecea;color:#c0392b;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .tx-noitem-card h3{margin:0 0 6px;font-size:18px;color:#1f2937}
+  .tx-noitem-card p{margin:0 0 16px;font-size:14px;color:#475569;line-height:1.45;word-break:break-word}
+  .tx-noitem-ok{border:0;background:#1e7a46;color:#fff;font:inherit;font-weight:700;padding:10px 28px;border-radius:10px;cursor:pointer}
+</style>
+<style id="tx-qty-warn-style">
+  .tx-qty-warn{margin-top:5px;font-size:12.5px;line-height:1.35;color:#c0392b;font-weight:600}
+  .tx-qty-warn[hidden]{display:none}
+  #txWeight.tx-qty-over{border-color:#c0392b!important;box-shadow:0 0 0 3px rgba(192,57,43,.12)}
+</style>
+<style id="inv-history-style">
+  .inv-view-tabs{display:inline-flex;border:1px solid #cfd8e3;border-radius:999px;padding:3px;background:#f1f5f9;margin-left:auto}
+  .inv-view-tabs button{border:0;background:transparent;padding:7px 18px;border-radius:999px;font:inherit;font-size:13px;font-weight:700;color:#64748b;cursor:pointer}
+  .inv-view-tabs button.active{background:#1e7a46;color:#fff}
+  #inventory .table-wrap[hidden]{display:none}
+</style>
+<style id="ai-form-only-style">
+  .ai-scanner.ai-scanner-form-only{background:none;border:0;box-shadow:none;padding:0;margin:0}
+  .ai-scanner.ai-scanner-form-only > :not(#inventoryWriteSection){display:none!important}
+  .ai-scanner #inventoryWriteSection{margin-top:16px}
+</style>
 </head>
 
 <body class="auth-pending">
@@ -9117,14 +9207,15 @@
                 <tr>
                   <th>ITEM NAME</th>
                   <th>CATEGORY</th>
-                  <th>WEIGHT (KG)</th>
+                  <th>COMBINED TOTAL</th>
+                  <th>ENTRIES</th>
                   <th>STATUS</th>
                   <th>LAST UPDATED</th>
                 </tr>
               </thead>
               <tbody id="dashboardInventoryBody">
                 <tr>
-                  <td colspan="5" style="text-align:center;color:#98a8ba">Loading inventory…</td>
+                  <td colspan="6" style="text-align:center;color:#98a8ba">Loading inventory…</td>
                 </tr>
               </tbody>
             </table>
@@ -9151,20 +9242,6 @@
             <h1>Physical Inventory</h1>
           </div>
           <div class="date">Tuesday, August 18, 2026 <span class="sep">|</span> 05:11:45 PM</div>
-        </div>
-        <div aria-label="Inventory summary" class="inventory-stats">
-          <button type="button" class="inventory-stat-card" data-inventory-stat="items"
-            title="Show all active inventory records">
-            <span class="inventory-stat-icon" aria-hidden="true">▦</span>
-            <span class="inventory-stat-text"><span>Items</span><strong
-                id="inventorySummaryCount">0</strong><small>Total active inventory records</small></span>
-          </button>
-          <button type="button" class="inventory-stat-card" data-inventory-stat="weight"
-            title="Open inventory weight analytics in Reports">
-            <span class="inventory-stat-icon" aria-hidden="true">⚖</span>
-            <span class="inventory-stat-text"><span>Total Weight</span><strong id="inventorySummaryWeight">0
-                kg</strong><small>Combined stock weight</small></span>
-          </button>
         </div>
         <section class="ai-scanner" id="aiScannerSection">
           <div class="ai-scanner-head">
@@ -9234,19 +9311,8 @@
             </div>
             <div class="scanner-bar"><i id="aiConfidenceBar"></i></div>
             <div class="scanner-description" id="aiDescription"></div>
-            <div class="scanner-meta">
-              <div class="scanner-meta-box"><span>Scrap / Non-scrap</span><strong id="aiIsScrap">—</strong></div>
-              <div class="scanner-meta-box"><span>Classification Status</span><strong id="aiCondition">Waiting for AI
-                  result</strong></div>
-            </div>
-            <div class="scanner-alts" id="aiAlternativesBox" style="display:none">
-              <div class="scanner-alts-title">Other classifications</div>
-              <div id="aiAlternatives"></div>
-            </div>
-            <button class="scanner-apply" id="aiApplyBtn" type="button">Use Result in Inventory Form</button>
           </div>
-          <div class="scanner-error" id="aiError"></div>
-        </section>
+
         <section class="inventory-write-section manual-entry-collapsed" id="inventoryWriteSection">
           <div class="manual-entry-head">
             <div>
@@ -9255,7 +9321,7 @@
             </div>
           </div>
           <div class="form-grid-inventory">
-            <div><label>Item Name</label><input id="inventoryItemName" placeholder="e.g. Aluminum Cans" /></div>
+            <div><label>Item Name</label><input id="inventoryItemName" placeholder="e.g. Good lumber" /></div>
             <div><label>Category</label><select id="inventoryCategory">
                 <option>Metal</option>
                 <option>Wood</option>
@@ -9263,8 +9329,11 @@
                 <option>Paper</option>
                 <option>Fiber</option>
               </select></div>
-            <div><label>Current Weight (kg)</label><input id="inventoryWeight" placeholder="0.00" step="0.01" min="0"
-                type="number" /></div>
+            <div><label class="inv-weight-label"><span class="inv-unit-toggle" id="inventoryWeightUnit" data-unit="kg" role="group" aria-label="Unit">
+                  <button type="button" class="active" data-unit="kg" aria-pressed="true">kg</button>
+                  <button type="button" data-unit="pcs" aria-pressed="false">pcs</button>
+                </span></label>
+              <input id="inventoryWeight" placeholder="0.00" step="0.01" min="0" type="number" /></div>
             <div class="inventory-stock-threshold-field"><label>Minimum Stock (kg)</label><input id="inventoryMinStock"
                 value="10" step="0.01" min="0" type="number" /></div>
             <div class="inventory-stock-threshold-field"><label>Maximum Stock (kg)</label><input id="inventoryMaxStock"
@@ -9285,10 +9354,12 @@
             <button class="save" id="saveInventoryBtn" type="button">Save Item to Inventory</button>
           </div>
         </section>
+          <div class="scanner-error" id="aiError"></div>
+        </section>
         <div class="current-inventory-heading">
           <div>
             <h2>Current Inventory</h2>
-            <p>Saved inventory records and their latest details.</p>
+            <p>Combined quantity of items with the same name.</p>
           </div>
           <div class="current-inventory-heading-right"><span id="inventoryRecordCount">0 records</span><button
               type="button" class="inventory-archive-toggle" id="inventoryArchiveToggle" aria-pressed="false"
@@ -9317,8 +9388,12 @@
                 type="button"><span>Fiber</span><span aria-hidden="true" class="filter-check">✓</span></button>
             </div>
           </div>
+          <div class="inv-view-tabs" id="inventoryViewTabs" role="tablist" aria-label="Inventory view">
+            <button type="button" role="tab" class="active" data-view="current" aria-selected="true">Current</button>
+            <button type="button" role="tab" data-view="history" aria-selected="false">History</button>
+          </div>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" id="inventoryHistoryWrap" hidden>
           <table>
             <thead>
               <tr>
@@ -9336,6 +9411,23 @@
               <tr>
                 <td class="empty" colspan="8">Loading inventory…</td>
               </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap" id="inventoryCurrentWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ITEM NAME</th>
+                <th>CATEGORY</th>
+                <th>COMBINED TOTAL</th>
+                <th>ENTRIES</th>
+                <th>STATUS</th>
+                <th>LAST UPDATED</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryCombinedBody">
+              <tr><td class="empty" colspan="6">Loading inventory…</td></tr>
             </tbody>
           </table>
         </div>
@@ -9387,11 +9479,13 @@
               <!-- Row 1: Item Name → Quantity → Unit → Price -->
               <div class="pm2v-form-group">
                 <label for="txItem">Item Name</label>
-                <input id="txItem" placeholder="e.g. Palochina, Good Lumber, Sako" type="text" />
+                <input id="txItem" placeholder="Search inventory item…" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="txItemResults" aria-autocomplete="list" />
+                <div class="tx-item-results" id="txItemResults" role="listbox" hidden></div>
               </div>
               <div class="pm2v-form-group">
                 <label for="txWeight">Quantity</label>
                 <input id="txWeight" min="0" placeholder="e.g. 10, 15.5, 50" step="0.01" type="number" />
+                <div class="tx-qty-warn" id="txWeightWarn" role="alert" hidden></div>
               </div>
               <div class="pm2v-form-group">
                 <label for="txUnit">Unit</label>
@@ -10046,7 +10140,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, setDoc, deleteDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, setDoc, deleteDoc, query, where, serverTimestamp, runTransaction, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = { apiKey: "AIzaSyDBIkDxyrj6JU-wDgaTCvf_B6fpXAE7wH8", authDomain: "pm2vstorage.firebaseapp.com", projectId: "pm2vstorage", storageBucket: "pm2vstorage.firebasestorage.app", messagingSenderId: "399594566749", appId: "1:399594566749:web:2b357f98d2801fe36889b4", measurementId: "G-SX0TDMD407" };
     const firebaseApp = initializeApp(firebaseConfig), auth = getAuth(firebaseApp), db = getFirestore(firebaseApp);
     const provisionApp = initializeApp(firebaseConfig, 'pm2vProvisioner');
@@ -10110,17 +10204,14 @@
           const actions = showingArchived
             ? `<button type="button" class="inventory-action restore" data-inventory-action="restore" data-inventory-id="${encodeURIComponent(x.id)}">Restore</button>`
             : `<button type="button" class="inventory-action edit" data-inventory-action="edit" data-inventory-id="${encodeURIComponent(x.id)}">Edit</button><button type="button" class="inventory-action archive" data-inventory-action="archive" data-inventory-id="${encodeURIComponent(x.id)}">Archive</button>`;
-          return `<tr data-inventory-category="${esc(x.category || '—')}" data-stock-status="${pm2vStockClass(status)}"><td><strong>${esc(x.itemName || 'Unnamed Item')}</strong></td><td><span class="inventory-category-pill">${esc(x.category || '—')}</span></td><td>${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</td><td><span class="stock-range">${min.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg — ${max.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</span></td><td>${pm2vStockPill(status)}</td><td><span class="inventory-condition-pill condition-${String(x.condition || 'unknown').toLowerCase().replace(/[^a-z]+/g, '-')}">${esc(x.condition || '—')}</span></td><td>${fmtDate(x.lastUpdated)}</td>${canManage ? `<td><div class="inventory-actions">${actions}</div></td>` : ''}</tr>`;
+          return `<tr data-inventory-category="${esc(x.category || '—')}" data-stock-status="${pm2vStockClass(status)}"><td><strong>${esc(x.itemName || 'Unnamed Item')}</strong></td><td><span class="inventory-category-pill">${esc(x.category || '—')}</span></td><td>${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${pm2vUnitOf(x)}</td><td><span class="stock-range">${min.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg — ${max.toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</span></td><td>${pm2vStockPill(status)}</td><td><span class="inventory-condition-pill condition-${String(x.condition || 'unknown').toLowerCase().replace(/[^a-z]+/g, '-')}">${esc(x.condition || '—')}</span></td><td>${fmtDate(x.lastUpdated)}</td>${canManage ? `<td><div class="inventory-actions">${actions}</div></td>` : ''}</tr>`;
         }).join('') : `<tr><td colspan="${canManage ? 8 : 7}" class="empty">${showingArchived ? 'No archived inventory records.' : 'No inventory records found.'}</td></tr>`;
         if (typeof pm2vApplyInventoryFilters === 'function') pm2vApplyInventoryFilters();
 
-        if (dash) dash.innerHTML = activeRows.slice(0, 10).map(x => {
-          const status = pm2vStockStatus(x);
-          return `<tr><td><strong>${esc(x.itemName || 'Unnamed Item')}</strong></td><td><span class="category-pill">${esc(x.category || '—')}</span></td><td>${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</td><td>${pm2vStockPill(status)}</td><td class="dashboard-updated">${fmtDate(x.lastUpdated)}</td></tr>`;
-        }).join('') || '<tr><td colspan="5" style="text-align:center;color:#98a8ba">No inventory records found.</td></tr>';
+        if (dash) dash.innerHTML = pm2vCombineInventory(activeRows).slice(0, 10).map(g => pm2vCombinedRowHtml(g, 'category-pill')).join('') || '<tr><td colspan="6" style="text-align:center;color:#98a8ba">No inventory records found.</td></tr>';
         const activity = document.getElementById('dashboardActivityBody');
         if (activity) {
-          activity.innerHTML = activeRows.slice(0, 5).map(x => { const status = pm2vStockStatus(x); return `<div class="activity-row"><div><div class="activity-name">${esc(x.itemName || 'Unnamed Item')}</div><div class="activity-category">${esc(x.category || 'Uncategorized')} · ${esc(status)}</div><div class="activity-time">Updated ${esc(fmtDateTime(x.lastUpdated))}</div></div><div class="activity-right"><span class="activity-weight">${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} kg</span><span class="activity-status">Updated</span></div></div>` }).join('') || '<div class="activity-empty">No inventory activity is available yet.</div>';
+          activity.innerHTML = activeRows.slice(0, 5).map(x => { const status = pm2vStockStatus(x); return `<div class="activity-row"><div><div class="activity-name">${esc(x.itemName || 'Unnamed Item')}</div><div class="activity-category">${esc(x.category || 'Uncategorized')} · ${esc(status)}</div><div class="activity-time">Updated ${esc(fmtDateTime(x.lastUpdated))}</div></div><div class="activity-right"><span class="activity-weight">${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${pm2vUnitOf(x)}</span><span class="activity-status">Updated</span></div></div>` }).join('') || '<div class="activity-empty">No inventory activity is available yet.</div>';
         }
 
         document.getElementById('dashTotalItems')?.replaceChildren(document.createTextNode(String(activeRows.length)));
@@ -10140,17 +10231,81 @@
             : `${listView.length} ${noun}${listView.length === 1 ? '' : 's'}`;
         }
         if (summaryCount) summaryCount.textContent = String(activeRows.length);
-        if (summaryWeight) summaryWeight.textContent = activeRows.reduce((sum, x) => sum + pm2vNum(x.weight), 0).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' kg';
+        if (summaryWeight) summaryWeight.textContent = activeRows.reduce((sum, x) => sum + (pm2vUnitOf(x) === 'kg' ? pm2vNum(x.weight) : 0), 0).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' kg';
+        PM2V_INV_ACTIVE = activeRows; pm2vRenderCombinedInventory();
         const writeSection = document.getElementById('inventoryWriteSection');
         if (writeSection && !document.body.classList.contains('inventory-editing')) writeSection.style.display = 'none';
       } catch (e) { console.error(e); toast('Could not load inventory. Check Firestore rules.', 'error') }
     }
+
+    // ─── INVENTORY VIEWS: Current (combined totals) / History (every saved entry) ─
+    let PM2V_INV_VIEW = 'current', PM2V_INV_ACTIVE = [];
+    // Shared by Physical Inventory (Current) and the Dashboard: combine same name + unit, hide 0 stock, newest added first.
+    function pm2vCombineInventory(list) {
+      const nn = v => String(v || '').trim().replace(/\s+/g, ' ').toLowerCase();
+      const groups = new Map();
+      (list || []).filter(x => pm2vStockStatus(x) !== 'Inactive' && x.itemName).forEach(x => {
+        const unit = pm2vUnitOf(x), key = nn(x.itemName) + '|' + unit;
+        const g = groups.get(key) || { name: String(x.itemName).trim(), category: x.category || '—', unit, total: 0, entries: 0, updated: null, added: null };
+        g.total += pm2vNum(x.weight); g.entries++;
+        const d = valueDate(x.lastUpdated); if (d && (!g.updated || d > g.updated)) g.updated = d;
+        const ad = valueDate(x.lastAddedAt) || valueDate(x.lastUpdated); if (ad && (!g.added || ad > g.added)) g.added = ad;
+        groups.set(key, g);
+      });
+      return [...groups.values()].filter(g => g.total > 0).sort((a, b) => (b.added?.getTime() || 0) - (a.added?.getTime() || 0) || a.name.localeCompare(b.name));
+    }
+    // Combined stock status: below 10 (9 and under) = Low Stock, 10 and above = In Stock.
+    function pm2vCombinedStatus(total) { return total < 10 ? 'Low Stock' : 'In Stock' }
+    function pm2vCombinedRowHtml(g, pillClass) {
+      return `<tr data-inventory-category="${esc(g.category)}"><td><strong>${esc(g.name)}</strong></td><td><span class="${pillClass}">${esc(g.category)}</span></td><td><strong>${g.total.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${g.unit}</strong></td><td>${g.entries} ${g.entries === 1 ? 'entry' : 'entries'}</td><td>${pm2vStockPill(pm2vCombinedStatus(g.total))}</td><td class="dashboard-updated">${g.updated ? fmtDate(g.updated) : '—'}</td></tr>`;
+    }
+    function pm2vRenderCombinedInventory() {
+      const body = document.getElementById('inventoryCombinedBody'); if (!body) return;
+      const all = pm2vCombineInventory(PM2V_INV_ACTIVE);
+      const rows = all.filter(g => PM2V_INVENTORY_CATEGORY === 'All' || g.category === PM2V_INVENTORY_CATEGORY);
+      body.innerHTML = rows.length ? rows.map(g => pm2vCombinedRowHtml(g, 'inventory-category-pill')).join('')
+        : `<tr><td class="empty" colspan="6">${all.length ? 'No items match the selected category.' : 'No inventory records found.'}</td></tr>`;
+      const rc = document.getElementById('inventoryRecordCount');
+      if (rc && PM2V_INV_VIEW === 'current') rc.textContent = PM2V_INVENTORY_CATEGORY === 'All' ? `${all.length} ${all.length === 1 ? 'item' : 'items'}` : `${rows.length} of ${all.length} items`;
+    }
+    function pm2vSetInventoryView(view) {
+      PM2V_INV_VIEW = view === 'history' ? 'history' : 'current';
+      const hist = PM2V_INV_VIEW === 'history';
+      document.querySelectorAll('#inventoryViewTabs button').forEach(b => { const on = b.dataset.view === PM2V_INV_VIEW; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      const cur = document.getElementById('inventoryCurrentWrap'), his = document.getElementById('inventoryHistoryWrap');
+      if (cur) cur.hidden = hist; if (his) his.hidden = !hist;
+      const h2 = document.querySelector('#inventory .current-inventory-heading h2'), p = document.querySelector('#inventory .current-inventory-heading p');
+      if (h2) h2.textContent = hist ? 'Inventory History' : 'Current Inventory';
+      if (p) p.textContent = hist ? 'Every saved entry and its latest details.' : 'Combined quantity of items with the same name.';
+      const arch = document.getElementById('inventoryArchiveToggle'); if (arch) arch.style.display = hist ? '' : 'none';
+      if (hist) { pm2vApplyInventoryFilters(); } else { if (PM2V_INVENTORY_SHOW_ARCHIVED) pm2vSetArchiveView(false); pm2vRenderCombinedInventory(); }
+    }
+    document.getElementById('inventoryViewTabs')?.addEventListener('click', e => { const b = e.target.closest('button[data-view]'); if (b) pm2vSetInventoryView(b.dataset.view); });
+
+    function pm2vSetWeightUnit(unit) {
+      unit = unit === 'pcs' ? 'pcs' : 'kg';
+      const box = document.getElementById('inventoryWeightUnit'), input = document.getElementById('inventoryWeight');
+      if (!box) return;
+      box.dataset.unit = unit;
+      box.querySelectorAll('button').forEach(b => { const on = b.dataset.unit === unit; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') });
+      if (input) { input.step = unit === 'pcs' ? '1' : '0.01'; input.placeholder = unit === 'pcs' ? '0' : '0.00' }
+    }
+    function pm2vGetWeightUnit() { return document.getElementById('inventoryWeightUnit')?.dataset.unit === 'pcs' ? 'pcs' : 'kg' }
+    function pm2vUnitOf(x) { return x && x.weightUnit === 'pcs' ? 'pcs' : 'kg' }
+    document.getElementById('inventoryWeightUnit')?.addEventListener('click', e => {
+      const b = e.target.closest('button[data-unit]'); if (!b) return;
+      const input = document.getElementById('inventoryWeight');
+      if (pm2vGetWeightUnit() !== b.dataset.unit && input) input.value = '';
+      pm2vSetWeightUnit(b.dataset.unit);
+    });
+    window.pm2vSetWeightUnit = pm2vSetWeightUnit;
 
     async function saveInventory() {
       const role = String(PM2V_PROFILE?.role || '').trim().toLowerCase();
       if (!['secretary', 'owner'].includes(role)) { toast('Only secretary and owner can add new inventory items.', 'error'); return }
       const name = document.getElementById('inventoryItemName')?.value.trim();
       const category = document.getElementById('inventoryCategory')?.value;
+      const weightUnit = pm2vGetWeightUnit();
       const weight = pm2vNum(document.getElementById('inventoryWeight')?.value, NaN);
       // Staff cannot configure stock thresholds. Protect the saved values as well
       // as hiding the fields, so client-side input changes cannot override defaults.
@@ -10159,16 +10314,36 @@
       const condition = document.getElementById('inventoryCondition')?.value;
       const status = document.getElementById('inventoryState')?.value || 'Active';
       if (!name) { toast('Enter an item name first.', 'error'); return }
-      if (!Number.isFinite(weight) || weight < 0) { toast('Enter a valid current weight.', 'error'); return }
+      if (!Number.isFinite(weight) || weight < 0) { toast(`Enter a valid current ${weightUnit === 'pcs' ? 'quantity (pcs)' : 'weight'}.`, 'error'); return }
       if (!Number.isFinite(minStock) || minStock < 0 || !Number.isFinite(maxStock) || maxStock < minStock) { toast('Maximum stock must be greater than or equal to minimum stock.', 'error'); return }
       const b = document.getElementById('saveInventoryBtn'); b.disabled = true; b.textContent = 'Saving…';
       try {
-        await addDoc(collection(db, 'inventory'), { itemName: name, category: category || 'Metal', weight, minStock, maxStock, condition: condition || 'Good', quantity: 1, status, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp() });
+        // If an active item with the same name AND unit already exists, combine into it instead of creating a duplicate.
+        const nn = v => String(v || '').trim().replace(/\s+/g, ' ').toLowerCase();
+        const existingSnap = await getDocs(collection(db, 'inventory'));
+        const existing = existingSnap.docs.find(d => { const x = d.data(); return !x.archived && nn(x.itemName) === nn(name) && pm2vUnitOf(x) === weightUnit; });
+        if (existing) {
+          let combined = 0;
+          await runTransaction(db, async tx => {
+            const snap = await tx.get(existing.ref);
+            combined = Math.max(0, pm2vNum(snap.data()?.weight)) + weight;
+            tx.update(existing.ref, { weight: combined, weightUnit, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp(), lastAddedAt: serverTimestamp() });
+          });
+          ['inventoryItemName', 'inventoryWeight', 'inventoryMinStock', 'inventoryMaxStock'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '' });
+          document.getElementById('inventoryMinStock').value = PM2V_DEFAULT_MIN_STOCK;
+          document.getElementById('inventoryMaxStock').value = PM2V_DEFAULT_MAX_STOCK;
+          pm2vSetWeightUnit('kg');
+          await loadInventory(); await loadReports();
+          toast(`"${existing.data().itemName}" already exists, so ${weight.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${weightUnit} was added. New total: ${combined.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${weightUnit}.`);
+          return;
+        }
+        await addDoc(collection(db, 'inventory'), { itemName: name, category: category || 'Metal', weight, weightUnit, minStock, maxStock, condition: condition || 'Good', quantity: 1, status, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp(), lastAddedAt: serverTimestamp() });
         ['inventoryItemName', 'inventoryWeight', 'inventoryMinStock', 'inventoryMaxStock'].forEach(id => { const el = document.getElementById(id); if (el) el.value = '' });
         document.getElementById('inventoryMinStock').value = PM2V_DEFAULT_MIN_STOCK;
         document.getElementById('inventoryMaxStock').value = PM2V_DEFAULT_MAX_STOCK;
+        pm2vSetWeightUnit('kg');
         await loadInventory(); await loadReports(); toast('Inventory item saved with automatic stock status.');
-      } catch (e) { console.error(e); toast('Could not save inventory item. Check Firestore write rules.', 'error') }
+      } catch (e) { console.error(e); toast('Could not save inventory item. Check Firestore write rules.' + (e && e.code ? ` (${e.code})` : ''), 'error') }
       finally { b.disabled = false; b.textContent = 'Save Item to Inventory' }
     }
 
@@ -10183,7 +10358,7 @@
         const nameField = document.getElementById('inventoryItemName'), categoryField = document.getElementById('inventoryCategory'), weightField = document.getElementById('inventoryWeight'), minField = document.getElementById('inventoryMinStock'), maxField = document.getElementById('inventoryMaxStock'), conditionField = document.getElementById('inventoryCondition'), stateField = document.getElementById('inventoryState');
         if (nameField) nameField.value = x.itemName || '';
         if (categoryField) categoryField.value = x.category || 'Metal';
-        if (weightField) weightField.value = pm2vNum(x.weight);
+        pm2vSetWeightUnit(pm2vUnitOf(x)); if (weightField) weightField.value = pm2vNum(x.weight);
         if (minField) minField.value = min;
         if (maxField) maxField.value = max;
         if (conditionField) conditionField.value = x.condition || 'Good';
@@ -10214,15 +10389,15 @@
       const role = String(PM2V_PROFILE?.role || '').trim().toLowerCase();
       if (!['secretary', 'owner'].includes(role)) { toast('Only secretary and owner can edit inventory items.', 'error'); return }
       const b = document.getElementById('saveInventoryBtn'), id = b.dataset.editId; if (!id) return;
-      const name = document.getElementById('inventoryItemName')?.value.trim(), category = document.getElementById('inventoryCategory')?.value, weight = pm2vNum(document.getElementById('inventoryWeight')?.value, NaN), minStock = pm2vNum(document.getElementById('inventoryMinStock')?.value, PM2V_DEFAULT_MIN_STOCK), maxStock = pm2vNum(document.getElementById('inventoryMaxStock')?.value, PM2V_DEFAULT_MAX_STOCK), condition = document.getElementById('inventoryCondition')?.value, status = document.getElementById('inventoryState')?.value || 'Active';
+      const name = document.getElementById('inventoryItemName')?.value.trim(), category = document.getElementById('inventoryCategory')?.value, weightUnit = pm2vGetWeightUnit(), weight = pm2vNum(document.getElementById('inventoryWeight')?.value, NaN), minStock = pm2vNum(document.getElementById('inventoryMinStock')?.value, PM2V_DEFAULT_MIN_STOCK), maxStock = pm2vNum(document.getElementById('inventoryMaxStock')?.value, PM2V_DEFAULT_MAX_STOCK), condition = document.getElementById('inventoryCondition')?.value, status = document.getElementById('inventoryState')?.value || 'Active';
       if (!name) { toast('Enter an item name first.', 'error'); return }
-      if (!Number.isFinite(weight) || weight < 0) { toast('Enter a valid current weight.', 'error'); return }
+      if (!Number.isFinite(weight) || weight < 0) { toast(`Enter a valid current ${weightUnit === 'pcs' ? 'quantity (pcs)' : 'weight'}.`, 'error'); return }
       if (!Number.isFinite(minStock) || minStock < 0 || !Number.isFinite(maxStock) || maxStock < minStock) { toast('Maximum stock must be greater than or equal to minimum stock.', 'error'); return }
       b.disabled = true; b.textContent = 'Updating…';
       try {
-        await updateDoc(doc(db, 'inventory', id), { itemName: name, category: category || 'Metal', weight, minStock, maxStock, condition: condition || 'Good', status, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp() });
+        await updateDoc(doc(db, 'inventory', id), { itemName: name, category: category || 'Metal', weight, weightUnit, minStock, maxStock, condition: condition || 'Good', status, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp() });
         cancelInventoryEdit(); await loadInventory(); await loadReports(); toast('Inventory item updated. Stock status recalculated.');
-      } catch (e) { console.error(e); toast('Could not update inventory item. Check Firestore rules.', 'error') }
+      } catch (e) { console.error(e); toast('Could not update inventory item. Check Firestore rules.' + (e && e.code ? ` (${e.code})` : ''), 'error') }
       finally { b.disabled = false }
     }
     async function deleteInventory(id) { const role = String(PM2V_PROFILE?.role || '').trim().toLowerCase(); if (!['secretary', 'owner'].includes(role)) { toast('Only secretary and owner can delete inventory items.', 'error'); return } if (!confirm('Delete this inventory item? This action cannot be undone.')) return; try { await deleteDoc(doc(db, 'inventory', id)); await loadInventory(); toast('Inventory item deleted.') } catch (e) { console.error(e); toast('Could not delete inventory item. Check Firestore rules.', 'error') } }
@@ -10295,7 +10470,7 @@
 
       // AI Scrap Scanner available to staff and secretary roles.
       const aiScanner = document.getElementById('aiScannerSection');
-      if (aiScanner) aiScanner.style.display = (r === 'staff' || r === 'secretary') ? '' : 'none';
+      if (aiScanner) { const scanRole = (r === 'staff' || r === 'secretary'); aiScanner.style.display = ''; aiScanner.classList.toggle('ai-scanner-form-only', !scanRole); }
 
       const inv = document.querySelector('.nav [data-page="inventory"]');
       if (inv) inv.style.display = '';
@@ -10648,7 +10823,7 @@
       // Items card — return to the full active list and jump to the table.
       if (PM2V_INVENTORY_SHOW_ARCHIVED) pm2vSetArchiveView(false);
       applyInventoryCategoryFilter('All');
-      document.querySelector('#inventory .table-wrap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelector('#inventory .table-wrap:not([hidden])')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
     function pm2vSetArchiveView(show) {
       PM2V_INVENTORY_SHOW_ARCHIVED = !!show;
@@ -10688,7 +10863,7 @@
       pm2vSetInventoryStatusFilter(s.value === '__all__' ? 'All' : s.value);
       pm2vRenderReports(); pm2vSyncReportFilterUI();
       showPage('inventory');
-      document.querySelector('#inventory .table-wrap')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelector('#inventory .table-wrap:not([hidden])')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
 
 
@@ -10709,8 +10884,10 @@
       if (inventoryCategoryLabel) inventoryCategoryLabel.textContent = PM2V_INVENTORY_CATEGORY === 'All' ? 'All Categories' : PM2V_INVENTORY_CATEGORY;
       inventoryCategoryOptions.forEach(option => option.setAttribute('aria-selected', option.dataset.category === PM2V_INVENTORY_CATEGORY ? 'true' : 'false'));
       pm2vApplyInventoryFilters();
+      pm2vRenderCombinedInventory();
     }
     function pm2vSetInventoryStatusFilter(status) {
+      if (PM2V_INV_VIEW !== 'history') pm2vSetInventoryView('history');
       PM2V_INVENTORY_STATUS = status || 'All';
       if (PM2V_INVENTORY_SHOW_ARCHIVED) {
         PM2V_INVENTORY_SHOW_ARCHIVED = false;
@@ -11229,6 +11406,111 @@
       }
     }
 
+    // ─── TRANSACTION ITEM SEARCH (max 5 inventory matches) ───────────────────────
+    (function pm2vInitTxItemSearch() {
+      const input = document.getElementById('txItem'), box = document.getElementById('txItemResults');
+      if (!input || !box) return;
+      let items = [], loadedAt = 0, active = -1, shown = [];
+      const norm = v => String(v || '').trim().toLowerCase();
+      const escH = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      async function loadItems(force) {
+        if (!force && items.length && Date.now() - loadedAt < 30000) return;
+        try {
+          const snap = await getDocs(collection(db, 'inventory'));
+          const merged = new Map();
+          snap.docs.map(d => ({ id: d.id, ...d.data() }))
+            .filter(x => !x.archived && pm2vStockStatus(x) !== 'Inactive' && x.itemName)
+            .forEach(x => {
+              const key = norm(x.itemName).replace(/\s+/g, ' ') + '|' + pm2vUnitOf(x);
+              const cur = merged.get(key);
+              if (cur) cur.weight = pm2vNum(cur.weight) + pm2vNum(x.weight);
+              else merged.set(key, { ...x, weight: pm2vNum(x.weight) });
+            });
+          // Same name + unit are combined into one entry; items with nothing left are not offered.
+          items = [...merged.values()].filter(x => x.weight > 0);
+          loadedAt = Date.now();
+        } catch (e) { console.error(e); }
+      }
+      function close() { box.hidden = true; input.setAttribute('aria-expanded', 'false'); active = -1; }
+      function render() {
+        const q = norm(input.value);
+        const scored = items.map(x => {
+          const n = norm(x.itemName), i = n.indexOf(q);
+          return { x, rank: !q ? 2 : n.startsWith(q) ? 0 : i >= 0 ? 1 : -1 };
+        }).filter(r => r.rank >= 0).sort((a, b) => a.rank - b.rank || String(a.x.itemName).localeCompare(String(b.x.itemName)));
+        shown = scored.slice(0, 5).map(r => r.x); active = shown.length ? 0 : -1;
+        box.innerHTML = shown.length ? shown.map((x, i) => {
+          const name = String(x.itemName), at = q ? norm(name).indexOf(q) : -1;
+          const label = at >= 0 ? escH(name.slice(0, at)) + '<mark>' + escH(name.slice(at, at + q.length)) + '</mark>' + escH(name.slice(at + q.length)) : escH(name);
+          return `<div class="tx-item-opt${i === 0 ? ' active' : ''}" role="option" data-i="${i}"><span>${label}</span><small>${pm2vNum(x.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${pm2vUnitOf(x)} in stock</small></div>`;
+        }).join('') : '<div class="tx-item-empty">No matching inventory item.</div>';
+        box.hidden = false; input.setAttribute('aria-expanded', 'true');
+      }
+      function setActive(i) {
+        if (!shown.length) return; active = (i + shown.length) % shown.length;
+        box.querySelectorAll('.tx-item-opt').forEach((el, k) => el.classList.toggle('active', k === active));
+      }
+      function pick(x) {
+        if (!x) return;
+        input.value = x.itemName;
+        input.dispatchEvent(new Event('change', { bubbles: true })); // applies price/unit preset if one exists
+        const u = document.getElementById('txUnit'); if (u) u.value = pm2vUnitOf(x);
+        close(); document.getElementById('txWeight')?.focus();
+      }
+      input.addEventListener('focus', async () => { await loadItems(true); render(); });
+      input.addEventListener('input', async () => { await loadItems(false); render(); });
+      input.addEventListener('keydown', e => {
+        if (box.hidden) return;
+        if (e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active - 1); }
+        else if (e.key === 'Enter' && active >= 0 && shown[active]) { e.preventDefault(); pick(shown[active]); }
+        else if (e.key === 'Escape') close();
+      });
+      box.addEventListener('mousedown', e => { // mousedown so it fires before the input blurs
+        const o = e.target.closest('.tx-item-opt'); if (!o) return; e.preventDefault(); pick(shown[+o.dataset.i]);
+      });
+      document.addEventListener('click', e => { if (!e.target.closest('#txItem, #txItemResults')) close(); });
+      input.addEventListener('blur', () => setTimeout(close, 120));
+      window.pm2vTxInv = { load: loadItems, get: () => items };
+    })();
+
+    function pm2vShowNoItemPopup(name) {
+      const m = document.getElementById('txNoItemModal'); if (!m) { toast(`No item exists with the name "${name}".`, 'error'); return; }
+      document.getElementById('txNoItemMsg').textContent = `No item exists in the inventory with the name "${name}". Please pick an item from the search list or add it to the inventory first.`;
+      m.classList.add('open'); m.setAttribute('aria-hidden', 'false');
+      const close = () => { m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.getElementById('txItem')?.focus(); document.removeEventListener('keydown', onKey); };
+      const onKey = e => { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); close(); } };
+      document.addEventListener('keydown', onKey);
+      document.getElementById('txNoItemOk').onclick = close;
+      m.onclick = e => { if (e.target === m) close(); };
+      document.getElementById('txNoItemOk').focus();
+    }
+
+    // ─── QUANTITY vs STOCK WARNING (Transactions) ────────────────────────────────
+    async function pm2vTxQtyCheck(force) {
+      const warn = document.getElementById('txWeightWarn'), qtyEl = document.getElementById('txWeight');
+      if (!warn || !qtyEl) return false;
+      const hide = () => { warn.hidden = true; warn.textContent = ''; qtyEl.classList.remove('tx-qty-over'); return false; };
+      const nn = v => String(v || '').trim().replace(/\s+/g, ' ').toLowerCase();
+      const name = nn(document.getElementById('txItem')?.value), unit = document.getElementById('txUnit')?.value || 'kg';
+      const qty = Number(qtyEl.value), type = document.getElementById('txType')?.value || 'sale';
+      if (type !== 'sale' || !name || !Number.isFinite(qty) || qty <= 0) return hide();
+      const inv = window.pm2vTxInv; if (!inv) return hide();
+      await inv.load(!!force);
+      const match = inv.get().find(x => nn(x.itemName) === name && pm2vUnitOf(x) === unit);
+      if (!match) return hide();
+      const available = Math.max(0, pm2vNum(match.weight));
+      if (qty > available) {
+        warn.textContent = `Not enough stock. Only ${available.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${unit} of "${match.itemName}" available in inventory.`;
+        warn.hidden = false; qtyEl.classList.add('tx-qty-over'); return true;
+      }
+      return hide();
+    }
+    ['input', 'change'].forEach(ev => document.getElementById('txWeight')?.addEventListener(ev, () => pm2vTxQtyCheck(false)));
+    document.getElementById('txUnit')?.addEventListener('change', () => pm2vTxQtyCheck(false));
+    document.getElementById('txItem')?.addEventListener('change', () => pm2vTxQtyCheck(false));
+    document.getElementById('txItem')?.addEventListener('input', () => pm2vTxQtyCheck(false));
+
     // ─── SAVE TRANSACTION (updated fields) ───────────────────────────────────────
     async function saveTransaction() {
       const btn  = document.getElementById('txSave');
@@ -11248,6 +11530,17 @@
       if (!item) { toast('Enter an item name.', 'error'); return; }
       if (!Number.isFinite(quantityWeight) || quantityWeight <= 0) { toast('Enter a valid quantity greater than 0.', 'error'); return; }
 
+      // Quantity may not exceed the available stock of the selected item.
+      if (await pm2vTxQtyCheck(true)) { document.getElementById('txWeight')?.focus(); return; }
+
+      // Block transactions for items that do not exist in the (active) inventory.
+      try {
+        const chkSnap = await getDocs(collection(db, 'inventory'));
+        const nn = v => String(v || '').trim().replace(/\s+/g, ' ').toLowerCase();
+        const exists = chkSnap.docs.some(d => { const x = d.data(); return !x.archived && nn(x.itemName) === nn(item); });
+        if (!exists) { pm2vShowNoItemPopup(item); return; }
+      } catch (_ce) { console.error(_ce); /* if inventory can't be read, fall through to the normal save flow */ }
+
       // Build the record date from the selected date field (defaults to today).
       // We store it as a JS Date so Firestore serialises it properly, but we
       // also keep the ISO string for easy daily-grouping queries.
@@ -11255,28 +11548,57 @@
 
       if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
       try {
-        // Attempt to match inventory for auto-update (best-effort — not mandatory for the new flow).
-        let inventoryUpdated = false;
+        // Auto-adjust inventory: a sale deducts the transacted quantity, a collection adds it.
+        // Matches the active (non-archived) inventory item by name (case/space-insensitive) AND unit (kg/pcs).
+        let inventoryUpdated = false, inventoryNote = '', invApplied = [];
+        const normName = v => String(v || '').trim().replace(/\s+/g, ' ').toLowerCase();
         try {
           const invSnap = await getDocs(collection(db, 'inventory'));
-          const normalizedItem = item.toLowerCase();
-          const match = invSnap.docs.map(d => ({ id: d.id, ref: d.ref, ...d.data() })).find(x =>
-            String(x.itemName || '').trim().toLowerCase() === normalizedItem
-          );
-          if (match && pm2vStockStatus(match) !== 'Inactive') {
-            const currentWeight = Math.max(0, pm2vNum(match.weight));
-            let newWeight = currentWeight;
-            if (type === 'sale') {
-              if (quantityWeight > currentWeight) { toast(`Sale exceeds available stock. Current stock is ${currentWeight.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${unit}.`, 'error'); if (btn) { btn.disabled = false; btn.textContent = '✓ Save Transaction'; } return; }
-              newWeight = currentWeight - quantityWeight;
-            } else if (type === 'collection') {
-              newWeight = currentWeight + quantityWeight;
+          const sameName = invSnap.docs.map(d => ({ id: d.id, ref: d.ref, ...d.data() }))
+            .filter(x => !x.archived && pm2vStockStatus(x) !== 'Inactive' && normName(x.itemName) === normName(item));
+          const matches = sameName.filter(x => pm2vUnitOf(x) === unit);
+          if (matches.length) {
+            const delta = type === 'sale' ? -quantityWeight : (type === 'collection' ? quantityWeight : 0);
+            if (delta !== 0) {
+              // Atomic read-check-write across every same-name record (duplicates are treated as one combined stock).
+              const applied = [];
+              await runTransaction(db, async tx => {
+                applied.length = 0;
+                const snaps = await Promise.all(matches.map(m => tx.get(m.ref)));
+                const curs = snaps.map(sn => Math.max(0, pm2vNum(sn.data()?.weight)));
+                const total = curs.reduce((a, c) => a + c, 0);
+                if (delta < 0 && quantityWeight > total) {
+                  const err = new Error('INSUFFICIENT_STOCK'); err.available = total; throw err;
+                }
+                if (delta > 0) { tx.update(matches[0].ref, { weight: curs[0] + delta, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp() }); applied.push({ ref: matches[0].ref, delta }); }
+                else {
+                  let left = quantityWeight;
+                  matches.forEach((m, i) => {
+                    if (left <= 0 || curs[i] <= 0) return;
+                    const take = Math.min(curs[i], left); left -= take;
+                    tx.update(m.ref, { weight: curs[i] - take, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp() });
+                    applied.push({ ref: m.ref, delta: -take });
+                  });
+                }
+              });
+              inventoryUpdated = true; invApplied = applied.slice();
             }
-            await updateDoc(match.ref, { weight: newWeight, updatedBy: pm2vCurrentUserName(), lastUpdated: serverTimestamp() });
-            inventoryUpdated = true;
+          } else if (sameName.length) {
+            inventoryNote = ` Inventory not updated: "${item}" is tracked in ${pm2vUnitOf(sameName[0])}, but this transaction is in ${unit}.`;
+          } else {
+            inventoryNote = ' No matching inventory item found, so stock was not changed.';
           }
-        } catch (_ie) { /* inventory match is optional */ }
+        } catch (_ie) {
+          if (_ie && _ie.message === 'INSUFFICIENT_STOCK') {
+            toast(`Sale exceeds available stock. Current stock is ${_ie.available.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${unit}.`, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = '✓ Save Transaction'; }
+            return;
+          }
+          console.error(_ie);
+          inventoryNote = ' Inventory could not be updated.';
+        }
 
+        try {
         await addDoc(collection(db, 'transactions'), {
           // — Canonical 4-field structure (Item Name / Quantity / Unit / Price) —
           itemName:        item,
@@ -11302,6 +11624,11 @@
           createdAt:       serverTimestamp(),
           recordDate:      recordDate
         });
+        } catch (txErr) {
+          // Transaction record failed: undo the stock change so inventory stays consistent.
+          for (const a of invApplied) { try { await updateDoc(a.ref, { weight: increment(-a.delta), lastUpdated: serverTimestamp() }); } catch (_r) { console.error(_r); } }
+          throw txErr;
+        }
 
         // Clear form fields, keep date as today
         ['txItem', 'txWeight', 'txAmount', 'txNotes'].forEach(id => {
@@ -11315,11 +11642,12 @@
         if (txTypeEl) txTypeEl.value = 'sale';
         const txUnitEl = document.getElementById('txUnit');
         if (txUnitEl) txUnitEl.value = 'kg';
+        pm2vTxQtyCheck(true);
 
         await loadTransactions();
         await loadInventory();
         await loadReports();
-        toast('Transaction saved successfully.' + (inventoryUpdated ? ' Inventory updated.' : ''));
+        toast('Transaction saved successfully.' + (inventoryUpdated ? (type === 'sale' ? ' Stock deducted from inventory.' : ' Inventory updated.') : inventoryNote));
       } catch (e) {
         console.error(e);
         toast('Could not save the transaction. Check Firestore rules.', 'error');
@@ -12337,11 +12665,34 @@
       proxyUrl: 'https://pm2v.vercel.app/api/roboflow',
       directFallback: false
     };
-    const DEFAULT_AI_CLASSES = [
-      'Cardboard', 'Paper', 'Newspaper', 'Mixed Paper', 'Plastic', 'PET Plastic', 'HDPE Plastic',
-      'Aluminum', 'Steel', 'Copper', 'Glass', 'Wood', 'Electronic Waste', 'Textile', 'Mixed Scrap', 'Unknown'
+    // Scrap presets: class name (Tagalog / English as used in the shop), unit, price, category, and a plain-words prompt for the on-device AI.
+    // price = value pre-filled in the form; priceLow = lower end when the price is a range (e.g. Jumbo bag 130 to 70).
+    const AI_PRESETS = [
+      { name: 'Good lumber',        unit: 'kg',  price: 20,  category: 'Wood',    prompt: 'stack of long reddish-brown solid wood lumber planks and boards' },
+      { name: 'Sako',               unit: 'pcs', price: 5,   category: 'Fiber',   count: ['woven sack','woven sacks'], prompt: 'empty woven sacks' },
+      { name: 'Panggatong',         unit: 'kg',  price: 3,   category: 'Wood',    prompt: 'small wood scraps and firewood' },
+      { name: 'Plywood (good)',     unit: 'kg',  price: 35,  category: 'Wood',    prompt: 'good quality plywood' },
+      { name: 'Plywood (bad)',      unit: 'kg',  price: 30,  category: 'Wood',    prompt: 'bad quality plywood' },
+      { name: 'Jumbo bag',          unit: 'pcs', price: 130, priceLow: 70,  category: 'Fiber',   count: ['jumbo bulk bag','jumbo bulk bags'], prompt: 'large jumbo bulk bags' },
+      { name: 'Damaged kahoy',      unit: 'kg',  price: 7,   category: 'Wood',    prompt: 'broken rotten damaged wood pieces' },
+      { name: 'Palochina',          unit: 'pcs', price: 300, category: 'Wood',    count: ['wooden pallet','wooden pallets'], prompt: 'stacked wooden pallets' },
+      { name: 'Pallet (bad)',       unit: 'pcs', price: 0,   category: 'Wood',    count: ['damaged wooden pallet','damaged wooden pallets'], prompt: 'damaged pallet or bad quality pallet' },
+      { name: 'Carton (small)',     unit: 'pcs', price: 15,  category: 'Paper',   count: ['small cardboard box','small cardboard boxes'], prompt: 'a small cardboard box' },
+      { name: 'Carton (medium)',    unit: 'pcs', price: 20,  category: 'Paper',   count: ['medium cardboard box','medium cardboard boxes'], prompt: 'a medium cardboard box' },
+      { name: 'Carton (large)',     unit: 'pcs', price: 25,  category: 'Paper',   count: ['large cardboard box','large cardboard boxes'], prompt: 'a large cardboard box' },
+      { name: 'Pallet (plastic)',   unit: 'pcs', price: 450, priceLow: 400, category: 'Plastic', count: ['plastic pallet','plastic pallets'], prompt: 'a plastic pallet' },
+      { name: 'Takip ng softdrinks', unit: 'kg', price: 55,  category: 'Plastic', prompt: 'plastic softdrink bottle caps' }
     ];
-    const AI_CLASSES_STORAGE_KEY = 'pm2v_ai_scanner_classes_v1';
+    const AI_PRESET_MAP = new Map(AI_PRESETS.map(x => [x.name.toLowerCase(), x]));
+    function getAIPreset(name) { return AI_PRESET_MAP.get(String(name || '').trim().toLowerCase()) || null; }
+    function aiPresetPriceText(pr) {
+      const f = n => '₱' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+      const range = pr.priceLow != null ? `${f(pr.priceLow)}–${f(pr.price)}` : f(pr.price);
+      return `${range} per ${pr.unit === 'kg' ? 'kg' : 'pc'}`;
+    }
+    const DEFAULT_AI_CLASSES = AI_PRESETS.map(x => x.name);
+    // v3: class list updated (Palochina, Pallet (bad)); older saved lists are no longer used.
+    const AI_CLASSES_STORAGE_KEY = 'pm2v_ai_scanner_classes_v3';
     let aiClasses = [];
     function loadAIClasses() {
       try {
@@ -12494,12 +12845,8 @@
       confidence: document.getElementById('aiConfidence'),
       confidenceBar: document.getElementById('aiConfidenceBar'),
       description: document.getElementById('aiDescription'),
-      isScrap: document.getElementById('aiIsScrap'),
-      condition: document.getElementById('aiCondition'),
-      altsBox: document.getElementById('aiAlternativesBox'),
-      alts: document.getElementById('aiAlternatives'),
       error: document.getElementById('aiError'),
-      apply: document.getElementById('aiApplyBtn')
+      apply: null
     };
     let aiStream = null, aiBlob = null, aiObjectUrl = null, aiCameraActive = false, aiBusy = false, aiLastResult = null;
 
@@ -12519,11 +12866,9 @@
     function resetAIResult() {
       ai.result.style.display = 'none';
       ai.error.style.display = 'none';
-      ai.altsBox.style.display = 'none';
-      ai.alts.innerHTML = '';
       ai.description.textContent = '';
       aiLastResult = null;
-      if (ai.apply) ai.apply.disabled = true;
+      if (inventoryWriteSection && !document.body.classList.contains('inventory-editing')) { inventoryWriteSection.style.display = 'none'; inventoryWriteSection.classList.add('manual-entry-collapsed'); }
     }
     function setAIImage(blob, url, name = 'Scrap image') {
       if (!blob || !url) return;
@@ -12645,14 +12990,10 @@
       return data;
     }
     /* ---------- On-device classifier (CLIP zero-shot, runs fully in the browser) ---------- */
-    const LOCAL_AI_PROMPTS = {
-      'cardboard': 'cardboard boxes', 'paper': 'sheets of paper', 'newspaper': 'newspapers',
-      'mixed paper': 'a pile of mixed paper', 'plastic': 'plastic scrap', 'pet plastic': 'PET plastic bottles',
-      'hdpe plastic': 'HDPE plastic containers', 'aluminum': 'aluminum cans or aluminum scrap',
-      'steel': 'steel or iron scrap metal', 'copper': 'copper wire or copper scrap', 'glass': 'glass bottles',
-      'wood': 'wooden planks and lumber', 'electronic waste': 'electronic waste and circuit boards',
-      'textile': 'old clothes and textile', 'mixed scrap': 'a pile of mixed scrap', 'not a scrap': 'a person, face, room or object that is not scrap material'
-    };
+    const LOCAL_AI_PROMPTS = Object.fromEntries([
+      ...AI_PRESETS.map(x => [x.name.toLowerCase(), x.prompt]),
+      ['not a scrap', 'a person, face, room or object that is not scrap material']
+    ]);
     let localClassifierPromise = null;
     function loadLocalClassifier() {
       if (!localClassifierPromise) {
@@ -12668,6 +13009,16 @@
         })().catch(e => { localClassifierPromise = null; throw e; });
       }
       return localClassifierPromise;
+    }
+    // Quantity estimate for countable (pcs) items: CLIP scores "one X", "two X" ... "twenty X" and the best match is the count.
+    // This is an estimate (least reliable for big or tightly packed stacks), so the number stays editable.
+    const COUNT_WORDS = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+    async function estimateCount(classifier, url, preset) {
+      const [one, many] = preset.count;
+      const labels = COUNT_WORDS.map((w, i) => i === 0 ? `a photo of one ${one}.` : `a photo of ${w} ${many} stacked or arranged together.`);
+      const out = await classifier(url, labels, { hypothesis_template: '{}' });
+      const ranked = out.map(o => ({ count: Math.max(1, labels.indexOf(o.label) + 1), score: o.score })).sort((a, b) => b.score - a.score);
+      return { count: ranked[0].count, confidence: ranked[0].score, alternatives: ranked.slice(1, 3).map(x => x.count) };
     }
     async function callLocalClassifier() {
       if (!aiBlob) throw new Error('Capture or upload a scrap image first.');
@@ -12705,7 +13056,15 @@
         return { material: 'Unknown', confidence: Math.max(top ? top.confidence : 0, 0.01), is_scrap: false, condition: 'Unidentifiable', description: 'The image did not clearly match any scrap material.', evidence: [], alternatives: classOnly.slice(0, 6) };
       }
       const isNot = /^not\s+a\s*scrap$/i.test(top.name);
+      let quantity = null;
+      const countPreset = getAIPreset(top.name);
+      if (!isNot && countPreset && countPreset.unit === 'pcs' && countPreset.count) {
+        const cUrl = URL.createObjectURL(aiBlob);
+        try { quantity = await estimateCount(classifier, cUrl, countPreset); } catch (e) { quantity = null; }
+        finally { URL.revokeObjectURL(cUrl); }
+      }
       return {
+        quantity,
         material: top.name, confidence: top.confidence, is_scrap: !isNot, condition: 'Detected',
         description: `On-device AI classified this image as ${top.name}.`,
         evidence: ranked.slice(0, 6).map(x => `${x.name}: ${(x.confidence * 100).toFixed(1)}%`),
@@ -12908,6 +13267,7 @@
       return {
         material,
         confidence: Math.max(0, Math.min(1, raw)),
+        quantity: r.quantity || null,
         evidence: Array.isArray(r.evidence) ? r.evidence : [],
         alternatives: Array.isArray(r.alternatives) ? r.alternatives : [],
         description: unidentifiable ? 'The scanned image could not be identified as a supported scrap material.' : (r.description || r.caption || ''),
@@ -12923,32 +13283,9 @@
       ai.confidence.textContent = `${pct}%`;
       ai.confidenceBar.style.width = `${pct}%`;
       ai.description.textContent = result.description || 'Classification completed.';
-      ai.isScrap.textContent = result.isScrap === undefined ? '—' : (result.isScrap ? 'Yes' : 'No');
-      ai.condition.textContent = result.condition || 'AI classification complete';
-      ai.apply.disabled = !(result.material && !/^not\s+a\s*scrap$/i.test(result.material) && result.confidence > 0);
-      const classScores = new Map(getAIClasses().map(name => [name.toLowerCase(), { name, confidence: 0 }]));
-      for (const x of (result.alternatives || [])) {
-        const name = String(x.name || x.label || '').trim(); if (!name) continue;
-        let q = Number(x.confidence ?? x.score ?? 0); if (q > 1) q /= 100;
-        const existing = classScores.get(name.toLowerCase());
-        if (existing) existing.confidence = Math.max(existing.confidence, q);
-        // Ignore anything that is not in the Manage Classes list.
-      }
-      const primaryKey = String(result.material || '').toLowerCase();
-      classScores.delete(primaryKey);
-      // Only show alternative classifications that have a confidence above 0%.
-      const rows = [...classScores.values()]
-        .filter(x => Number.isFinite(x.confidence) && Math.round(x.confidence * 100) > 0)
-        .sort((a, b) => b.confidence - a.confidence || a.name.localeCompare(b.name))
-        .slice(0, 3); // top 3 only
-      if (rows.length) {
-        ai.altsBox.style.display = 'block';
-        ai.alts.innerHTML = rows.map(x => `<div class="scanner-alt-row"><span>${esc(x.name)}</span><strong>${Math.round(x.confidence * 100)}%</strong></div>`).join('');
-      } else {
-        ai.altsBox.style.display = 'none'; ai.alts.innerHTML = '';
-      }
       ai.result.style.display = 'block';
       ai.error.style.display = 'none';
+      pm2vAutofillFromAI(result);
     }
     function showAIError(message) {
       ai.error.textContent = message;
@@ -12979,6 +13316,8 @@
     initAIClassManager();
 
     function categoryFromMaterial(material) {
+      const preset = getAIPreset(material);
+      if (preset) return preset.category;
       const m = String(material || '').toLowerCase();
       if (/metal|steel|iron|aluminum|aluminium|copper|electronic|e-waste/.test(m)) return 'Metal';
       if (/wood|pallet|lumber|timber/.test(m)) return 'Wood';
@@ -12987,23 +13326,49 @@
       if (/fiber|fabric|textile|sack|rubber|tire/.test(m)) return 'Fiber';
       return 'Paper';
     }
-    ai.apply.addEventListener('click', () => {
-      if (!aiLastResult || !(aiLastResult.confidence > 0)) { showAIError('There is no validated AI classification to apply. Run the AI classification again.'); return; }
-      const name = document.getElementById('inventoryItemName');
-      const category = document.getElementById('inventoryCategory');
-      const condition = document.getElementById('inventoryCondition');
-      if (name && (!name.value || name.value === '')) {
-        name.value = aiLastResult.material;
+    // After a classification, fill the Add Inventory Item form automatically (no button needed).
+    function pm2vAutofillFromAI(result) {
+      if (!result || !(result.confidence > 0) || /^not\s+a\s*scrap$/i.test(result.material || '')) return;
+      if (document.body.classList.contains('inventory-editing')) return; // don't overwrite an item being edited
+      const name = document.getElementById('inventoryItemName'), category = document.getElementById('inventoryCategory'), condition = document.getElementById('inventoryCondition'), wInput = document.getElementById('inventoryWeight');
+      if (name) name.value = result.material;
+      if (category) category.value = categoryFromMaterial(result.material);
+      if (condition && /detected/i.test(result.condition || '')) condition.value = 'Good';
+      // Current weight/quantity: pcs-type items use the pcs toggle with the AI count estimate; no estimate = left empty.
+      const preset = getAIPreset(result.material);
+      if (preset && preset.unit === 'pcs') {
+        pm2vSetWeightUnit('pcs');
+        const est = result.quantity && Number(result.quantity.count);
+        if (wInput) wInput.value = (Number.isFinite(est) && est > 0) ? est : '';
+      } else { pm2vSetWeightUnit('kg'); if (wInput) wInput.value = ''; }
+      if (inventoryWriteSection) {
+        inventoryWriteSection.classList.remove('manual-entry-collapsed'); inventoryWriteSection.style.display = '';
+        manualEntryToggle?.setAttribute('aria-expanded', 'true');
+        setTimeout(() => inventoryWriteSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
       }
-      if (category) category.value = categoryFromMaterial(aiLastResult.material);
-      if (condition && /detected/i.test(aiLastResult.condition || '')) condition.value = 'Good';
-      if (inventoryWriteSection) { inventoryWriteSection.classList.remove('manual-entry-collapsed'); inventoryWriteSection.style.display = ''; manualEntryToggle?.setAttribute('aria-expanded', 'true'); setTimeout(() => inventoryWriteSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80) } document.getElementById('inventoryItemName')?.focus();
-      setAIMode('Result applied');
+    }
+
+    // Preset on the Transaction form: typing/picking an item that matches a class sets its unit and price.
+    document.getElementById('txItem')?.addEventListener('change', e => {
+      const preset = getAIPreset(e.target.value);
+      if (!preset) return;
+      const txUnit = document.getElementById('txUnit'), txAmount = document.getElementById('txAmount');
+      if (txUnit) txUnit.value = preset.unit;
+      if (txAmount && !txAmount.value) txAmount.value = preset.price;
     });
 
     window.addEventListener('beforeunload', () => { stopAICamera(); revokeAIUrl(); });
     pm2vInitReportControls();
   </script>
+
+  <div class="tx-noitem-modal" id="txNoItemModal" aria-hidden="true">
+    <div class="tx-noitem-card" role="alertdialog" aria-modal="true" aria-labelledby="txNoItemTitle" aria-describedby="txNoItemMsg">
+      <div class="tx-noitem-icon" aria-hidden="true">!</div>
+      <h3 id="txNoItemTitle">Item not found</h3>
+      <p id="txNoItemMsg"></p>
+      <button class="tx-noitem-ok" id="txNoItemOk" type="button">OK</button>
+    </div>
+  </div>
 
   <div class="ai-add-modal" id="aiAddModal" aria-hidden="true">
     <div class="ai-add-card" role="dialog" aria-modal="true" aria-labelledby="aiAddTitle">
