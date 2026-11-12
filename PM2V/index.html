@@ -3513,19 +3513,25 @@
       }
 
       .dashboard-table-wrap tr td:nth-child(3)::before {
-        content: 'Weight ';
+        content: 'Combined total ';
         font-weight: 700;
         color: #8a9a8f
       }
 
       .dashboard-table-wrap tr td:nth-child(4)::before {
-        content: 'Status ';
+        content: 'Entries ';
         font-weight: 700;
         color: #8a9a8f
       }
 
       .dashboard-table-wrap tr td:nth-child(5)::before {
-        content: 'Updated ';
+        content: 'Status ';
+        font-weight: 700;
+        color: #8a9a8f
+      }
+
+      .dashboard-table-wrap tr td:nth-child(6)::before {
+        content: 'Last updated ';
         font-weight: 700;
         color: #8a9a8f
       }
@@ -16413,6 +16419,692 @@
 
     #dashboard .dashboard-stat-label {
       font-size: 7px
+    }
+  }
+</style>
+
+<style id="pm2v-mobile-inventory-fit">
+  @media (max-width: 380px) {
+    #inventory .filters {
+      width: 100%;
+      min-width: 0;
+      gap: 6px;
+      flex-wrap: nowrap
+    }
+
+    #inventory .inventory-category-filter,
+    #inventory .inv-view-tabs {
+      flex: 1 1 0;
+      min-width: 0
+    }
+
+    #inventory .inventory-category-trigger {
+      width: 100%;
+      min-width: 0;
+      justify-content: space-between;
+      padding-right: 10px;
+      padding-left: 10px
+    }
+
+    #inventory .inv-view-tabs {
+      margin-left: 0;
+      justify-content: stretch
+    }
+
+    #inventory .inv-view-tabs button {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 7px 6px;
+      font-size: 12px;
+      white-space: nowrap
+    }
+  }
+</style>
+
+<style id="pm2v-mobile-ui-polish">
+  @media (max-width: 760px) {
+    #dashboard .dashboard-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 9px !important;
+      margin-bottom: 16px !important;
+    }
+
+    #dashboard .dashboard-stat {
+      height: 82px !important;
+      min-height: 82px !important;
+      padding: 10px 11px !important;
+      gap: 8px !important;
+      border-radius: 14px !important;
+    }
+
+    #dashboard .dashboard-stat:last-child {
+      grid-column: 1 / -1;
+      width: calc((100% - 9px) / 2);
+      justify-self: center;
+    }
+
+    #dashboard .dashboard-stat-label {
+      font-size: 9px !important;
+      line-height: 1.15 !important;
+      letter-spacing: .35px !important;
+    }
+
+    #dashboard .dashboard-stat-value {
+      font-size: 22px !important;
+      line-height: 1.05 !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr:not(:has(> td.empty)),
+    #inventory #inventoryHistoryWrap tr:not(:has(> td.empty)) {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      align-items: start;
+      gap: 10px 12px !important;
+      padding: 14px !important;
+      border-radius: 14px !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr td,
+    #inventory #inventoryHistoryWrap tr td {
+      min-width: 0 !important;
+      align-self: start;
+      overflow-wrap: anywhere;
+      color: #52665a !important;
+      font-size: 12px !important;
+      line-height: 1.35 !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr td::before,
+    #inventory #inventoryHistoryWrap tr td::before {
+      display: block;
+      margin-bottom: 3px;
+      color: #7a8a80 !important;
+      font-size: 9px !important;
+      font-weight: 800 !important;
+      letter-spacing: .45px;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    #inventory #inventoryCurrentWrap tr td:first-child,
+    #inventory #inventoryHistoryWrap tr td:first-child {
+      grid-column: 1 / -1;
+      margin: 0 !important;
+      color: #203b2c !important;
+      font-size: 15px !important;
+      line-height: 1.25 !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr td:nth-child(2)::before,
+    #inventory #inventoryHistoryWrap tr td:nth-child(2)::before {
+      content: "Category";
+    }
+
+    #inventory #inventoryCurrentWrap tr td:nth-child(3)::before {
+      content: "Combined total";
+    }
+
+    #inventory #inventoryCurrentWrap tr td:nth-child(4)::before {
+      content: "Entries";
+    }
+
+    #inventory #inventoryCurrentWrap tr td:nth-child(5)::before {
+      content: "Status";
+    }
+
+    #inventory #inventoryCurrentWrap tr td:nth-child(6)::before {
+      content: "Updated";
+    }
+
+    #inventory #inventoryCurrentWrap tr td:nth-child(6),
+    #inventory #inventoryHistoryWrap tr td:nth-child(7) {
+      grid-column: 1 / -1;
+      justify-self: stretch !important;
+      margin-top: 0 !important;
+    }
+
+    #inventory #inventoryHistoryWrap tr td:nth-child(3)::before {
+      content: "Current weight";
+    }
+
+    #inventory #inventoryHistoryWrap tr td:nth-child(4)::before {
+      content: "Min / max";
+    }
+
+    #inventory #inventoryHistoryWrap tr td:nth-child(5)::before {
+      content: "Stock status";
+    }
+
+    #inventory #inventoryHistoryWrap tr td:nth-child(6)::before {
+      content: "Condition";
+    }
+
+    #inventory #inventoryHistoryWrap tr td:nth-child(7)::before {
+      content: "Last updated";
+    }
+
+    #inventory #inventoryHistoryWrap tr td:nth-child(8) {
+      grid-column: 1 / -1;
+      justify-self: stretch !important;
+    }
+
+    #inventory .inventory-category-pill,
+    #inventory .stock-status-pill {
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .mobile-bottom-nav {
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+      height: 76px !important;
+      min-height: 76px !important;
+      padding: 6px 5px !important;
+    }
+
+    .mobile-nav-btn {
+      min-height: 60px !important;
+      height: 60px !important;
+      padding: 5px 2px !important;
+      gap: 3px !important;
+      border-radius: 15px !important;
+      font-size: 8px !important;
+    }
+
+    .mobile-nav-btn svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .mobile-nav-label {
+      width: 100%;
+      font-size: inherit !important;
+      text-align: center;
+    }
+
+    @media (max-width: 380px) {
+      .mobile-nav-btn {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+      }
+
+      .mobile-nav-label {
+        letter-spacing: -.35px;
+      }
+    }
+  }
+</style>
+
+<style id="pm2v-mobile-brand-colors">
+  @media (max-width: 760px) {
+    body {
+      background: #eaf7eb !important;
+      color: #17335a;
+    }
+
+    .mobile-app-header,
+    .mobile-bottom-nav,
+    #dashboard .dashboard-stat,
+    #dashboard .dashboard-card,
+    #inventory #inventoryCurrentWrap tr:not(:has(> td.empty)),
+    #inventory #inventoryHistoryWrap tr:not(:has(> td.empty)) {
+      background-color: #fff !important;
+    }
+
+    .mobile-app-header {
+      border-bottom-color: #e2e8e4 !important;
+    }
+
+    .mobile-header-logo {
+      background-color: #e7f4e9 !important;
+      box-shadow: 0 2px 7px rgba(23, 57, 40, .1) !important;
+    }
+
+    .mobile-header-kicker,
+    .mobile-header-clock {
+      color: #08733a !important;
+    }
+
+    .mobile-header-title {
+      color: #17335a !important;
+    }
+
+    .mobile-menu-toggle,
+    body.mobile-menu-open .mobile-menu-toggle {
+      background-color: #146b35 !important;
+      color: #fff !important;
+      box-shadow: 0 7px 20px rgba(23, 57, 40, .18) !important;
+    }
+
+    .mobile-menu-toggle {
+      border-color: #fff !important;
+    }
+
+    .mobile-menu-backdrop {
+      background-color: rgba(20, 107, 53, .2) !important;
+    }
+
+    .mobile-bottom-nav {
+      border-color: #e2e8e4 !important;
+      box-shadow: 0 -4px 16px rgba(23, 57, 40, .06) !important;
+    }
+
+    .mobile-nav-btn {
+      color: #58708d !important;
+    }
+
+    .mobile-nav-btn.active {
+      background-color: #e7f4e9 !important;
+      color: #146b35 !important;
+    }
+
+    #dashboard .dashboard-stat,
+    #dashboard .dashboard-card,
+    #inventory #inventoryCurrentWrap tr:not(:has(> td.empty)),
+    #inventory #inventoryHistoryWrap tr:not(:has(> td.empty)) {
+      border-color: #e2e8e4 !important;
+      box-shadow: 0 2px 8px rgba(23, 57, 40, .04) !important;
+    }
+
+    #dashboard .dashboard-stat-icon {
+      background-color: #e7f4e9 !important;
+      color: #14743c !important;
+    }
+
+    #dashboard .dashboard-stat-label,
+    #inventory #inventoryCurrentWrap tr td,
+    #inventory #inventoryHistoryWrap tr td {
+      color: #58708d !important;
+    }
+
+    #dashboard .dashboard-stat-value,
+    #dashboard .dashboard-card-title,
+    #inventory #inventoryCurrentWrap tr td:first-child,
+    #inventory #inventoryHistoryWrap tr td:first-child {
+      color: #17335a !important;
+    }
+
+    #dashboard .dashboard-card-icon {
+      color: #14743c !important;
+    }
+
+    #dashboard .dashboard-view-all {
+      color: #08783a !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr td::before,
+    #inventory #inventoryHistoryWrap tr td::before,
+    #dashboard .dashboard-activity .activity-category,
+    #dashboard .dashboard-activity .activity-time {
+      color: #58708d !important;
+    }
+
+    #inventory .inventory-category-pill {
+      background-color: #e8f5eb !important;
+      color: #146f37 !important;
+    }
+
+    #inventory .inventory-condition-pill.condition-good {
+      background-color: #e8f5eb !important;
+      color: #146f37 !important;
+    }
+
+    #inventory .inventory-condition-pill.condition-fair {
+      background-color: #fff6df !important;
+      color: #a56b00 !important;
+    }
+
+    #inventory .inventory-condition-pill.condition-poor {
+      background-color: #fff0ef !important;
+      color: #b42318 !important;
+    }
+
+    #inventory .inventory-condition-pill.condition-unknown {
+      background-color: #f1f3f5 !important;
+      color: #6b7785 !important;
+    }
+
+    #inventory .stock-in-stock {
+      background-color: #e8f7ec !important;
+      color: #14743c !important;
+    }
+
+    #inventory .stock-low-stock {
+      background-color: #fff6dc !important;
+      color: #a66a00 !important;
+    }
+
+    #inventory .stock-out-of-stock {
+      background-color: #fff0ef !important;
+      color: #c33232 !important;
+    }
+
+    #inventory .stock-overstock {
+      background-color: #e9f2ff !important;
+      color: #1769c2 !important;
+    }
+
+    #inventory .stock-inactive {
+      background-color: #f1f3f4 !important;
+      color: #7b8490 !important;
+    }
+  }
+</style>
+
+<style id="pm2v-mobile-visual-polish">
+  @media (max-width: 760px) {
+    .mobile-app-header {
+      box-shadow: 0 2px 8px rgba(23, 57, 40, .06) !important;
+    }
+
+    .mobile-menu-toggle,
+    .mobile-nav-btn,
+    #dashboard .dashboard-stat-action,
+    #inventory .inventory-action,
+    #inventory .inventory-category-trigger {
+      transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    #dashboard .dashboard-stat {
+      border-color: #dce9df !important;
+      box-shadow: 0 3px 10px rgba(23, 57, 40, .07) !important;
+    }
+
+    #dashboard .dashboard-stat:nth-child(3) {
+      background-color: #eaf5ed !important;
+      border-color: #cfe3d3 !important;
+    }
+
+    #dashboard .dashboard-stat-icon {
+      background-color: #146b35 !important;
+      color: #fff !important;
+    }
+
+    #dashboard .dashboard-stat-value {
+      color: #146b35 !important;
+    }
+
+    #dashboard .dashboard-card {
+      border-color: #dce9df !important;
+      box-shadow: 0 3px 12px rgba(23, 57, 40, .065) !important;
+      overflow: hidden;
+    }
+
+    #dashboard .dashboard-card-head {
+      background-color: #eaf5ed !important;
+      border-bottom-color: #dce9df !important;
+    }
+
+    #dashboard .dashboard-card-title {
+      color: #146b35 !important;
+    }
+
+    #dashboard .dashboard-activity .activity-row {
+      border-top-color: #e2e8e4 !important;
+    }
+
+    #dashboard .dashboard-activity .activity-name {
+      color: #17335a !important;
+    }
+
+    #dashboard .dashboard-activity .activity-status {
+      background-color: #e8f7ec !important;
+      color: #14743c !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr[data-inventory-category]:not(.inventory-category-hidden),
+    #inventory #inventoryHistoryWrap tr[data-inventory-category]:not(.inventory-category-hidden) {
+      border-color: #dce9df !important;
+      box-shadow: 0 3px 10px rgba(23, 57, 40, .065) !important;
+      transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    #inventory #inventoryCurrentWrap tr td:first-child,
+    #inventory #inventoryHistoryWrap tr td:first-child {
+      color: #146b35 !important;
+    }
+
+    #inventory .inventory-category-pill {
+      background-color: #e7f4e9 !important;
+      color: #08733a !important;
+    }
+
+    #inventory .stock-status-pill {
+      border: 1px solid currentColor;
+    }
+
+    #inventory .stock-in-stock {
+      background-color: #e8f7ec !important;
+      color: #14743c !important;
+    }
+
+    #inventory .stock-low-stock {
+      background-color: #fff6dc !important;
+      color: #a66a00 !important;
+    }
+
+    #inventory .inventory-action.edit,
+    #inventory .inventory-action.restore {
+      background-color: #e7f4e9 !important;
+      color: #146b35 !important;
+    }
+
+    #inventory .inventory-action.archive {
+      background-color: #fff6df !important;
+      color: #a56b00 !important;
+    }
+
+    .mobile-bottom-nav {
+      box-shadow: 0 -5px 18px rgba(23, 57, 40, .09) !important;
+    }
+
+    .mobile-nav-btn.active {
+      box-shadow: inset 0 0 0 1px #cfe3d3 !important;
+    }
+
+    .mobile-nav-btn.active svg {
+      color: #146b35 !important;
+    }
+  }
+</style>
+
+<style id="pm2v-mobile-bold-brand">
+  @media (max-width: 760px) {
+    .mobile-app-header {
+      background: linear-gradient(110deg, #146b35 0%, #14743c 100%) !important;
+      border-bottom-color: #146b35 !important;
+      box-shadow: 0 4px 14px rgba(23, 57, 40, .18) !important;
+    }
+
+    .mobile-header-kicker,
+    .mobile-header-title {
+      color: #fff !important;
+    }
+
+    .mobile-header-clock {
+      color: #eaf5ed !important;
+    }
+
+    .mobile-header-logo {
+      background-color: #fff !important;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, .2) !important;
+    }
+
+    .mobile-menu-toggle {
+      background-color: #fff !important;
+      color: #146b35 !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .16) !important;
+    }
+
+    body.mobile-menu-open .mobile-menu-toggle {
+      background-color: #eaf5ed !important;
+      color: #146b35 !important;
+    }
+
+    #dashboard .dashboard-stat {
+      border-top: 3px solid #146b35 !important;
+      background: linear-gradient(145deg, #eaf5ed 0%, #fff 82%) !important;
+    }
+
+    #dashboard .dashboard-stat:nth-child(2) {
+      border-top-color: #14743c !important;
+      background: linear-gradient(145deg, #e7f4e9 0%, #fff 82%) !important;
+    }
+
+    #dashboard .dashboard-stat:nth-child(3) {
+      border: 1px solid #146b35 !important;
+      border-top: 3px solid #14743c !important;
+      background: linear-gradient(135deg, #146b35 0%, #14743c 100%) !important;
+    }
+
+    #dashboard .dashboard-stat-icon {
+      background-color: #146b35 !important;
+      color: #fff !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12);
+    }
+
+    #dashboard .dashboard-stat:nth-child(2) .dashboard-stat-icon {
+      background-color: #14743c !important;
+    }
+
+    #dashboard .dashboard-stat:nth-child(3) .dashboard-stat-icon {
+      background-color: #fff !important;
+      color: #146b35 !important;
+      box-shadow: none;
+    }
+
+    #dashboard .dashboard-stat-label {
+      color: #146b35 !important;
+    }
+
+    #dashboard .dashboard-stat-value {
+      color: #146b35 !important;
+      font-size: 24px !important;
+      font-weight: 900 !important;
+    }
+
+    #dashboard .dashboard-stat:nth-child(3) .dashboard-stat-label,
+    #dashboard .dashboard-stat:nth-child(3) .dashboard-stat-value {
+      color: #fff !important;
+    }
+
+    #dashboard .dashboard-stat:nth-child(3) .dashboard-stat-label {
+      opacity: .9;
+    }
+
+    #dashboard .dashboard-card-head {
+      background: linear-gradient(105deg, #146b35 0%, #14743c 100%) !important;
+      border-bottom-color: #146b35 !important;
+    }
+
+    #dashboard .dashboard-card-title,
+    #dashboard .dashboard-card-icon,
+    #dashboard .dashboard-view-all,
+    #dashboard .dashboard-view-all .arrow {
+      color: #fff !important;
+    }
+
+    #dashboard .dashboard-view-all {
+      text-decoration: underline;
+      text-decoration-color: rgba(255, 255, 255, .45);
+      text-underline-offset: 3px;
+    }
+
+    #dashboard .dashboard-activity .activity-row {
+      background-color: #fff !important;
+    }
+
+    #inventory .current-inventory-heading {
+      background: linear-gradient(105deg, #eaf5ed 0%, #e7f4e9 100%) !important;
+      border-left: 4px solid #146b35;
+      border-radius: 12px;
+      padding: 11px 12px !important;
+    }
+
+    #inventory .current-inventory-heading h2 {
+      color: #146b35 !important;
+      font-weight: 900;
+    }
+
+    #inventory .current-inventory-heading p,
+    #inventory .current-inventory-heading-right > span {
+      color: #58708d !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr[data-inventory-category]:not(.inventory-category-hidden),
+    #inventory #inventoryHistoryWrap tr[data-inventory-category]:not(.inventory-category-hidden) {
+      border-left: 4px solid #146b35 !important;
+      background: linear-gradient(105deg, #fff 0%, #fff 76%, #f7fbf8 100%) !important;
+      box-shadow: 0 4px 14px rgba(23, 57, 40, .09) !important;
+    }
+
+    #inventory #inventoryCurrentWrap tr td:first-child,
+    #inventory #inventoryHistoryWrap tr td:first-child {
+      color: #146b35 !important;
+      font-weight: 900 !important;
+    }
+
+    #inventory .inventory-category-pill {
+      border: 1px solid #cfe3d3;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
+    }
+
+    #inventory .stock-status-pill {
+      font-weight: 900;
+      box-shadow: 0 1px 3px rgba(23, 57, 40, .1);
+    }
+
+    #transactions .pm2v-record-card h2,
+    #transactions .pm2v-daily-list-head,
+    #reports .report-category-head,
+    #users .role-card > .card-title {
+      background-color: #eaf5ed !important;
+      border-left: 3px solid #146b35;
+      color: #146b35 !important;
+    }
+
+    #transactions .pm2v-record-card h2 {
+      padding: 8px 10px;
+      border-radius: 9px;
+    }
+
+    #transactions .pm2v-record-card h2 .pm2v-form-icon {
+      background-color: #146b35 !important;
+      color: #fff !important;
+    }
+
+    #transactions .pm2v-daily-list-head,
+    #reports .report-category-head {
+      border-bottom-color: #cfe3d3 !important;
+    }
+
+    #transactions .pm2v-daily-list-title,
+    #reports .report-category-head .card-title,
+    #users .role-card > .card-title {
+      color: #146b35 !important;
+    }
+
+    .mobile-bottom-nav {
+      background: linear-gradient(105deg, #146b35 0%, #14743c 100%) !important;
+      border-color: #146b35 !important;
+      box-shadow: 0 -5px 18px rgba(23, 57, 40, .18) !important;
+    }
+
+    .mobile-nav-btn {
+      color: #eaf5ed !important;
+    }
+
+    .mobile-nav-btn svg {
+      color: currentColor;
+    }
+
+    .mobile-nav-btn.active {
+      background: #fff !important;
+      color: #146b35 !important;
+      box-shadow: inset 0 0 0 1px #cfe3d3, 0 2px 6px rgba(0, 0, 0, .12) !important;
+    }
+
+    .mobile-nav-btn.active svg {
+      color: #146b35 !important;
     }
   }
 </style>
