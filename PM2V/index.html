@@ -17,7 +17,16 @@
       margin: 0;
       min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
-      color: #17335a
+      color: #17335a;
+      scrollbar-width: none;
+      -ms-overflow-style: none
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0
     }
 
     body {
@@ -3191,7 +3200,7 @@
       body {
         width: 100%;
         min-height: 100%;
-        overflow-x: hidden
+        overflow-x: clip
       }
 
       body {
@@ -3269,6 +3278,7 @@
       }
 
       .mobile-header-title {
+        display: none;
         font-size: 19px;
         line-height: 1.2;
         font-weight: 900;
@@ -3872,7 +3882,12 @@
 
     @media (max-width:430px) {
       .mobile-header-clock {
-        display: none !important
+        display: block !important;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        text-align: left;
+        white-space: normal !important;
+        overflow-wrap: anywhere
       }
 
       .mobile-app-header {
@@ -7532,6 +7547,9 @@
   <style id="pm2v-v18-client-refresh">
     /* V18 client implementation: unified internal UI foundation. */
     .global-page-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -7558,6 +7576,7 @@
     }
 
     .global-page-header h1 {
+      display: none;
       font-size: 29px;
       margin: 0;
       color: #071c3b;
@@ -7627,6 +7646,326 @@
     .report-filter-toggle:focus-visible {
       outline: 3px solid rgba(20, 111, 55, .18);
       outline-offset: 2px
+    }
+
+    .dashboard-detail-backdrop {
+      position: fixed;
+      inset: 16px 16px 16px 286px;
+      z-index: 1150;
+      display: flex;
+      min-width: 0;
+      background: rgba(15, 35, 25, .16)
+    }
+
+    .dashboard-detail-backdrop[hidden] {
+      display: none !important
+    }
+
+    .dashboard-detail-dialog {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid #dce8df;
+      border-radius: 20px;
+      background: #f8fbf8;
+      box-shadow: 0 18px 55px rgba(13, 35, 24, .22)
+    }
+
+    .dashboard-detail-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px 20px;
+      padding: 22px 26px 18px;
+      border-bottom: 1px solid #e3ebe5;
+      background: #fff
+    }
+
+    .dashboard-detail-heading {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 14px
+    }
+
+    .dashboard-detail-head h2 {
+      margin: 0;
+      color: #17335a;
+      font-size: clamp(20px, 2vw, 25px);
+      letter-spacing: -.3px
+    }
+
+    .dashboard-detail-head p {
+      flex: 1 0 100%;
+      margin: 0;
+      color: #718178;
+      font-size: 13px;
+      line-height: 1.45
+    }
+
+    body.dashboard-detail-open {
+      overflow: hidden
+    }
+
+    .dashboard-detail-count {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 11px;
+      border: 1px solid #cfe7d5;
+      border-radius: 999px;
+      background: #eff8f1;
+      color: #146f37;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap
+    }
+
+    .dashboard-detail-close {
+      grid-column: 2;
+      grid-row: 1;
+      width: 42px;
+      height: 42px;
+      border: 1px solid #e0e9e2;
+      border-radius: 12px;
+      background: #f6f9f6;
+      color: #456451;
+      cursor: pointer;
+      font-size: 25px;
+      line-height: 1;
+      transition: background .16s ease, color .16s ease
+    }
+
+    .dashboard-detail-close:hover {
+      background: #eaf5ed;
+      color: #146f37
+    }
+
+    .dashboard-detail-search {
+      grid-column: 1 / -1;
+      position: relative;
+      display: block
+    }
+
+    .dashboard-detail-search::before {
+      content: "";
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      width: 13px;
+      height: 13px;
+      border: 2px solid #7d9183;
+      border-radius: 50%;
+      transform: translateY(-60%)
+    }
+
+    .dashboard-detail-search::after {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: calc(50% + 6px);
+      width: 6px;
+      height: 2px;
+      border-radius: 2px;
+      background: #7d9183;
+      transform: rotate(45deg)
+    }
+
+    .dashboard-detail-search input {
+      width: 100%;
+      height: 44px;
+      padding: 0 15px 0 43px;
+      border: 1px solid #dce7df;
+      border-radius: 12px;
+      outline: 0;
+      background: #f9fbf9;
+      color: #17335a;
+      font-size: 14px;
+      transition: border-color .16s ease, box-shadow .16s ease
+    }
+
+    .dashboard-detail-search input:focus {
+      border-color: #63a879;
+      box-shadow: 0 0 0 3px rgba(20, 111, 55, .1)
+    }
+
+    .dashboard-detail-content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+      overflow: auto;
+      padding: 18px 26px 24px;
+      overscroll-behavior: contain;
+      scrollbar-color: #b7cdbd transparent;
+      scrollbar-width: thin
+    }
+
+    .dashboard-detail-content::-webkit-scrollbar {
+      width: 9px
+    }
+
+    .dashboard-detail-content::-webkit-scrollbar-thumb {
+      border: 2px solid #f8fbf8;
+      border-radius: 8px;
+      background: #b7cdbd
+    }
+
+    .dashboard-detail-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      border: 1px solid #e2ebe4;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 2px 7px rgba(23, 57, 40, .035);
+      transition: border-color .16s ease, box-shadow .16s ease
+    }
+
+    .dashboard-detail-row:hover {
+      border-color: #c9dfce;
+      box-shadow: 0 5px 15px rgba(23, 57, 40, .07)
+    }
+
+    .dashboard-detail-item-head {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 12px
+    }
+
+    .dashboard-detail-name {
+      color: #17335a;
+      font-size: 15px;
+      font-weight: 800;
+      overflow-wrap: anywhere
+    }
+
+    .dashboard-detail-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      grid-column: 1 / -1;
+      padding-top: 12px;
+      border-top: 1px solid #edf2ee
+    }
+
+    .dashboard-detail-field-label {
+      display: block;
+      margin-bottom: 5px;
+      color: #839188;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .55px;
+      text-transform: uppercase
+    }
+
+    .dashboard-detail-field-value {
+      display: block;
+      color: #395448;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+      overflow-wrap: anywhere
+    }
+
+    .dashboard-detail-category-count {
+      color: #146f37;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap
+    }
+
+    .dashboard-detail-empty {
+      margin: auto;
+      padding: 30px 12px;
+      color: #718178;
+      text-align: center
+    }
+
+    @media (min-width: 761px) and (max-width: 900px) {
+      .dashboard-detail-backdrop {
+        left: 246px
+      }
+
+      .dashboard-detail-head {
+        padding-right: 20px;
+        padding-left: 20px
+      }
+
+      .dashboard-detail-content {
+        padding-right: 20px;
+        padding-left: 20px
+      }
+    }
+
+    @media (max-width: 760px) {
+      .dashboard-detail-backdrop {
+        inset: 70px 10px calc(var(--mobile-nav-h) + var(--mobile-safe-bottom) + 10px);
+        z-index: 1050;
+        background: rgba(15, 35, 25, .12)
+      }
+
+      .dashboard-detail-dialog {
+        border-radius: 17px
+      }
+
+      .dashboard-detail-head {
+        gap: 12px;
+        padding: 16px
+      }
+
+      .dashboard-detail-content {
+        gap: 9px;
+        padding: 12px 14px 18px
+      }
+
+      .dashboard-detail-row {
+        gap: 12px;
+        padding: 14px
+      }
+    }
+
+    @media (max-width: 520px) {
+      .dashboard-detail-head {
+        gap: 10px 12px;
+        padding: 14px
+      }
+
+      .dashboard-detail-heading {
+        gap: 8px
+      }
+
+      .dashboard-detail-count {
+        min-height: 27px;
+        padding: 0 9px;
+        font-size: 11px
+      }
+
+      .dashboard-detail-close {
+        width: 38px;
+        height: 38px
+      }
+
+      .dashboard-detail-content {
+        padding: 10px 10px 14px
+      }
+
+      .dashboard-detail-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 12px
+      }
+
+      .dashboard-detail-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px
+      }
     }
 
     .dashboard-activity .activity-empty {
@@ -7884,9 +8223,10 @@
       }
 
       .mobile-header-clock {
-        grid-column: 2;
+        grid-column: 1 / -1;
         grid-row: 2;
-        text-align: right;
+        text-align: left;
+        white-space: normal;
         align-self: end
       }
 
@@ -8918,6 +9258,7 @@
   .ai-scanner.ai-scanner-form-only > :not(#inventoryWriteSection){display:none!important}
   .ai-scanner #inventoryWriteSection{margin-top:16px}
 </style>
+
 </head>
 
 <body class="auth-pending">
@@ -8925,7 +9266,7 @@
     <div class="pm2v-landing-wrap" id="pm2vLandingWrap">
       <header class="pm2v-landing-header">
         <div class="pm2v-landing-header-inner"><a class="pm2v-landing-brand"><img alt="PM2V logo"
-              src="pm2v-logo.png" />PM2V Scrap Trading</a>
+              src="pm2v-logo.png" />PM2V Scrap Trading Management System</a>
           <nav class="pm2v-landing-nav"><button class="pm2v-landing-nav-link" id="pm2vFaqBtn"
               type="button">FAQs</button><button class="pm2v-landing-nav-login" id="pm2vNavLogin"
               type="button">Login</button></nav>
@@ -8942,8 +9283,7 @@
         </section>
         <section class="pm2v-auth-form-side">
           <img alt="PM2V logo" class="pm2v-auth-logo" src="pm2v-logo.png" />
-          <h1 class="pm2v-auth-title" id="pm2vLoginTitle">PM2V Scrap Trading</h1>
-          <div class="pm2v-auth-sub">Sign in to manage your inventory</div>
+          <h1 class="pm2v-auth-title" id="pm2vLoginTitle">SIGN-IN</h1>
           <form class="login-form" id="loginForm">
             <div class="login-field"><span aria-hidden="true" class="login-field-icon"><svg fill="none"
                   viewbox="0 0 24 24">
@@ -9192,6 +9532,25 @@
             </div>
           </button>
         </section>
+        <div class="dashboard-detail-backdrop" id="dashboardDetailBackdrop" hidden>
+          <section class="dashboard-detail-dialog" role="dialog" aria-modal="false"
+            aria-labelledby="dashboardDetailTitle" aria-describedby="dashboardDetailSubtitle" tabindex="-1">
+            <header class="dashboard-detail-head">
+              <div class="dashboard-detail-heading">
+                <h2 id="dashboardDetailTitle">Dashboard Details</h2>
+                <span class="dashboard-detail-count" id="dashboardDetailCount"></span>
+                <p id="dashboardDetailSubtitle"></p>
+              </div>
+              <button class="dashboard-detail-close" id="dashboardDetailClose" type="button"
+                aria-label="Close details">&times;</button>
+              <label class="dashboard-detail-search">
+                <input id="dashboardDetailSearch" type="search" autocomplete="off"
+                  placeholder="Search inventory items..." aria-label="Search dashboard details">
+              </label>
+            </header>
+            <div class="dashboard-detail-content" id="dashboardDetailContent"></div>
+          </section>
+        </div>
         <section class="dashboard-card">
           <div class="dashboard-card-head">
             <div class="dashboard-card-title">
@@ -10156,6 +10515,7 @@
     let inventoryInlineEditRow = null;
     let inventoryInlineEditPlaceholder = null;
     let inventoryInlineEditActive = false;
+    let PM2V_DASHBOARD_INVENTORY_ROWS = [];
     const PM2V_DEFAULT_MIN_STOCK = 10;
     const PM2V_DEFAULT_MAX_STOCK = 100;
     function pm2vNum(v, fallback = 0) { if (v === null || v === undefined || String(v).trim() === '') return fallback; const n = Number(v); return Number.isFinite(n) ? n : fallback }
@@ -10195,6 +10555,7 @@
         if (scannerApply) scannerApply.style.display = role === 'staff' ? 'none' : '';
 
         const activeRows = rows.filter(x => !x.archived);
+        PM2V_DASHBOARD_INVENTORY_ROWS = activeRows;
         const archivedRows = rows.filter(x => x.archived);
         const listView = PM2V_INVENTORY_SHOW_ARCHIVED ? archivedRows : activeRows;
         const showingArchived = PM2V_INVENTORY_SHOW_ARCHIVED;
@@ -10592,13 +10953,16 @@
       if (!view) return;
       view.hidden = false; card?.classList.add('pm2v-occluded');
       document.getElementById('pm2vFaqBtn')?.classList.add('active');
-      const wrap = document.getElementById('pm2vLandingWrap'); if (wrap) wrap.scrollTop = 0;
+      const wrap = document.getElementById('pm2vLandingWrap');
+      if (wrap) { wrap.scrollTop = 0; wrap.classList.add('pm2v-faq-open') }
+      view.scrollTop = 0;
     }
     function closePM2VFaq() {
       const view = document.getElementById('pm2vFaqView'), card = document.getElementById('pm2vAuthCard');
       if (!view || view.hidden) return;
       view.hidden = true; card?.classList.remove('pm2v-occluded');
       document.getElementById('pm2vFaqBtn')?.classList.remove('active');
+      document.getElementById('pm2vLandingWrap')?.classList.remove('pm2v-faq-open');
     }
     function togglePM2VFaq() { const v = document.getElementById('pm2vFaqView'); if (!v) return; if (v.hidden) openPM2VFaq(); else closePM2VFaq(); }
     document.getElementById('pm2vFaqBtn')?.addEventListener('click', togglePM2VFaq);
@@ -10739,6 +11103,7 @@
     });
     links.forEach(link => link.addEventListener('click', e => {
       e.preventDefault();
+      closeDashboardDetails(false);
       showPage(link.dataset.page);
       setMobileMenuOpen(false);
     }));
@@ -10747,6 +11112,7 @@
     const mobilePageTitleMap = { dashboard: 'Dashboard', inventory: 'Physical Inventory', transactions: 'Transactions', reports: 'Reports', users: 'User Management', profile: 'Profile' };
     const mobileProfileNavBtn = document.getElementById('mobileProfileNavBtn');
     function showMobilePage(id) {
+      closeDashboardDetails(false);
       showPage(id);
       const resolvedPage = document.querySelector('.page.active')?.id || id;
       if (document.body.classList.contains('mobile-menu-open')) setMobileMenuOpen(false, false);
@@ -10815,8 +11181,89 @@
       }
     });
 
-    document.querySelector('[data-dashboard-inventory]')?.addEventListener('click', e => { e.preventDefault(); showPage('inventory') });
-    document.querySelectorAll('[data-dashboard-action]').forEach(btn => btn.addEventListener('click', () => showPage('inventory')));
+    document.querySelector('[data-dashboard-inventory]')?.addEventListener('click', e => { e.preventDefault(); closeDashboardDetails(false); showPage('inventory') });
+    const dashboardDetailBackdrop = document.getElementById('dashboardDetailBackdrop');
+    let dashboardDetailTrigger = null;
+    let dashboardDetailAction = 'inventory';
+    function closeDashboardDetails(restoreFocus = true) {
+      if (!dashboardDetailBackdrop || dashboardDetailBackdrop.hidden) return;
+      dashboardDetailBackdrop.hidden = true;
+      document.body.classList.remove('dashboard-detail-open');
+      if (restoreFocus) dashboardDetailTrigger?.focus();
+      dashboardDetailTrigger = null;
+    }
+    function openDashboardDetails(action, trigger) {
+      if (!dashboardDetailBackdrop) return;
+      const title = document.getElementById('dashboardDetailTitle');
+      const subtitle = document.getElementById('dashboardDetailSubtitle');
+      const count = document.getElementById('dashboardDetailCount');
+      const search = document.getElementById('dashboardDetailSearch');
+      const content = document.getElementById('dashboardDetailContent');
+      if (!title || !subtitle || !count || !search || !content) return;
+
+      dashboardDetailAction = action;
+      title.textContent = action === 'categories' ? 'Categories' : action === 'active' ? 'Active Items' : 'Total Items';
+      search.value = '';
+      search.placeholder = action === 'categories' ? 'Search material categories...' : 'Search inventory items...';
+      dashboardDetailTrigger = trigger;
+      dashboardDetailBackdrop.hidden = false;
+      document.body.classList.add('dashboard-detail-open');
+      renderDashboardDetails();
+      search.focus();
+    }
+    function renderDashboardDetails() {
+      const subtitle = document.getElementById('dashboardDetailSubtitle');
+      const count = document.getElementById('dashboardDetailCount');
+      const search = document.getElementById('dashboardDetailSearch');
+      const content = document.getElementById('dashboardDetailContent');
+      if (!subtitle || !count || !search || !content) return;
+
+      const query = search.value.trim().toLocaleLowerCase();
+      const rows = PM2V_DASHBOARD_INVENTORY_ROWS;
+      let rowMarkup = '';
+      if (dashboardDetailAction === 'categories') {
+        const categoryCounts = new Map();
+        rows.forEach(row => {
+          const category = String(row.category || '').trim();
+          if (category) categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+        });
+        const categories = [...categoryCounts.entries()].sort(([a], [b]) => a.localeCompare(b));
+        const matches = categories.filter(([category]) => category.toLocaleLowerCase().includes(query));
+        count.textContent = `${categories.length.toLocaleString()} categor${categories.length === 1 ? 'y' : 'ies'}`;
+        subtitle.textContent = query ? `${matches.length.toLocaleString()} of ${categories.length.toLocaleString()} categories match your search` : 'Available material categories and inventory counts';
+        rowMarkup = matches.map(([category, itemCount]) => `<article class="dashboard-detail-row"><div class="dashboard-detail-name">${esc(category)}</div><div class="dashboard-detail-category-count">${itemCount.toLocaleString()} item${itemCount === 1 ? '' : 's'}</div></article>`).join('');
+      } else {
+        const inventoryRows = dashboardDetailAction === 'active'
+          ? rows.filter(row => pm2vStockStatus(row) !== 'Inactive')
+          : rows;
+        const matches = inventoryRows.filter(row => {
+          if (!query) return true;
+          const status = pm2vStockStatus(row);
+          const weight = `${pm2vNum(row.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${pm2vUnitOf(row)}`;
+          return [row.itemName, row.category, weight, status, fmtDateTime(row.lastUpdated)].join(' ').toLocaleLowerCase().includes(query);
+        });
+        count.textContent = `${inventoryRows.length.toLocaleString()} item${inventoryRows.length === 1 ? '' : 's'}`;
+        subtitle.textContent = query ? `${matches.length.toLocaleString()} of ${inventoryRows.length.toLocaleString()} items match your search` : dashboardDetailAction === 'active' ? 'Currently active inventory records' : 'All current inventory records';
+        rowMarkup = matches.map(row => {
+          const status = pm2vStockStatus(row);
+          const category = row.category || 'Uncategorized';
+          const quantity = `${pm2vNum(row.weight).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${pm2vUnitOf(row)}`;
+          return `<article class="dashboard-detail-row"><div class="dashboard-detail-item-head"><div class="dashboard-detail-name">${esc(row.itemName || 'Unnamed Item')}</div>${pm2vStockPill(status)}</div><div class="dashboard-detail-meta"><div><span class="dashboard-detail-field-label">Category</span><span class="dashboard-detail-field-value">${esc(category)}</span></div><div><span class="dashboard-detail-field-label">Quantity</span><span class="dashboard-detail-field-value">${esc(quantity)}</span></div><div><span class="dashboard-detail-field-label">Last Updated</span><span class="dashboard-detail-field-value">${esc(fmtDateTime(row.lastUpdated))}</span></div></div></article>`;
+        }).join('');
+      }
+      content.innerHTML = rowMarkup || '<div class="dashboard-detail-empty">No inventory details are available.</div>';
+    }
+    document.querySelectorAll('[data-dashboard-action]').forEach(btn => btn.addEventListener('click', () => {
+      openDashboardDetails(btn.dataset.dashboardAction, btn);
+    }));
+    document.getElementById('dashboardDetailSearch')?.addEventListener('input', renderDashboardDetails);
+    document.getElementById('dashboardDetailClose')?.addEventListener('click', closeDashboardDetails);
+    dashboardDetailBackdrop?.addEventListener('click', event => {
+      if (event.target === dashboardDetailBackdrop) closeDashboardDetails();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeDashboardDetails();
+    });
     document.querySelectorAll('[data-inventory-stat]').forEach(btn => btn.addEventListener('click', () => {
       const what = btn.dataset.inventoryStat;
       if (what === 'weight') { showPage('reports'); document.getElementById('reports')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return }
@@ -14266,6 +14713,10 @@
     margin-top: 22px
   }
 
+  .pm2v-faq-view[hidden] {
+    display: none !important
+  }
+
   .pm2v-faq-card {
     background: #fff;
     border: 1px solid #e3ece5;
@@ -15327,6 +15778,640 @@
 
     .pm2v-landing-header-inner {
       gap: 8px
+    }
+  }
+</style>
+
+<style id="pm2v-centered-login-style">
+  #loginScreen {
+    overflow: hidden;
+    background: #063c20
+  }
+
+  #loginScreen::before,
+  #loginScreen::after {
+    content: "";
+    position: fixed;
+    inset: -8px;
+    pointer-events: none
+  }
+
+  #loginScreen::before {
+    background-image: url("pm2v-shop.jpg");
+    background-position: center 28%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: blur(5px);
+    transform: scale(1.03)
+  }
+
+  #loginScreen::after {
+    background: rgba(3, 45, 24, .69)
+  }
+
+  .pm2v-landing-wrap {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    min-height: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 28px 16px 86px;
+    background: transparent;
+    color: #17251d
+  }
+
+  .pm2v-landing-header {
+    position: relative;
+    top: auto;
+    align-self: auto;
+    width: min(600px, 100%);
+    flex: 0 0 auto;
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 12px;
+    background: #063c20;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .24)
+  }
+
+  .pm2v-landing-header-inner {
+    width: 100%;
+    height: auto;
+    min-height: 88px;
+    justify-content: center;
+    padding: 14px 22px
+  }
+
+  .pm2v-landing-brand {
+    white-space: normal;
+    gap: 18px;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-align: center
+  }
+
+  .pm2v-landing-brand img {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px
+  }
+
+  #pm2vNavLogin {
+    display: none
+  }
+
+  #pm2vFaqBtn {
+    position: fixed;
+    right: 20px;
+    bottom: 66px;
+    z-index: 40;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 999px;
+    padding: 10px 22px;
+    background: #063c20;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, .25);
+    color: #fff;
+    font-weight: 700
+  }
+
+  #pm2vFaqBtn:hover,
+  #pm2vFaqBtn.active {
+    background: #0b6533;
+    color: #fff
+  }
+
+  .pm2v-auth-card {
+    width: min(600px, 100%);
+    min-height: 0;
+    flex: 0 0 auto;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, .58);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .9);
+    box-shadow: 0 20px 52px rgba(0, 0, 0, .22)
+  }
+
+  .pm2v-auth-photo,
+  .pm2v-auth-logo {
+    display: none
+  }
+
+  .pm2v-auth-form-side {
+    align-items: stretch;
+    padding: 30px 28px 26px;
+    background: transparent;
+    text-align: left
+  }
+
+  .pm2v-auth-title {
+    display: block;
+    color: #15241b;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: .3px
+  }
+
+  .pm2v-auth-sub {
+    display: block;
+    margin: 5px 0 22px;
+    color: #59695f;
+    font-size: 14px
+  }
+
+  .pm2v-auth-form-side .login-form {
+    max-width: none;
+    gap: 12px
+  }
+
+  .pm2v-auth-form-side .login-field input {
+    height: 50px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .83)
+  }
+
+  .pm2v-auth-form-side .login-field input:focus {
+    border-color: #168044;
+    box-shadow: 0 0 0 3px rgba(20, 109, 53, .12)
+  }
+
+  .pm2v-auth-form-side .login-forgot {
+    justify-self: start;
+    margin: 0;
+    padding: 3px 0;
+    color: #146d35;
+    text-decoration: underline;
+    text-underline-offset: 2px
+  }
+
+  .pm2v-auth-form-side .login-submit {
+    height: 50px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #146d35, #087d3e);
+    box-shadow: 0 8px 18px rgba(14, 112, 57, .2)
+  }
+
+  .pm2v-landing-foot {
+    position: fixed;
+    z-index: 30;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 10px 16px;
+    background: #063c20;
+    color: rgba(255, 255, 255, .92);
+    font-size: 12px;
+    text-align: center
+  }
+
+  .pm2v-landing-foot > span:first-child {
+    display: none
+  }
+
+  .pm2v-landing-foot strong {
+    color: #fff
+  }
+
+  @media (max-width: 600px) {
+    #loginScreen::before {
+      background-position: center 22%;
+      background-size: auto 108%
+    }
+
+    .pm2v-landing-wrap {
+      justify-content: flex-start;
+      padding: 24px 14px 82px
+    }
+
+    .pm2v-landing-header {
+      width: 100%;
+      border-radius: 10px
+    }
+
+    .pm2v-landing-header-inner {
+      min-height: 76px;
+      padding: 12px 16px
+    }
+
+    .pm2v-landing-brand {
+      gap: 12px;
+      font-size: clamp(16px, 4.5vw, 19px)
+    }
+
+    .pm2v-landing-brand img {
+      width: 48px;
+      height: 48px;
+      flex-basis: 48px
+    }
+
+    .pm2v-auth-card {
+      width: 100%;
+      margin-top: 14px;
+      border-radius: 10px
+    }
+
+    .pm2v-auth-form-side {
+      padding: 24px 20px 20px
+    }
+
+    .pm2v-auth-sub {
+      margin-bottom: 18px
+    }
+
+    #pm2vFaqBtn {
+      right: 14px;
+      bottom: 60px;
+      padding: 9px 18px
+    }
+
+    .pm2v-landing-foot {
+      min-height: 46px;
+      font-size: 10.5px
+    }
+  }
+
+  @media (max-height: 600px) and (min-width: 601px) {
+    .pm2v-landing-wrap {
+      justify-content: flex-start;
+      padding-top: 22px
+    }
+  }
+
+  .pm2v-landing-wrap.pm2v-faq-open {
+    overflow: hidden
+  }
+
+  .pm2v-faq-view,
+  .pm2v-faq-view[hidden] {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    box-sizing: border-box;
+    flex-direction: column;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #f5f9f6
+  }
+
+  .pm2v-faq-view[hidden] {
+    display: none !important
+  }
+
+  .pm2v-faq-card {
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 24px clamp(20px, 5vw, 72px) 36px
+  }
+
+  .pm2v-faq-back {
+    min-height: 40px
+  }
+
+  .pm2v-faq-hero {
+    margin: 18px 0 26px
+  }
+
+  .pm2v-faq-hero h2 {
+    font-size: clamp(24px, 3vw, 34px)
+  }
+
+  .pm2v-faq-flow,
+  .pm2v-faq-list {
+    width: min(1120px, 100%);
+    margin-right: auto;
+    margin-left: auto
+  }
+
+  .pm2v-faq-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px
+  }
+
+  .pm2v-faq-cta {
+    margin-bottom: 4px
+  }
+
+  @media (max-width: 600px) {
+    .pm2v-faq-card {
+      padding: 16px 16px 28px
+    }
+
+    .pm2v-faq-flow,
+    .pm2v-faq-list {
+      grid-template-columns: minmax(0, 1fr)
+    }
+
+    .pm2v-faq-hero {
+      margin: 16px 0 20px
+    }
+  }
+</style>
+
+<style id="pm2v-dashboard-visual-refinement">
+  #dashboard .dashboard-stats {
+    gap: 16px;
+    margin-bottom: 22px
+  }
+
+  #dashboard .dashboard-stat {
+    min-width: 0;
+    justify-content: flex-start;
+    height: 104px;
+    padding: 18px 22px;
+    border: 1px solid #e1e9e3;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(23, 57, 40, .045);
+    text-align: left
+  }
+
+  #dashboard .dashboard-stat>div:last-child,
+  #dashboard .dashboard-stat-label,
+  #dashboard .dashboard-stat-value {
+    text-align: left
+  }
+
+  #dashboard .dashboard-stat-action {
+    transition: box-shadow .16s ease, border-color .16s ease
+  }
+
+  #dashboard .dashboard-stat-action:hover {
+    transform: none;
+    border-color: #c9dfce;
+    box-shadow: 0 5px 14px rgba(20, 111, 55, .08)
+  }
+
+  #dashboard .dashboard-stat-icon,
+  #dashboard .dashboard-stat:nth-child(2) .dashboard-stat-icon {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+    margin-right: 16px;
+    border-radius: 50%;
+    background: #eaf5ed;
+    color: #16743c
+  }
+
+  #dashboard .dashboard-stat-label {
+    margin-bottom: 6px;
+    color: #65796c;
+    font-size: 11px;
+    letter-spacing: .6px
+  }
+
+  #dashboard .dashboard-stat-value {
+    color: #17335a;
+    font-size: 27px
+  }
+
+  #dashboard .dashboard-card {
+    margin-bottom: 20px;
+    border: 1px solid #e1e9e3;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(23, 57, 40, .04)
+  }
+
+  #dashboard .dashboard-card-head {
+    height: 64px;
+    padding: 0 22px;
+    border-bottom: 1px solid #edf2ee
+  }
+
+  #dashboard .dashboard-card-title {
+    gap: 10px;
+    color: #17335a;
+    font-size: 17px
+  }
+
+  #dashboard .dashboard-card-icon {
+    color: #16743c
+  }
+
+  #dashboard .dashboard-view-all {
+    color: #146b35
+  }
+
+  #dashboard .dashboard-table-wrap {
+    border-top: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch
+  }
+
+  #dashboard .dashboard-table {
+    min-width: 760px
+  }
+
+  #dashboard .dashboard-table th {
+    height: 42px;
+    padding: 0 18px;
+    background: #f5f8f6;
+    color: #617568;
+    font-size: 11px;
+    letter-spacing: .55px;
+    white-space: nowrap
+  }
+
+  #dashboard .dashboard-table td {
+    height: 54px;
+    padding: 10px 18px;
+    border-top-color: #edf2ee;
+    color: #334c3d;
+    font-size: 13px;
+    white-space: nowrap
+  }
+
+  #dashboard .dashboard-table tbody tr:hover {
+    background: #fbfdfb
+  }
+
+  #dashboard .dashboard-table td strong {
+    color: #203b2c;
+    font-weight: 700
+  }
+
+  #dashboard .dashboard-table .category-pill {
+    border-radius: 999px;
+    padding: 6px 11px;
+    background: #eaf5ed;
+    color: #146b35;
+    font-size: 12px
+  }
+
+  #dashboard .dashboard-table .stock-status-pill {
+    min-height: 26px;
+    padding: 0 10px;
+    font-size: 11px
+  }
+
+  #dashboard .dashboard-activity {
+    padding-bottom: 0
+  }
+
+  #dashboard .dashboard-activity .activity-row {
+    min-height: 72px;
+    margin: 0 22px;
+    padding: 12px 0;
+    gap: 14px;
+    border-top-color: #edf2ee
+  }
+
+  #dashboard .dashboard-activity .activity-name {
+    margin-bottom: 4px;
+    color: #203b2c;
+    font-size: 14px
+  }
+
+  #dashboard .dashboard-activity .activity-category,
+  #dashboard .dashboard-activity .activity-time {
+    color: #718178;
+    font-size: 12px;
+    line-height: 1.4
+  }
+
+  #dashboard .dashboard-activity .activity-right {
+    gap: 12px
+  }
+
+  #dashboard .dashboard-activity .activity-weight {
+    color: #526a5c;
+    font-size: 13px;
+    white-space: nowrap
+  }
+
+  #dashboard .dashboard-activity .activity-status {
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: #eaf5ed;
+    color: #146b35;
+    font-size: 11px;
+    white-space: nowrap
+  }
+
+  @media (max-width: 1050px) and (min-width: 761px) {
+    #dashboard .dashboard-stats {
+      gap: 12px
+    }
+
+    #dashboard .dashboard-stat {
+      padding: 16px
+    }
+  }
+
+  @media (max-width: 760px) {
+    #dashboard .dashboard-stats {
+      gap: 8px;
+      margin-bottom: 16px
+    }
+
+    #dashboard .dashboard-stat {
+      height: 82px;
+      padding: 9px 8px;
+      border-radius: 12px
+    }
+
+    #dashboard .dashboard-stat-icon,
+    #dashboard .dashboard-stat:nth-child(2) .dashboard-stat-icon {
+      width: 32px;
+      height: 32px;
+      flex-basis: 32px;
+      margin-right: 0;
+      font-size: 16px
+    }
+
+    #dashboard .dashboard-stat-label {
+      font-size: 8px;
+      letter-spacing: .35px
+    }
+
+    #dashboard .dashboard-stat-value {
+      font-size: 20px
+    }
+
+    #dashboard .dashboard-card {
+      margin-bottom: 16px;
+      border-radius: 12px
+    }
+
+    #dashboard .dashboard-card-head {
+      min-height: 56px;
+      padding: 10px 14px;
+      gap: 10px
+    }
+
+    #dashboard .dashboard-card-title {
+      gap: 8px;
+      font-size: 15px
+    }
+
+    #dashboard .dashboard-card-icon {
+      font-size: 19px
+    }
+
+    #dashboard .dashboard-view-all {
+      flex: 0 0 auto;
+      font-size: 12px
+    }
+
+    #dashboard .dashboard-table {
+      min-width: 760px
+    }
+
+    #dashboard .dashboard-table th {
+      padding: 0 14px;
+      font-size: 10px
+    }
+
+    #dashboard .dashboard-table td {
+      padding: 9px 14px;
+      font-size: 12px
+    }
+
+    #dashboard .dashboard-activity .activity-row {
+      margin: 0 14px;
+      padding: 12px 0
+    }
+  }
+
+  @media (max-width: 380px) {
+    #dashboard .dashboard-stats {
+      gap: 5px
+    }
+
+    #dashboard .dashboard-stat {
+      gap: 5px;
+      padding: 8px 6px
+    }
+
+    #dashboard .dashboard-stat-icon,
+    #dashboard .dashboard-stat:nth-child(2) .dashboard-stat-icon {
+      width: 27px;
+      height: 27px;
+      flex-basis: 27px;
+      font-size: 14px
+    }
+
+    #dashboard .dashboard-stat-label {
+      font-size: 7px
     }
   }
 </style>
